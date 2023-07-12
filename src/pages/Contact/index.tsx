@@ -1,8 +1,11 @@
+import {useTranslation} from "react-i18next";
+
 function Contact() {
+    const {t} = useTranslation();
     return (
         <>
-            <h1>Contact</h1>
-            <p>Get in touch using the form below</p>
+            <h1>{t('contact.title')}</h1>
+            <p>{t('contact.text')}</p>
         </>
     );
 }
