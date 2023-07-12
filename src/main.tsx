@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 import TermsOfUse from "./pages/TermsOfUse";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Contact from "./pages/Contact";
-import './i18n.js'
+import './locales/i18n.ts'
 
 const router = createBrowserRouter([
     {

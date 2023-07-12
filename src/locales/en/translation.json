@@ -1,6 +1,44 @@
 {
   "contact": {
     "title": "Contact",
-    "text": "Get in touch using the form below"
+    "text": "Get in touch using the form below",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Send",
+      "errors": {
+        "name": {
+            "required": "Name is required",
+            "min": "Name must be at least 5 characters",
+            "max": "Name must be at most 100 characters"
+        },
+        "email": {
+          "required": "Email is required",
+          "invalid": "Email must be a valid email"
+        },
+        "message": {
+            "required": "Message is a required field",
+            "min": "Message must be at least 10 characters",
+            "max": "Message must be at most 100 characters"
+        }
+      }
+    },
+    "footer": "Footer text here"
+  },
+  "yup": {
+    "invalid_field_length": "This field must have at least ${min} characters",
+    "invalid_number_length": "This field should be bigger than ${min}.",
+    "mixed_invalid_field": "This field is invalid.",
+    "mixed_required_field": "This field is required.",
+    "mixed_not_type": "This field is invalid.",
+    "mixed_one_of": "This field doesn't match.",
+    "mixed_max": "This field should be smaller than ${max}.",
+    "mixed_min": "This field should be bigger than ${min}.",
+    "string_email": "This field needs to be a valid email.",
+    "string_max": "This field should be smaller than ${max}.",
+    "string_min": "This field should be bigger than ${min}.",
+    "number_max": "This field should be smaller than ${max}.",
+    "number_min": "This field should be bigger than ${min}."
   }
 }

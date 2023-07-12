@@ -1,6 +1,44 @@
 {
   "contact": {
     "title": "Entre em Contato",
-    "text": "Utilize o formulário abaixo para entrar em contato conosco."
+    "text": "Utilize o formulário abaixo para entrar em contato conosco.",
+    "form": {
+      "name": "Nome",
+      "email": "E-mail",
+      "message": "Mensagem",
+      "submit": "Enviar",
+      "errors": {
+        "name": {
+          "required": "Nome é obrigatório",
+          "min": "Nome deve ter no mínimo 5 caracteres",
+          "max": "Nome deve ter no máximo 50 caracteres"
+        },
+        "email": {
+          "required": "Email é obrigatório",
+          "invalid": "Email inválido"
+        },
+        "message": {
+          "required": "Mensagem é obrigatório",
+          "min": "Mensagem deve ter no mínimo 10 caracteres",
+          "max": "Mensagem deve ter no máximo 500 caracteres"
+        }
+      }
+    },
+    "footer": "Texto do footer aqui"
+  },
+  "yup": {
+    "invalid_field_length": "Esse campo deve ter pelo menos {{ min }} caracteres.",
+    "invalid_number_length": "Esse campo deve ser maior que {{ min }} caracteres.",
+    "mixed_invalid_field": "Campo inválido.",
+    "mixed_required_field": "Campo obrigatório.",
+    "mixed_not_type": "Campo inválido",
+    "mixed_one_of": "Este campo não corresponde",
+    "mixed_max": "Esse campo deve ser menor que ${max}.",
+    "mixed_min": "Esse campo deve ser maior que ${min}.",
+    "string_email": "Esse campo precisa ser um email válido.",
+    "string_max": "Esse campo deve ser menor que ${max}.",
+    "string_min": "Esse campo deve ser maior que ${min}.",
+    "number_max": "Esse campo deve ser menor que ${max}.",
+    "number_min": "Esse campo deve ser maior que ${min}."
   }
 }
