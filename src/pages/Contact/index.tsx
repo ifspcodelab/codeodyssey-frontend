@@ -26,7 +26,7 @@ function Contact() {
                     <Grid item xs={12}>
                         <TextField
                             sx={{ width: "100%" }}
-                            {...register("name", { required: true })}
+                            {...register("name")}
                             label={t("contact.form.name")}
                             variant="outlined"
                             error={!!errors.name}
@@ -36,7 +36,7 @@ function Contact() {
                     <Grid item xs={12}>
                         <TextField
                             sx={{ width: "100%" }}
-                            {...register("email", { required: true })}
+                            {...register("email")}
                             label={t("contact.form.email")}
                             variant="outlined"
                             error={!!errors.email}
@@ -46,7 +46,7 @@ function Contact() {
                     <Grid item xs={12}>
                         <TextField
                             sx={{ width: "100%" }}
-                            {...register("message", { required: true })}
+                            {...register("message")}
                             label={t("contact.form.message")}
                             variant="outlined"
                             multiline

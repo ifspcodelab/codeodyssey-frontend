@@ -1,4 +1,7 @@
 {
+  "privacypolicy": {
+    "title": "Privacy Policy"
+  },
   "contact": {
     "title": "Contact",
     "text": "Get in touch using the form below",
@@ -6,23 +9,7 @@
       "name": "Name",
       "email": "Email",
       "message": "Message",
-      "submit": "Send",
-      "errors": {
-        "name": {
-            "required": "Name is required",
-            "min": "Name must be at least 5 characters",
-            "max": "Name must be at most 100 characters"
-        },
-        "email": {
-          "required": "Email is required",
-          "invalid": "Email must be a valid email"
-        },
-        "message": {
-            "required": "Message is a required field",
-            "min": "Message must be at least 10 characters",
-            "max": "Message must be at most 100 characters"
-        }
-      }
+      "submit": "Send"
     },
     "footer": "Footer text here"
   },

@@ -1,4 +1,7 @@
 {
+  "privacypolicy": {
+    "title": "Política de Privacidade"
+  },
   "contact": {
     "title": "Entre em Contato",
     "text": "Utilize o formulário abaixo para entrar em contato conosco.",
@@ -6,23 +9,7 @@
       "name": "Nome",
       "email": "E-mail",
       "message": "Mensagem",
-      "submit": "Enviar",
-      "errors": {
-        "name": {
-          "required": "Nome é obrigatório",
-          "min": "Nome deve ter no mínimo 5 caracteres",
-          "max": "Nome deve ter no máximo 50 caracteres"
-        },
-        "email": {
-          "required": "Email é obrigatório",
-          "invalid": "Email inválido"
-        },
-        "message": {
-          "required": "Mensagem é obrigatório",
-          "min": "Mensagem deve ter no mínimo 10 caracteres",
-          "max": "Mensagem deve ter no máximo 500 caracteres"
-        }
-      }
+      "submit": "Enviar"
     },
     "footer": "Texto do footer aqui"
   },
