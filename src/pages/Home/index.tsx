@@ -9,6 +9,7 @@ function Home() {
             <h1>Home Page</h1>
             <nav>
                 <Link to={"/registration"}>Registration</Link>
+                <Link to={"/login"}>Login</Link>
             </nav>
             <PageFooter/>
         </>

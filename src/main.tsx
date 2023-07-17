@@ -8,6 +8,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Contact from "./pages/Contact";
 import './locales/i18n.ts'
 import Registration from "./pages/Registration";
+import Login from "./pages/Login";
+import './index.css'
 
 const router = createBrowserRouter([
     {
@@ -21,6 +23,10 @@ const router = createBrowserRouter([
             {
                 path: "registration",
                 element: <Registration/>
+            },
+            {
+                path: "login",
+                element: <Login/>
             },
             {
                 path: "terms-of-use",

@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
+import './styles.css'
+import {useNavigate} from "react-router-dom"
 
 interface RegistrationData {
     name: string;
@@ -11,6 +13,7 @@ interface RegistrationData {
 function Registration() {
     const registrationData: RegistrationData = {name: "", email: "", password: ""}
     const [formData, setFormData] = useState(registrationData)
+    const navigate = useNavigate()
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target
@@ -22,25 +25,38 @@ function Registration() {
         console.log(formData)
     }
 
+    const handleLogin = () => {
+        return navigate("/login")
+    }
+
     return (
         <>
-            <PageHeader title={"Registration"} text={"Form to register on the platform"}/>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor={"name"}>Name</label>
-                    <input type="text" name="name" onChange={inputChangeHandler}/>
-                </div>
-                <div>
-                    <label htmlFor={"email"}>Email</label>
-                    <input type="text" name="email" onChange={inputChangeHandler}/>
-                </div>
-                <div>
-                    <label htmlFor={"password"}>Password</label>
-                    <input type="password" name="password" onChange={inputChangeHandler}/>
-                </div>
-                <button type="submit">Submit</button>
-            </form>
-            <PageFooter/>
+            <div className="formContainer">
+                <PageHeader title={"Registration"} text={"Form to register on the platform"}/>
+                <form onSubmit={handleSubmit}>
+                    <div className="formInput">
+                        <label htmlFor={"name"}>Name</label>
+                        <input type="text" name="name" onChange={inputChangeHandler}/>
+                    </div>
+                    <div className="formInput">
+                        <label htmlFor={"email"}>Email</label>
+                        <input type="text" name="email" onChange={inputChangeHandler}/>
+                    </div>
+                    <div className="formInput">
+                        <label htmlFor={"password"}>Password</label>
+                        <input type="password" name="password" onChange={inputChangeHandler}/>
+                    </div>
+                    <div className={"checkbox"}>
+                        <input type="checkbox" id="terms"/>
+                        <label htmlFor="terms">I have read and accept the terms of use</label>
+                    </div>
+                    <div id="buttons">
+                        <button onClick={handleLogin}>Login</button>
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+                <PageFooter id="footer" text={"Accept the terms to use the platform"}/>
+            </div>
         </>
     );
 }
