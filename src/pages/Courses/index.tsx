@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import axios from "axios";
 import React from "react";
-import i18next from 'i18next';
 
 function Courses() {
     const { t } = useTranslation();
@@ -25,7 +24,6 @@ function Courses() {
     return (
         <>
             <h1>{t("courses.title")}</h1>
-
         <div>
             {courses.map((course) => (
             <Card variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>
@@ -37,7 +35,20 @@ function Courses() {
                         {course.teacherName}    
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        {course.startDate} until {course.endDate}
+                    {t("courses.intlDate", { date: new Date(course.startDate),
+                formatParams: {
+                    date: { year: 'numeric', month: 'short', day: 'numeric'},
+                  },
+                })} {t("courses.until")} {t("courses.intlDate", {
+                    date: new Date((course.endDate)),
+                    formatParams: {
+                      date: {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric"
+                      }
+                    }
+                  })}
                     </Typography>
                 </CardContent>
 

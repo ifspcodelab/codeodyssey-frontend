@@ -4,7 +4,9 @@
     "button": {
       "invite": "Create Invite",
       "students": "Visualize Students"
-    }
+    },
+    "intlDate": "{{date, datetime}}",
+    "until": "until"
   },
   "privacypolicy": {
     "title": "Privacy Policy"
