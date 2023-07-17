@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import axios from "axios";
 import React from "react";
+import i18next from 'i18next';
 
 function Courses() {
     const { t } = useTranslation();
@@ -30,13 +31,13 @@ function Courses() {
             <Card variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>
                 <CardContent>
                     <Typography variant="h5" component="div">
-                        {course.course_name}
+                        {course.name}
                     </Typography>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                        {course.teacher_name}    
+                        {course.teacherName}    
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        {course.start_date} until {course.end_date}
+                        {course.startDate} until {course.endDate}
                     </Typography>
                 </CardContent>
 
