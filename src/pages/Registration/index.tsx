@@ -3,27 +3,20 @@ import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
 import './styles.css'
 import {useNavigate} from "react-router-dom"
+import { useForm } from "react-hook-form";
+import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers/yup";
 
-interface RegistrationData {
-    name: string;
-    email: string;
-    password: string;
-}
+const schema = yup.object({
+    name: yup.string().required().min(5).max(100),
+    email: yup.string().required().email(),
+    password: yup.string().min(8).max(64)
+}).required()
 
 function Registration() {
-    const registrationData: RegistrationData = {name: "", email: "", password: ""}
-    const [formData, setFormData] = useState(registrationData)
+    const { register, handleSubmit, formState: { errors} } = useForm({ resolver: yupResolver(schema)})
     const navigate = useNavigate()
-
-    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = event.target
-        setFormData({...formData, [name]: value})
-    }
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        console.log(formData)
-    }
+    const onSubmit = (data) => console.log(data)
 
     const handleLogin = () => {
         return navigate("/login")
@@ -33,18 +26,21 @@ function Registration() {
         <>
             <div className="formContainer">
                 <PageHeader title={"Registration"} text={"Form to register on the platform"}/>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="formInput">
                         <label htmlFor={"name"}>Name</label>
-                        <input type="text" name="name" onChange={inputChangeHandler}/>
+                        <input type="text" name="name" {...register("name", { required: true })} />
+                        <p>{errors.name?.message}</p>
                     </div>
                     <div className="formInput">
                         <label htmlFor={"email"}>Email</label>
-                        <input type="text" name="email" onChange={inputChangeHandler}/>
+                        <input type="text" name="email" {...register("email", { required: true })} />
+                        <p>{errors.email?.message}</p>
                     </div>
                     <div className="formInput">
                         <label htmlFor={"password"}>Password</label>
-                        <input type="password" name="password" onChange={inputChangeHandler}/>
+                        <input type="password" name="password" {...register("password", { required: true })} />
+                        <p>{errors.password?.message}</p>
                     </div>
                     <div className={"checkbox"}>
                         <input type="checkbox" id="terms"/>
