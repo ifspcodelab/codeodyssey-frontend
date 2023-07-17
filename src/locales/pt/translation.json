@@ -1,4 +1,11 @@
 {
+  "courses": {
+    "title": "Meus Cursos",
+    "button": {
+      "invite": "Criar Convite",
+      "students": "Visualizar Alunos"
+    }
+  },
   "privacypolicy": {
     "title": "Política de Privacidade"
   },
