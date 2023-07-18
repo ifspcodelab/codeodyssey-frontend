@@ -21,7 +21,8 @@
         }
       }
     },
-    "footer": "Texto do footer do registro"
+    "footer": "Texto do footer do registro",
+    "alert": "Você deve aceitar os termos e a política de privacidade"
   },
   "contact": {
     "title": "Entre em Contato",

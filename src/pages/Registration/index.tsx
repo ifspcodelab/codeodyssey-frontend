@@ -23,10 +23,16 @@ function Registration() {
     const {t} = useTranslation()
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
     const navigate = useNavigate()
-    const onSubmit = (data) => console.log(data)
+    const [isChecked, setIsChecked] = useState(false);
+    const onSubmit = (data) => {
+        if (!isChecked) {
+            alert(t('registration.alert'))
+            return
+        }
+        console.log(data)
+    }
 
     const handleLogin = () => {
-
         return navigate("/login")
     }
 
@@ -51,7 +57,7 @@ function Registration() {
                         <p>{errors.password?.message}</p>
                     </div>
                     <div className="checkbox">
-                        <input type="checkbox" id="terms"/>
+                        <input type="checkbox" id="terms" checked={isChecked} onChange={(e) => setIsChecked(e.target.checked)} />
                         <label htmlFor="terms">{t('registration.form.termscheckbox')}</label>
                     </div>
                     <div id="buttons">
