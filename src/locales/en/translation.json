@@ -11,34 +11,42 @@
       "password": "Password",
       "login": "Login",
       "submit": "Submit",
-      "termscheckbox": "I have read and agree with the Terms of Use and Privacy Policy"
+      "termscheckbox": "I have read and agree with the Terms of Use and Privacy Policy",
+      "validation": {
+        "password": {
+          "number": "Password must have at least one digit",
+          "lowercase": "Password must have at least one lowercase letter",
+          "uppercase": "Password must have at least one uppercase letter",
+          "special": "Password must have at least one special character"
+        }
+      }
     },
-    "footer": "Registration footer"
-  },
-  "contact": {
-    "title": "Contact",
-    "text": "Get in touch using the form below",
-    "form": {
-      "name": "Name",
-      "email": "Email",
-      "message": "Message",
-      "submit": "Send"
+      "footer": "Registration footer"
     },
-    "footer": "Footer text here"
-  },
-  "yup": {
-    "invalid_field_length": "This field must have at least ${min} characters",
-    "invalid_number_length": "This field should be bigger than ${min}.",
-    "mixed_invalid_field": "This field is invalid.",
-    "mixed_required_field": "This field is required.",
-    "mixed_not_type": "This field is invalid.",
-    "mixed_one_of": "This field doesn't match.",
-    "mixed_max": "This field should be smaller than ${max}.",
-    "mixed_min": "This field should be bigger than ${min}.",
-    "string_email": "This field needs to be a valid email.",
-    "string_max": "This field should be smaller than ${max}.",
-    "string_min": "This field should be bigger than ${min}.",
-    "number_max": "This field should be smaller than ${max}.",
-    "number_min": "This field should be bigger than ${min}."
+    "contact": {
+      "title": "Contact",
+      "text": "Get in touch using the form below",
+      "form": {
+        "name": "Name",
+        "email": "Email",
+        "message": "Message",
+        "submit": "Send"
+      },
+      "footer": "Footer text here"
+    },
+    "yup": {
+      "invalid_field_length": "This field must have at least ${min} characters",
+      "invalid_number_length": "This field should be bigger than ${min}.",
+      "mixed_invalid_field": "This field is invalid.",
+      "mixed_required_field": "This field is required.",
+      "mixed_not_type": "This field is invalid.",
+      "mixed_one_of": "This field doesn't match.",
+      "mixed_max": "This field should be smaller than ${max}.",
+      "mixed_min": "This field should be bigger than ${min}.",
+      "string_email": "This field needs to be a valid email.",
+      "string_max": "This field should be smaller than ${max}.",
+      "string_min": "This field should be bigger than ${min}.",
+      "number_max": "This field should be smaller than ${max}.",
+      "number_min": "This field should be bigger than ${min}."
+    }
   }
-}

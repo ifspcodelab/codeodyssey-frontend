@@ -13,6 +13,10 @@ form input {
     display: block;
 }
 
+.formInput p {
+    color: #FF0000;
+}
+
 .checkbox {
     display: flex;
     align-items: center;

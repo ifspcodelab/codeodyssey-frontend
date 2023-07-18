@@ -11,7 +11,15 @@
       "message": "Senha",
       "login": "Login",
       "submit": "Submeter",
-      "termscheckbox": "Eu li e concordo com os Termos de Uso e a Política de Privacidade"
+      "termscheckbox": "Eu li e concordo com os Termos de Uso e a Política de Privacidade",
+      "validation": {
+        "password": {
+          "number": "A senha deve ter pelo menos um digito",
+          "lowercase": "A senha deve ter pelo menos uma letra minúscula",
+          "uppercase": "A senha deve ter pelo menos uma letra maiúscula",
+          "special": "A senha deve ter pelo menos um caractere especial"
+        }
+      }
     },
     "footer": "Texto do footer do registro"
   },

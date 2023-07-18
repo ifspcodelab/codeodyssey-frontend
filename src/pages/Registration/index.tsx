@@ -7,20 +7,26 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup";
 import {useTranslation} from "react-i18next";
+import i18n from "../../locales/i18n";
 
 const schema = yup.object({
     name: yup.string().required().min(5).max(100),
-    email: yup.string().required().email(),
-    password: yup.string().min(8).max(64)
+    email: yup.string().required().email().max(350),
+    password: yup.string().required().min(8).max(64)
+        .matches(/\d+/, i18n.t('registration.form.validation.password.number'))
+        .matches(/[a-z]+/, i18n.t('registration.form.validation.password.lowercase'))
+        .matches(/[A-Z]+/, i18n.t('registration.form.validation.password.uppercase'))
+        .matches(/[\W_]+/, i18n.t('registration.form.validation.password.special'))
 }).required()
 
 function Registration() {
     const {t} = useTranslation()
-    const { register, handleSubmit, formState: { errors} } = useForm({ resolver: yupResolver(schema)})
+    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
     const navigate = useNavigate()
     const onSubmit = (data) => console.log(data)
 
     const handleLogin = () => {
+
         return navigate("/login")
     }
 
