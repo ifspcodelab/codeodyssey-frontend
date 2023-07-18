@@ -1,4 +1,8 @@
 {
+  "createcourse": {
+    "title": "Create Course",
+    "text": "Create a course by filling out the form below"
+  },
   "privacypolicy": {
     "title": "Política de Privacidade"
   },

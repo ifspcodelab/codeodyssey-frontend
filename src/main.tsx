@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import TermsOfUse from "./pages/TermsOfUse";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Contact from "./pages/Contact";
+import CreateCourse from "./pages/CreateCourse";
 import './locales/i18n.ts'
 
 const router = createBrowserRouter([
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
             {
                 path: "",
                 element: <Home/>
+            },
+            {
+                path: "create-course",
+                element: <CreateCourse/>
             },
             {
                 path: "terms-of-use",

@@ -1,4 +1,8 @@
-{
+{ 
+  "createcourse": {
+  "title": "Criar Curso",
+  "text": "Crie um curso preenchendo o formulário abaixo"
+},
   "privacypolicy": {
     "title": "Privacy Policy"
   },
