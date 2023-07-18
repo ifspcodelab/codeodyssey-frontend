@@ -1,7 +1,15 @@
 { 
   "createcourse": {
-  "title": "Criar Curso",
-  "text": "Crie um curso preenchendo o formulário abaixo"
+  "title": "Create Course",
+  "text": "Create a course by filling out the form below",
+  "form": {
+    "name": "Name",
+    "slug": "Slug",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "submit": "Create",
+    "cancel": "Cancel"
+  }
 },
   "privacypolicy": {
     "title": "Privacy Policy"
