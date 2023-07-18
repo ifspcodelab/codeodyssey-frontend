@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useTransition} from 'react';
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
-import './styles.css'
+import './style.css'
 import {useNavigate} from "react-router-dom"
 import { useForm } from "react-hook-form";
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup";
+import {useTranslation} from "react-i18next";
 
 const schema = yup.object({
     name: yup.string().required().min(5).max(100),
@@ -14,6 +15,7 @@ const schema = yup.object({
 }).required()
 
 function Registration() {
+    const {t} = useTranslation()
     const { register, handleSubmit, formState: { errors} } = useForm({ resolver: yupResolver(schema)})
     const navigate = useNavigate()
     const onSubmit = (data) => console.log(data)
@@ -25,33 +27,33 @@ function Registration() {
     return (
         <>
             <div className="formContainer">
-                <PageHeader title={"Registration"} text={"Form to register on the platform"}/>
+                <PageHeader title={t('registration.title')} text={t('registration.text')}/>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="formInput">
-                        <label htmlFor={"name"}>Name</label>
+                        <label htmlFor={"name"}>{t('registration.form.name')}</label>
                         <input type="text" name="name" {...register("name", { required: true })} />
                         <p>{errors.name?.message}</p>
                     </div>
                     <div className="formInput">
-                        <label htmlFor={"email"}>Email</label>
+                        <label htmlFor={"email"}>{t('registration.form.email')}</label>
                         <input type="text" name="email" {...register("email", { required: true })} />
                         <p>{errors.email?.message}</p>
                     </div>
                     <div className="formInput">
-                        <label htmlFor={"password"}>Password</label>
+                        <label htmlFor={"password"}>{t('registration.form.password')}</label>
                         <input type="password" name="password" {...register("password", { required: true })} />
                         <p>{errors.password?.message}</p>
                     </div>
-                    <div className={"checkbox"}>
+                    <div className="checkbox">
                         <input type="checkbox" id="terms"/>
-                        <label htmlFor="terms">I have read and accept the terms of use</label>
+                        <label htmlFor="terms">{t('registration.form.termscheckbox')}</label>
                     </div>
                     <div id="buttons">
-                        <button onClick={handleLogin}>Login</button>
-                        <button type="submit">Submit</button>
+                        <button onClick={handleLogin}>{t('registration.form.login')}</button>
+                        <button type="submit">{t('registration.form.submit')}</button>
                     </div>
                 </form>
-                <PageFooter id="footer" text={"Accept the terms to use the platform"}/>
+                <PageFooter id="footer" text={t('registration.footer')}/>
             </div>
         </>
     );

@@ -2,6 +2,19 @@
   "privacypolicy": {
     "title": "Política de Privacidade"
   },
+  "registration": {
+    "title": "Cadastro",
+    "text": "Por favor, preencha o formulário abaixo para usar a plataforma",
+    "form": {
+      "name": "Nome",
+      "email": "E-mail",
+      "message": "Senha",
+      "login": "Login",
+      "submit": "Submeter",
+      "termscheckbox": "Eu li e concordo com os Termos de Uso e a Política de Privacidade"
+    },
+    "footer": "Texto do footer do registro"
+  },
   "contact": {
     "title": "Entre em Contato",
     "text": "Utilize o formulário abaixo para entrar em contato conosco.",
