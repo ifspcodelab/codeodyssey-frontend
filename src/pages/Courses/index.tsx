@@ -13,7 +13,7 @@ function Courses() {
 
     const [courses, setCourses] = useState([])
 
-    const baseURL = "http://localhost:3000/courses";
+    const baseURL = "http://localhost:8080/api/v1/courses";
 
     React.useEffect(() => {
         axios.get(baseURL).then((response) => {
@@ -32,7 +32,7 @@ function Courses() {
                         {course.name}
                     </Typography>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                        {course.teacherName}    
+                        {course.professor.name}    
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {t("courses.intlDate", { date: new Date(course.startDate),
