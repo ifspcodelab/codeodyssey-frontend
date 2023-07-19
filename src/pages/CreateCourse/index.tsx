@@ -3,12 +3,10 @@ import {useTranslation} from "react-i18next";
 import {Button, Container, Grid, TextField} from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {schema} from "./schema.ts";
-import {SubmitHandler, useForm} from "react-hook-form";
+import {SubmitHandler, useForm, Controller} from "react-hook-form";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
 
 function CreateCourse() {
@@ -17,11 +15,11 @@ function CreateCourse() {
   interface CreateCourse {
     name: string;
     slug: string;
-    startDate: string;
-    endDate: string;
+    startDate: Date;
+    endDate: Date;
 }
 
-  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
+  const { register, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
 
   const onSubmit: SubmitHandler<CreateCourse> = (data) => console.log(data)
 
@@ -55,22 +53,27 @@ function CreateCourse() {
 
           <Grid item xs={12} textAlign="right" display="flex" alignItems="spaceBetween">
             <Grid item xs={4}>
-              <LocalizationProvider dateAdapter={AdapterDayjs} >
-                <DemoContainer components={['DatePicker']}>
-                  <DatePicker 
-                    label={t('createcourse.form.startDate')} 
-                    defaultValue={dayjs()}
-                    disablePast
-                    />   
-                </DemoContainer>
-              </LocalizationProvider>   
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Controller
+                name={"startDate"}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                    <DatePicker value={value ?? " "} onChange={onChange} disablePast />
+                )}
+              />
+            </LocalizationProvider>
             </Grid>
 
             <Grid >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={['DatePicker']}>
-                <DatePicker label={t('createcourse.form.endDate')} disablePast/>
-              </DemoContainer>
+            <Controller
+                name={"endDate"}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                    <DatePicker value={value ?? " "} onChange={onChange}  
+                    />
+                )}
+              />
             </LocalizationProvider>   
             </Grid>        
             
