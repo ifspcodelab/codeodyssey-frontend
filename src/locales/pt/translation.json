@@ -49,5 +49,9 @@
     "string_min": "Esse campo deve ser maior que ${min}.",
     "number_max": "Esse campo deve ser menor que ${max}.",
     "number_min": "Esse campo deve ser maior que ${min}."
+  },
+  "resendEmail":{
+    "title": "Reenviar o email",
+    "text": "Por favor veja sua caixa de emails. Caso não tenha recebido, clique em reenviar ou espere para refazer o cadastro"
   }
 }

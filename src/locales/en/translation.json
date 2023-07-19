@@ -49,5 +49,9 @@
     "string_min": "This field should be bigger than ${min}.",
     "number_max": "This field should be smaller than ${max}.",
     "number_min": "This field should be bigger than ${min}."
+  },
+  "resendEmail":{
+    "title": "Resend email",
+    "text": "Please check your email box. If you have not received it, click resend or wait to redo the registration"
   }
 }

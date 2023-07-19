@@ -8,6 +8,11 @@ import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup";
 import {useTranslation} from "react-i18next";
 import i18n from "../../locales/i18n";
+import axios from "axios";
+
+
+const baseURL = "http://localhost:8080/api/v1"
+
 
 const schema = yup.object({
     name: yup.string().required().min(5).max(100),
@@ -24,14 +29,26 @@ function Registration() {
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
     const navigate = useNavigate()
     const [isChecked, setIsChecked] = useState(false);
+
     const onSubmit = (data) => {
         if (!isChecked) {
             alert(t('registration.alert'))
             return
         }
-        console.log(data)
+
+        void createUser(data).then(() => navigate("/resend-email"))
     }
 
+    const createUser = async (data) => {
+        return await axios
+            .post(baseURL + '/users', {
+                name: data.name,
+                email: data.email,
+                password: data.password,
+                role: "PROFESSOR",
+            })
+    }
+    
     const handleLogin = () => {
         return navigate("/login")
     }

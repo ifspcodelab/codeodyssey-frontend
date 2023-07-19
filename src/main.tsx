@@ -10,6 +10,7 @@ import './locales/i18n.ts'
 import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import './index.css'
+import ResendEmail from "./pages/ResendEmail";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +24,14 @@ const router = createBrowserRouter([
             {
                 path: "registration",
                 element: <Registration/>
+            },
+            {
+                path: "resend-email",
+                element: <ResendEmail/>
+            },
+            {
+                path: "cadastro/verificacao/:token",
+                element: <ResendEmail/>
             },
             {
                 path: "login",
