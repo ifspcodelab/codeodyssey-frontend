@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import {schema} from "./schema.ts";
 import {SubmitHandler, useForm} from "react-hook-form";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -16,6 +17,8 @@ function CreateCourse() {
   interface CreateCourse {
     name: string;
     slug: string;
+    startDate: string;
+    endDate: string;
 }
 
   const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
@@ -54,7 +57,11 @@ function CreateCourse() {
             <Grid item xs={4}>
               <LocalizationProvider dateAdapter={AdapterDayjs} >
                 <DemoContainer components={['DatePicker']}>
-                  <DatePicker label={t('createcourse.form.startDate')} />   
+                  <DatePicker 
+                    label={t('createcourse.form.startDate')} 
+                    defaultValue={dayjs()}
+                    disablePast
+                    />   
                 </DemoContainer>
               </LocalizationProvider>   
             </Grid>
@@ -62,7 +69,7 @@ function CreateCourse() {
             <Grid >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
-                <DatePicker label={t('createcourse.form.endDate')} />
+                <DatePicker label={t('createcourse.form.endDate')} disablePast/>
               </DemoContainer>
             </LocalizationProvider>   
             </Grid>        
@@ -70,8 +77,8 @@ function CreateCourse() {
           </Grid>
 
           <Grid item xs={12} textAlign="right">
-            <Button variant="outlined" type="submit">{t('createcourse.form.cancel')}</Button>
-            <Button variant="outlined" color="error">{t('createcourse.form.submit')}</Button>
+            <Button variant="outlined" color="error">{t('createcourse.form.cancel')}</Button>
+            <Button variant="outlined" type="submit">{t('createcourse.form.submit')}</Button>
            </Grid>
         </Grid>
        </form>
