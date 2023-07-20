@@ -7,22 +7,37 @@ import {SubmitHandler, useForm, Controller} from "react-hook-form";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import axios from "axios";
 
 
 function CreateCourse() {
   const {t} = useTranslation();
 
-  interface CreateCourse {
-    name: string;
-    slug: string;
-    startDate: Date;
-    endDate: Date;
-}
+type CreateCourse = {
+  name: string;
+  slug: string;
+  startDate: Date;
+  endDate: Date;
+};
+
+const onSubmit: SubmitHandler<CreateCourse> = (data) => createCourse(data)
+
 
   const { register, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
 
-  const onSubmit: SubmitHandler<CreateCourse> = (data) => console.log(data)
+  const baseURL = "http://localhost:3000"
 
+  const createCourse = async (data) => {
+    await axios
+        .post(baseURL + '/courses', {
+          slug: data.slug,
+          name: data.name,
+          startDate: data.startDate,
+          endDate: data.endDate,
+        })
+
+        console.log(data)
+}
 
   return (
     <Container maxWidth="md">
@@ -86,8 +101,6 @@ function CreateCourse() {
         </Grid>
        </form>
     </Container>
-
-
   )
 
 }
