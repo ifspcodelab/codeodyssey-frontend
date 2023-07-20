@@ -25,18 +25,17 @@ const onSubmit: SubmitHandler<CreateCourse> = (data) => createCourse(data)
 
   const { register, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
 
-  const baseURL = "http://localhost:3000"
+  const baseURL = "http://localhost:8080/api/v1"
 
   const createCourse = async (data) => {
     await axios
         .post(baseURL + '/courses', {
-          slug: data.slug,
           name: data.name,
-          startDate: data.startDate,
-          endDate: data.endDate,
+          slug: data.slug,
+          startDate: data.startDate.toISOString(),
+          endDate: data.endDate.toISOString(),
+          professorId: "e549c674-e8a6-4134-9655-aa98d66d596b"
         })
-
-        console.log(data)
 }
 
   return (
