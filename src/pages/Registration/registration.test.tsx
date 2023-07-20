@@ -35,50 +35,13 @@ describe("Registration", () => {
         await expect(schema.validateAt('name', {name: "valid name"})).resolves.toBeTruthy()
     })
 
-    // test("should validate form fields", async () => {
-    //     const {getByLabelText, getByText } = render(
-    //         <BrowserRouter>
-    //             <Registration/>
-    //         </BrowserRouter>
-    //     );
-    //
-    //     const nameInput = getByLabelText('Name')
-    //     const submitButton = getByText("Submit")
-    //
-    //     fireEvent.click(submitButton)
-    //
-    //     await expect(getByText("This field is required.")).toBeInTheDocument()
+    test("Should be able to send registration request", () => {
+        const { getByTestId } = render(
+            <BrowserRouter>
+                <Registration/>
+            </BrowserRouter>
+        );
 
-        // fireEvent.change(nameInput, {target: {value: "nam"}})
-
-        // fireEvent.click(submitButton)
-
-        // expect(getByText('This field should be bigger than 5.')).toBeInTheDocument();
-    // })
-
-    // test("Should be able to send registration request", () => {
-    //     const { getByTestId } = render(
-    //         <BrowserRouter>
-    //             <Registration/>
-    //         </BrowserRouter>
-    //     );
-    //
-    //     fireEvent.click(screen.getByTestId(submitButtonId));
-    // })
-
-    // test("Should show error message if the checkbox is not checked", () => {
-    //     const { getByLabelText, getByTestId, getByText } = render(
-    //         <BrowserRouter>
-    //             <Registration/>
-    //         </BrowserRouter>
-    //     );
-    //
-    //     const termsCheckBox = getByLabelText("I have read and agree with the Terms of Use and Privacy Policy")
-    //     const submitButton = getByTestId(submitButtonId)
-    //
-    //     fireEvent.click(termsCheckBox);
-    //     fireEvent.click(submitButton);
-    //
-    //     expect(getByText("You must agree with the terms and privacy policy")).toBeInTheDocument();
-    // })
+        fireEvent.click(getByTestId(submitButtonId));
+    })
 });
