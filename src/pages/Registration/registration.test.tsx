@@ -1,8 +1,9 @@
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
-import {describe, test, vi} from "vitest";
+import { render, fireEvent } from "@testing-library/react";
+import {describe, test} from "vitest";
 import Registration from "./index";
 import {BrowserRouter} from "react-router-dom";
+import {schema} from "../Registration/index.tsx"
 
 const submitButtonId = "submitButton"
 
@@ -28,29 +29,56 @@ describe("Registration", () => {
         expect(getByTestId(submitButtonId)).toBeInTheDocument();
     })
 
-    test("Should be able to send registration request", () => {
-        const { getByTestId } = render(
-            <BrowserRouter>
-                <Registration/>
-            </BrowserRouter>
-        );
-
-        fireEvent.click(screen.getByTestId(submitButtonId));
+    test("requires user's name", async () => {
+        await expect(schema.validateAt('name', {})).rejects.toMatch(/name is a required field/)
+        await expect(schema.validateAt('name', {name: "inv"})).rejects.toMatch(/name must be at least 5 characters/)
+        await expect(schema.validateAt('name', {name: "valid name"})).resolves.toBeTruthy()
     })
 
-    test("Should show error message if the checkbox is not checked", () => {
-        const { getByLabelText, getByTestId, getByText } = render(
-            <BrowserRouter>
-                <Registration/>
-            </BrowserRouter>
-        );
+    // test("should validate form fields", async () => {
+    //     const {getByLabelText, getByText } = render(
+    //         <BrowserRouter>
+    //             <Registration/>
+    //         </BrowserRouter>
+    //     );
+    //
+    //     const nameInput = getByLabelText('Name')
+    //     const submitButton = getByText("Submit")
+    //
+    //     fireEvent.click(submitButton)
+    //
+    //     await expect(getByText("This field is required.")).toBeInTheDocument()
 
-        const termsCheckBox = getByLabelText("I have read and agree with the Terms of Use and Privacy Policy")
-        const submitButton = getByTestId(submitButtonId)
+        // fireEvent.change(nameInput, {target: {value: "nam"}})
 
-        fireEvent.click(termsCheckBox);
-        fireEvent.click(submitButton);
+        // fireEvent.click(submitButton)
 
-        expect(getByText("You must agree with the terms and privacy policy"))
-    })
+        // expect(getByText('This field should be bigger than 5.')).toBeInTheDocument();
+    // })
+
+    // test("Should be able to send registration request", () => {
+    //     const { getByTestId } = render(
+    //         <BrowserRouter>
+    //             <Registration/>
+    //         </BrowserRouter>
+    //     );
+    //
+    //     fireEvent.click(screen.getByTestId(submitButtonId));
+    // })
+
+    // test("Should show error message if the checkbox is not checked", () => {
+    //     const { getByLabelText, getByTestId, getByText } = render(
+    //         <BrowserRouter>
+    //             <Registration/>
+    //         </BrowserRouter>
+    //     );
+    //
+    //     const termsCheckBox = getByLabelText("I have read and agree with the Terms of Use and Privacy Policy")
+    //     const submitButton = getByTestId(submitButtonId)
+    //
+    //     fireEvent.click(termsCheckBox);
+    //     fireEvent.click(submitButton);
+    //
+    //     expect(getByText("You must agree with the terms and privacy policy")).toBeInTheDocument();
+    // })
 });

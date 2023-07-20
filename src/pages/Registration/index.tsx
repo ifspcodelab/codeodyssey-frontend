@@ -14,7 +14,7 @@ import axios from "axios";
 const baseURL = "http://localhost:8080/api/v1"
 
 
-const schema = yup.object({
+export const schema = yup.object({
     name: yup.string().required().min(5).max(100),
     email: yup.string().required().email().max(350),
     password: yup.string().required().min(8).max(64)
@@ -54,8 +54,8 @@ function Registration() {
                 <PageHeader title={t('registration.title')} text={t('registration.text')}/>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="formInput">
-                        <label htmlFor={"name"}>{t('registration.form.name')}</label>
-                        <input type="text" name="name" {...register("name", { required: true })} />
+                        <label id="name" htmlFor={"name"}>{t('registration.form.name')}</label>
+                        <input aria-labelledby="name" type="text" name="name" {...register("name", { required: true })} />
                         <p>{errors.name?.message}</p>
                     </div>
                     <div className="formInput">
