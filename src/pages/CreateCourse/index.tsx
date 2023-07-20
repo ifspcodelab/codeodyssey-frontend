@@ -51,6 +51,7 @@ const onSubmit: SubmitHandler<CreateCourse> = (data) => createCourse(data)
               variant="outlined"
               error={!!errors.name}
               helperText={errors.name && <span>{errors.name.message}</span> }
+              data-testid="nameField"
             />
           </Grid>
 
@@ -62,6 +63,7 @@ const onSubmit: SubmitHandler<CreateCourse> = (data) => createCourse(data)
               variant="outlined"
               error={!!errors.slug}
               helperText={errors.slug && <span>{errors.slug.message}</span> }
+              data-testid="slugField"
             />
           </Grid>
 
@@ -72,7 +74,7 @@ const onSubmit: SubmitHandler<CreateCourse> = (data) => createCourse(data)
                 name={"startDate"}
                 control={control}
                 render={({ field: { onChange, value } }) => (
-                    <DatePicker value={value ?? " "} onChange={onChange} disablePast />
+                <DatePicker label="Start Date" value={value ?? " "} onChange={onChange} disablePast />
                 )}
               />
             </LocalizationProvider>
@@ -84,7 +86,7 @@ const onSubmit: SubmitHandler<CreateCourse> = (data) => createCourse(data)
                 name={"endDate"}
                 control={control}
                 render={({ field: { onChange, value } }) => (
-                    <DatePicker value={value ?? " "} onChange={onChange}  
+                    <DatePicker label="End Date" data-testid="endDateField" value={value ?? " "} onChange={onChange}  
                     />
                 )}
               />
@@ -94,8 +96,8 @@ const onSubmit: SubmitHandler<CreateCourse> = (data) => createCourse(data)
           </Grid>
 
           <Grid item xs={12} textAlign="right">
-            <Button variant="outlined" color="error">{t('createcourse.form.cancel')}</Button>
-            <Button variant="outlined" type="submit">{t('createcourse.form.submit')}</Button>
+            <Button data-testid="cancelButton" variant="outlined" color="error">{t('createcourse.form.cancel')}</Button>
+            <Button data-testid="submitButton" variant="outlined" type="submit">{t('createcourse.form.submit')}</Button>
            </Grid>
         </Grid>
        </form>
