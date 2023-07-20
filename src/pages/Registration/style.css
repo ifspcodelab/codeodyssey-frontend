@@ -18,7 +18,7 @@ form input {
 }
 
 .checkbox {
-    display: flex;
+    display: block;
     align-items: center;
     margin: 10px auto;
     width: 100%;
@@ -28,6 +28,10 @@ form input {
     margin-right: 10px;
     width: 15px;
     aspect-ratio: 1;
+}
+
+.checkbox p {
+    color: #FF0000;
 }
 
 #buttons {

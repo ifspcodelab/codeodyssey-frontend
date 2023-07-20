@@ -11,8 +11,9 @@
       "password": "Password",
       "login": "Login",
       "submit": "Submit",
-      "termscheckbox": "I have read and agree with the Terms of Use and Privacy Policy",
+      "termsCheckbox": "I have read and agree with the Terms of Use and Privacy Policy",
       "validation": {
+        "termsCheckbox": "You must agree with the terms and privacy policy",
         "password": {
           "number": "Password must have at least one digit",
           "lowercase": "Password must have at least one lowercase letter",
@@ -21,8 +22,7 @@
         }
       }
     },
-    "footer": "Registration footer",
-    "alert": "You must agree with the terms and privacy policy"
+    "footer": "Registration footer"
   },
   "contact": {
     "title": "Contact",

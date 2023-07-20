@@ -21,7 +21,8 @@ const schema = yup.object({
         .matches(/\d+/, i18n.t('registration.form.validation.password.number'))
         .matches(/[a-z]+/, i18n.t('registration.form.validation.password.lowercase'))
         .matches(/[A-Z]+/, i18n.t('registration.form.validation.password.uppercase'))
-        .matches(/[\W_]+/, i18n.t('registration.form.validation.password.special'))
+        .matches(/[\W_]+/, i18n.t('registration.form.validation.password.special')),
+    terms: yup.boolean().oneOf([true], i18n.t('registration.form.validation.termsCheckbox'))
 }).required()
 
 function Registration() {
@@ -31,12 +32,7 @@ function Registration() {
     const [isChecked, setIsChecked] = useState(false);
 
     const onSubmit = (data) => {
-        if (!isChecked) {
-            alert(t('registration.alert'))
-            return
-        }
-
-        void createUser(data).then(() => navigate("/resend-email"))
+        // void createUser(data).then(() => navigate("/resend-email"))
     }
 
     const createUser = async (data) => {
@@ -73,12 +69,14 @@ function Registration() {
                         <p>{errors.password?.message}</p>
                     </div>
                     <div className="checkbox">
-                        <input type="checkbox" id="terms" checked={isChecked} onChange={(e) => setIsChecked(e.target.checked)} />
-                        <label htmlFor="terms">{t('registration.form.termscheckbox')}</label>
+                        <input type="checkbox" data-testid="termsCheckBox" name="terms" id="terms" checked={isChecked}
+                                {...register("terms", { onChange:(e) => setIsChecked(e.target.checked) })} />
+                        <label htmlFor="terms">{t('registration.form.termsCheckbox')}</label>
+                        <p>{errors.terms?.message}</p>
                     </div>
                     <div id="buttons">
                         <button onClick={handleLogin}>{t('registration.form.login')}</button>
-                        <button type="submit">{t('registration.form.submit')}</button>
+                        <button data-testid="submitButton" type="submit">{t('registration.form.submit')}</button>
                     </div>
                 </form>
                 <PageFooter id="footer" text={t('registration.footer')}/>

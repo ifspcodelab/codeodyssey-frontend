@@ -11,8 +11,9 @@
       "message": "Senha",
       "login": "Login",
       "submit": "Submeter",
-      "termscheckbox": "Eu li e concordo com os Termos de Uso e a Política de Privacidade",
+      "termsCheckbox": "Eu li e concordo com os Termos de Uso e a Política de Privacidade",
       "validation": {
+        "termsCheckbox": "Você deve aceitar os termos e a política de privacidade",
         "password": {
           "number": "A senha deve ter pelo menos um digito",
           "lowercase": "A senha deve ter pelo menos uma letra minúscula",
@@ -21,8 +22,7 @@
         }
       }
     },
-    "footer": "Texto do footer do registro",
-    "alert": "Você deve aceitar os termos e a política de privacidade"
+    "footer": "Texto do footer do registro"
   },
   "contact": {
     "title": "Entre em Contato",
