@@ -69,4 +69,20 @@ describe("Registration", () => {
 
         expect(result).toMatchSnapshot();
     })
+
+    test("Should send to login page after clicking the login button", async () => {
+        const { getByText, getByTestId } = render(
+            <BrowserRouter>
+                <Registration />
+            </BrowserRouter>
+        );
+
+        const loginButton = getByTestId("loginButton")
+
+        fireEvent.click(loginButton)
+
+        const result = await vitest.fn();
+
+        expect(result).toMatchSnapshot("Login Page");
+    })
 });

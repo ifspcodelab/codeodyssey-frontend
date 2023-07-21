@@ -75,7 +75,7 @@ function Registration() {
                         <p>{errors.terms?.message}</p>
                     </div>
                     <div id="buttons">
-                        <button onClick={handleLogin}>{t('registration.form.login')}</button>
+                        <button data-testid="loginButton" onClick={handleLogin}>{t('registration.form.login')}</button>
                         <button data-testid="submitButton" type="submit">{t('registration.form.submit')}</button>
                     </div>
                 </form>
