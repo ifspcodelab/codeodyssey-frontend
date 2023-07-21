@@ -5,7 +5,6 @@ import Registration from "./index";
 import {BrowserRouter} from "react-router-dom";
 import {schema} from "../Registration/index.tsx"
 
-const submitButtonId = "submitButton"
 
 describe("Registration", () => {
 
@@ -32,6 +31,16 @@ describe("Registration", () => {
         expect(getByLabelText('I have read and agree with the Terms of Use and Privacy Policy')).toBeInTheDocument();
     })
 
+    test("Should be able to see the login button text", () => {
+        const { getByTestId } = render(
+            <BrowserRouter>
+                <Registration/>
+            </BrowserRouter>
+        );
+
+        expect(getByTestId("loginButton")).toBeInTheDocument();
+    })
+
     test("Should be able to see the submit button text", () => {
         const { getByTestId } = render(
             <BrowserRouter>
@@ -39,7 +48,7 @@ describe("Registration", () => {
             </BrowserRouter>
         );
 
-        expect(getByTestId(submitButtonId)).toBeInTheDocument();
+        expect(getByTestId("submitButton")).toBeInTheDocument();
     })
 
     test("requires user's name", async () => {
@@ -55,7 +64,7 @@ describe("Registration", () => {
             </BrowserRouter>
         );
 
-        fireEvent.click(getByTestId(submitButtonId));
+        fireEvent.click(getByTestId("submitButton"));
     })
 
     test("Should send request with data after form submission", async () => {
