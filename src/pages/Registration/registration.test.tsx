@@ -19,6 +19,19 @@ describe("Registration", () => {
        expect(getByText("Registration")).toBeInTheDocument();
    })
 
+    test("Should be able to see all the form fields", () => {
+        const { getByLabelText, getByText } = render(
+            <BrowserRouter>
+                <Registration/>
+            </BrowserRouter>
+        );
+
+        expect(getByText("Name")).toBeInTheDocument();
+        expect(getByText("Email")).toBeInTheDocument();
+        expect(getByText("Password")).toBeInTheDocument();
+        expect(getByLabelText('I have read and agree with the Terms of Use and Privacy Policy')).toBeInTheDocument();
+    })
+
     test("Should be able to see the submit button text", () => {
         const { getByTestId } = render(
             <BrowserRouter>
