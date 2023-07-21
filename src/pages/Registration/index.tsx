@@ -32,7 +32,7 @@ function Registration() {
     const [isChecked, setIsChecked] = useState(false);
 
     const onSubmit = (data) => {
-        // void createUser(data).then(() => navigate("/resend-email"))
+        void createUser(data).then(() => navigate("/resend-email"))
     }
 
     const createUser = async (data) => {
@@ -59,19 +59,19 @@ function Registration() {
                         <p>{errors.name?.message}</p>
                     </div>
                     <div className="formInput">
-                        <label htmlFor={"email"}>{t('registration.form.email')}</label>
-                        <input type="text" name="email" {...register("email", { required: true })} />
+                        <label id="email" htmlFor={"email"}>{t('registration.form.email')}</label>
+                        <input aria-labelledby="email" type="text" name="email" {...register("email", { required: true })} />
                         <p>{errors.email?.message}</p>
                     </div>
                     <div className="formInput">
-                        <label htmlFor={"password"}>{t('registration.form.password')}</label>
-                        <input type="password" name="password" {...register("password", { required: true })} />
+                        <label id="password" htmlFor={"password"}>{t('registration.form.password')}</label>
+                        <input aria-labelledby="password" type="password" name="password" {...register("password", { required: true })} />
                         <p>{errors.password?.message}</p>
                     </div>
                     <div className="checkbox">
-                        <input type="checkbox" data-testid="termsCheckBox" name="terms" id="terms" checked={isChecked}
+                        <input aria-labelledby="terms" type="checkbox" name="terms" checked={isChecked}
                                 {...register("terms", { onChange:(e) => setIsChecked(e.target.checked) })} />
-                        <label htmlFor="terms">{t('registration.form.termsCheckbox')}</label>
+                        <label id="terms" htmlFor="terms">{t('registration.form.termsCheckbox')}</label>
                         <p>{errors.terms?.message}</p>
                     </div>
                     <div id="buttons">

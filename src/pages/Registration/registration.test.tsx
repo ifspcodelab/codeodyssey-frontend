@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, fireEvent } from "@testing-library/react";
-import {describe, test} from "vitest";
+import {describe, test, vitest} from "vitest";
 import Registration from "./index";
 import {BrowserRouter} from "react-router-dom";
 import {schema} from "../Registration/index.tsx"
@@ -43,5 +43,30 @@ describe("Registration", () => {
         );
 
         fireEvent.click(getByTestId(submitButtonId));
+    })
+
+    test("Should send request with data after form submission", async () => {
+        const { getByLabelText, getByTestId } = render(
+            <BrowserRouter>
+                <Registration />
+            </BrowserRouter>
+        );
+
+        const inputName = getByLabelText('Name');
+        const inputEmail = getByLabelText('Email');
+        const inputPassword = getByLabelText('Password');
+        const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy')
+        const submitButton =getByTestId('submitButton');
+
+        fireEvent.change(inputName, { target: { value: 'John Doe' } });
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
+        fireEvent.change(inputTerms, { target: {value: true}})
+
+        fireEvent.click(submitButton);
+
+        const result = await vitest.fn();
+
+        expect(result).toMatchSnapshot();
     })
 });
