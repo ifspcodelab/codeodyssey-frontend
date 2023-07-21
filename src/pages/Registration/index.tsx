@@ -1,4 +1,4 @@
-import React, {useState, useTransition} from 'react';
+import {useState} from 'react';
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
 import './style.css'
@@ -10,9 +10,7 @@ import {useTranslation} from "react-i18next";
 import i18n from "../../locales/i18n";
 import axios from "axios";
 
-
-const baseURL = "http://localhost:8080/api/v1"
-
+const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 export const schema = yup.object({
     name: yup.string().required().min(5).max(100),
@@ -31,13 +29,19 @@ function Registration() {
     const navigate = useNavigate()
     const [isChecked, setIsChecked] = useState(false);
 
-    const onSubmit = (data) => {
+    interface UserRequest {
+        name: string,
+        email: string,
+        password: string,
+    }
+
+    const onSubmit = (data: UserRequest) => {
         void createUser(data).then(() => navigate("/resend-email"))
     }
 
-    const createUser = async (data) => {
+    const createUser = async (data: UserRequest) => {
         return await axios
-            .post(baseURL + '/users', {
+            .post(BASE_URL + '/users', {
                 name: data.name,
                 email: data.email,
                 password: data.password,
@@ -55,21 +59,21 @@ function Registration() {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="formInput">
                         <label id="name" htmlFor={"name"}>{t('registration.form.name')}</label>
-                        <input aria-labelledby="name" type="text" name="name" {...register("name", { required: true })} />
+                        <input aria-labelledby="name" type="text" {...register("name", { required: true })} />
                         <p>{errors.name?.message}</p>
                     </div>
                     <div className="formInput">
                         <label id="email" htmlFor={"email"}>{t('registration.form.email')}</label>
-                        <input aria-labelledby="email" type="text" name="email" {...register("email", { required: true })} />
+                        <input aria-labelledby="email" type="text" {...register("email", { required: true })} />
                         <p>{errors.email?.message}</p>
                     </div>
                     <div className="formInput">
                         <label id="password" htmlFor={"password"}>{t('registration.form.password')}</label>
-                        <input aria-labelledby="password" type="password" name="password" {...register("password", { required: true })} />
+                        <input aria-labelledby="password" type="password" {...register("password", { required: true })} />
                         <p>{errors.password?.message}</p>
                     </div>
                     <div className="checkbox">
-                        <input aria-labelledby="terms" type="checkbox" name="terms" checked={isChecked}
+                        <input aria-labelledby="terms" type="checkbox" checked={isChecked}
                                 {...register("terms", { onChange:(e) => setIsChecked(e.target.checked) })} />
                         <label id="terms" htmlFor="terms">{t('registration.form.termsCheckbox')}</label>
                         <p>{errors.terms?.message}</p>
@@ -79,7 +83,7 @@ function Registration() {
                         <button data-testid="submitButton" type="submit">{t('registration.form.submit')}</button>
                     </div>
                 </form>
-                <PageFooter id="footer" text={t('registration.footer')}/>
+                <PageFooter text={t('registration.footer')}/>
             </div>
         </>
     );

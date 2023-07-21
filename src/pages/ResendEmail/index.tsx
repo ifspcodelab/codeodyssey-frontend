@@ -1,4 +1,3 @@
-import React from 'react';
 import PageHeader from "../../components/PageHeader";
 import {useTranslation} from "react-i18next";
 

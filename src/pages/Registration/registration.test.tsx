@@ -93,7 +93,7 @@ describe("Registration", () => {
     })
 
     test("Should send to login page after clicking the login button", async () => {
-        const { getByText, getByTestId } = render(
+        const { getByTestId } = render(
             <BrowserRouter>
                 <Registration />
             </BrowserRouter>

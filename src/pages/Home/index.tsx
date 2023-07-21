@@ -11,7 +11,7 @@ function Home() {
                 <Link to={"/registration"}>Registration</Link>
                 <Link to={"/login"}>Login</Link>
             </nav>
-            <PageFooter/>
+            <PageFooter text={"Home Footer"}/>
         </>
     );
 }
