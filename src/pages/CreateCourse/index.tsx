@@ -13,29 +13,53 @@ import axios from "axios";
 function CreateCourse() {
   const {t} = useTranslation();
 
-type CreateCourse = {
+type UserResponse = {
+  name: string;
+  email: string;
+  role: string;
+};
+
+type CourseResponse = {
   name: string;
   slug: string;
   startDate: Date;
   endDate: Date;
+  // professor: UserResponse;
 };
 
-const onSubmit: SubmitHandler<CreateCourse> = (data) => createCourse(data)
+
+const onSubmit: SubmitHandler<CourseResponse> = (data) => createCourse(data)
 
 
   const { register, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
 
-  const baseURL = "http://localhost:8080/api/v1"
 
-  const createCourse = async (data) => {
-    await axios
-        .post(baseURL + '/courses', {
-          name: data.name,
-          slug: data.slug,
-          startDate: data.startDate.toISOString(),
-          endDate: data.endDate.toISOString(),
-          professorId: "e549c674-e8a6-4134-9655-aa98d66d596b"
-        })
+  const baseURL = "http://localhost:8080/api/v1/users/"
+  const professorId = "8544a9bc-6aa7-4e40-9f7f-88e0eb0e35c1"
+
+async function createCourse(data: CourseResponse) {
+  try {
+      await axios.post<CourseResponse>(
+        baseURL + professorId + "/courses",
+          { name: data.name, slug: data.slug, startDate: data.startDate.toISOString(),  endDate: data.endDate.toISOString() },
+          {
+              headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+              },
+          },
+      );
+      console.log(data)
+  }
+  catch(error) {
+      if (axios.isAxiosError(error)) {
+          // handleError(error)
+      console.log(error)
+      } else {
+          console.log('unexpected error: ', error);
+          return 'An unexpected error ocurred';
+      }
+  }
 }
 
   return (
