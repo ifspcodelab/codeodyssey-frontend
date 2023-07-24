@@ -10,6 +10,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import axios from "axios";
 import dayjs from 'dayjs';
 import {useNavigate} from "react-router-dom"
+import i18n from "../../locales/i18n";
+
 
 function CreateCourse() {
   const {t} = useTranslation();
@@ -50,12 +52,19 @@ async function createCourse(data: CourseResponse) {
   }
   catch(error) {
       if (axios.isAxiosError(error)) {
-          // handleError(error)
-      console.log(error)
+        handleError(error)
       } else {
           console.log('unexpected error: ', error);
           return 'An unexpected error ocurred';
       }
+  }
+}
+
+const handleError = (error) => {
+  let responseStatus: number
+  responseStatus = error.response.data.status
+  if (responseStatus == 400) {
+      alert(i18n.t("registration.exception.badRequest"))
   }
 }
 
