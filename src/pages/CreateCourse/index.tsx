@@ -8,10 +8,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import axios from "axios";
-import { DateValidationError } from '@mui/x-date-pickers/models';
-import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import { ErrorSharp } from "@mui/icons-material";
+import dayjs from 'dayjs';
+import {useNavigate} from "react-router-dom"
 
 function CreateCourse() {
   const {t} = useTranslation();
@@ -32,9 +30,8 @@ type CourseResponse = {
 
 
 const onSubmit: SubmitHandler<CourseResponse> = (data) => createCourse(data)
-  const { register, handleSubmit, watch, control, formState: { errors }, getValues } = useForm({ resolver: yupResolver(schema)})
-
-  
+  const { register, handleSubmit, watch, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
+  const navigate = useNavigate()
   const professorId = "8544a9bc-6aa7-4e40-9f7f-88e0eb0e35c1"
   const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 async function createCourse(data: CourseResponse) {
@@ -49,7 +46,7 @@ async function createCourse(data: CourseResponse) {
               },
           },
       );
-      console.log(data)
+      navigate('/courses')
   }
   catch(error) {
       if (axios.isAxiosError(error)) {
