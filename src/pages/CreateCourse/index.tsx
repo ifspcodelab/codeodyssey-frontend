@@ -33,14 +33,13 @@ const onSubmit: SubmitHandler<CourseResponse> = (data) => createCourse(data)
 
   const { register, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
 
-
-  const baseURL = "http://localhost:8080/api/v1/users/"
   const professorId = "8544a9bc-6aa7-4e40-9f7f-88e0eb0e35c1"
+  const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
 async function createCourse(data: CourseResponse) {
   try {
       await axios.post<CourseResponse>(
-        baseURL + professorId + "/courses",
+        BASE_URL + "/users/" + professorId + "/courses",
           { name: data.name, slug: data.slug, startDate: data.startDate.toISOString(),  endDate: data.endDate.toISOString() },
           {
               headers: {
