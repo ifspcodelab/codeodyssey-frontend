@@ -30,7 +30,7 @@
   },
   "resendEmail":{
     "title": "Reenviar o email",
-    "text": "O sistema mandou um email de confirmação para XX. Verifique seu email."
+    "text": "O sistema mandou um email de confirmação para {{email}}. Verifique seu email."
   },
   "contact": {
     "title": "Entre em Contato",

@@ -30,7 +30,7 @@
   },
   "resendEmail":{
     "title": "Resend email",
-    "text": "The system has sent a confirmation email to xx. Check your email."
+    "text": "The system has sent a confirmation email to {{email}}. Check your email."
   },
   "contact": {
     "title": "Contact",

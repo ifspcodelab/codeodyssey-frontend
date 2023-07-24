@@ -45,7 +45,7 @@ function Registration() {
                     },
                 },
             );
-            navigate('/resend-email')
+            navigate('/resend-email', { state: { data: data.email }})
         }
         catch(error) {
             if (axios.isAxiosError(error)) {
