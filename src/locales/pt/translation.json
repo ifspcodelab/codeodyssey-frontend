@@ -8,7 +8,7 @@
     "form": {
       "name": "Nome",
       "email": "E-mail",
-      "message": "Senha",
+      "password": "Senha",
       "login": "Login",
       "submit": "Submeter",
       "termsCheckbox": "Eu li e concordo com os Termos de Uso e a Política de Privacidade",
@@ -22,7 +22,11 @@
         }
       }
     },
-    "footer": "Texto do footer do registro"
+    "footer": "Texto do footer do registro",
+    "exception": {
+      "email": "Houve um problema com o email usado",
+      "badRequest": "Requisição mal formada"
+    }
   },
   "contact": {
     "title": "Entre em Contato",
@@ -52,6 +56,6 @@
   },
   "resendEmail":{
     "title": "Reenviar o email",
-    "text": "Por favor veja sua caixa de emails. Caso não tenha recebido, clique em reenviar ou espere para refazer o cadastro"
+    "text": "O sistema mandou um email de confirmação para XX. Verifique seu email."
   }
 }

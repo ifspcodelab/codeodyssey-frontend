@@ -22,7 +22,11 @@
         }
       }
     },
-    "footer": "Registration footer"
+    "footer": "Registration footer",
+    "exception": {
+      "email": "There was a problem with the email used",
+      "badRequest": "Bad request"
+    }
   },
   "contact": {
     "title": "Contact",
@@ -52,6 +56,6 @@
   },
   "resendEmail":{
     "title": "Resend email",
-    "text": "Please check your email box. If you have not received it, click resend or wait to redo the registration"
+    "text": "The system has sent a confirmation email to xx. Check your email."
   }
 }

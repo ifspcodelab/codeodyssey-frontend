@@ -17,6 +17,10 @@ form input {
     color: #FF0000;
 }
 
+.formInput input {
+    padding-left: 4px;
+}
+
 .checkbox {
     display: block;
     align-items: center;
@@ -32,6 +36,11 @@ form input {
 
 .checkbox p {
     color: #FF0000;
+}
+
+#terms {
+    position: relative;
+    top: -2px;
 }
 
 #buttons {
