@@ -8,7 +8,10 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import axios from "axios";
-
+import { DateValidationError } from '@mui/x-date-pickers/models';
+import * as React from 'react';
+import dayjs, { Dayjs } from 'dayjs';
+import { ErrorSharp } from "@mui/icons-material";
 
 function CreateCourse() {
   const {t} = useTranslation();
@@ -29,13 +32,11 @@ type CourseResponse = {
 
 
 const onSubmit: SubmitHandler<CourseResponse> = (data) => createCourse(data)
+  const { register, handleSubmit, watch, control, formState: { errors }, getValues } = useForm({ resolver: yupResolver(schema)})
 
-
-  const { register, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
-
+  
   const professorId = "8544a9bc-6aa7-4e40-9f7f-88e0eb0e35c1"
   const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
-
 async function createCourse(data: CourseResponse) {
   try {
       await axios.post<CourseResponse>(
@@ -96,8 +97,15 @@ async function createCourse(data: CourseResponse) {
               <Controller
                 name={"startDate"}
                 control={control}
+                defaultValue={dayjs(new Date())}
+
                 render={({ field: { onChange, value } }) => (
-                <DatePicker label="Start Date" value={value ?? " "} onChange={onChange} disablePast />
+                <DatePicker label="Start Date" disablePast  value={value ?? " "} onChange={onChange} 
+                slotProps={{
+                  textField: {
+                    helperText: errors.startDate && <span>{errors.startDate.message}</span> 
+                  },
+                }}/>
                 )}
               />
             </LocalizationProvider>
@@ -108,8 +116,14 @@ async function createCourse(data: CourseResponse) {
             <Controller
                 name={"endDate"}
                 control={control}
+                defaultValue={null}
                 render={({ field: { onChange, value } }) => (
-                    <DatePicker label="End Date" data-testid="endDateField" value={value ?? " "} onChange={onChange}  
+                    <DatePicker label="End Date" data-testid="endDateField" value={value || null} onChange={onChange} minDate={watch().startDate}
+                     slotProps={{
+                      textField: {
+                        helperText: errors.endDate && <span>{errors.endDate.message}</span> 
+                      },
+                    }} 
                     />
                 )}
               />
