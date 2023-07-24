@@ -28,6 +28,10 @@
       "badRequest": "Bad request"
     }
   },
+  "resendEmail":{
+    "title": "Resend email",
+    "text": "The system has sent a confirmation email to xx. Check your email."
+  },
   "contact": {
     "title": "Contact",
     "text": "Get in touch using the form below",
@@ -53,9 +57,5 @@
     "string_min": "This field should be bigger than ${min}.",
     "number_max": "This field should be smaller than ${max}.",
     "number_min": "This field should be bigger than ${min}."
-  },
-  "resendEmail":{
-    "title": "Resend email",
-    "text": "The system has sent a confirmation email to xx. Check your email."
   }
 }

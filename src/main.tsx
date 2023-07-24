@@ -11,6 +11,7 @@ import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import './index.css'
 import ResendEmail from "./pages/ResendEmail";
+import RegistrationConfirmation from "./pages/RegistrationConfirmation";
 
 const router = createBrowserRouter([
     {
@@ -27,10 +28,6 @@ const router = createBrowserRouter([
             },
             {
                 path: "resend-email",
-                element: <ResendEmail/>
-            },
-            {
-                path: "cadastro/verificacao/:token",
                 element: <ResendEmail/>
             },
             {
