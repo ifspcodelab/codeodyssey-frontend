@@ -84,7 +84,7 @@ const handleError = (error) => {
               variant="outlined"
               error={!!errors.name}
               helperText={errors.name && <span>{errors.name.message}</span> }
-              data-testid="nameField"
+              inputProps={{ "data-testid": "nameField" }}
             />
           </Grid>
 
@@ -96,7 +96,7 @@ const handleError = (error) => {
               variant="outlined"
               error={!!errors.slug}
               helperText={errors.slug && <span>{errors.slug.message}</span> }
-              data-testid="slugField"
+              inputProps={{ "data-testid": "slugField" }}
             />
           </Grid>
 

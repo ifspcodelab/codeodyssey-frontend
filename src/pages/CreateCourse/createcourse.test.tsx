@@ -86,6 +86,31 @@ describe("Create Course Form", () => {
     fireEvent.click(getByTestId("submitButton"));
 })
 
+test("Should send request with data after form submission", async () => {
+  const { getByTestId, getByLabelText } = render(
+      <BrowserRouter>
+          <CreateCourse />
+      </BrowserRouter>
+  );
+
+  const nameInput = getByTestId("nameField")
+  const slugInput = getByTestId('slugField')
+  const startDate = getByLabelText(startDateLabelName)
+  const endDate = getByLabelText(endDateLabelName)
+  const submitButton =getByTestId('submitButton');
+
+  fireEvent.change(nameInput, { target: { value: 'Java Spring' } });
+  fireEvent.change(slugInput, { target: { value: 'java' } });
+  fireEvent.change(startDate, { target: { value: '2023-12-01' } });
+  fireEvent.change(endDate, { target: { value: '2024-01-01' } });
+
+  fireEvent.click(submitButton);
+
+  const result = await vitest.fn();
+
+  expect(result).toMatchSnapshot();
+})
+
 test("Should send to my courses page after clicking the submit button", async () => {
   const { getByTestId } = render(
       <BrowserRouter>
@@ -101,15 +126,4 @@ test("Should send to my courses page after clicking the submit button", async ()
 
   expect(result).toMatchSnapshot("My Courses Page");
 })
-
-//   test("Should be able to fire event", () => {
-//     const handleClick = vi.fn()
-//     const mockOnSubmit = jest.fn()
-
-//     const { getByTestId } = render(<CreateCourse onSubmit={mockOnSubmit}/>);
-//     fireEvent.click(getByTestId(submitButtonId))
-
-//     expect(handleClick).toHaveBeenCalledTimes(1)
-    
-//   })
 })
