@@ -83,6 +83,14 @@ describe("Registration", () => {
         await expect(schema.validateAt('name', {name: "valid name"})).resolves.toBeTruthy()
     })
 
+    test("requires user's email", async () => {
+        await expect(schema.validateAt('email', {})).rejects.toMatch(/email is a required field/)
+        await expect(schema.validateAt('email', {email: "email"})).rejects.toMatch(/email must be a valid email/)
+        await expect(schema.validateAt('email', {email: "email@emailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemaile.com"})).rejects.toMatch(/email must be a valid email/)
+        await expect(schema.validateAt('email', {email: 'ema`i´l\'"@email'})).rejects.toMatch(/email must be a valid email/)
+        await expect(schema.validateAt('email', {email: "email@email"})).resolves.toBeTruthy()
+    })
+
     test("Should be able to send registration request", () => {
         const { getByTestId } = render(
             <BrowserRouter>
