@@ -101,6 +101,11 @@ describe("Registration", () => {
         await expect(schema.validateAt('password', {password: "ValidPassword@1"})).resolves.toBeTruthy()
     })
 
+    test("Should terms be validated", async () => {
+        await expect(schema.validateAt('terms', {terms: false})).rejects.toMatch(/You must agree with the terms and privacy policy/)
+        await expect(schema.validateAt('terms', {terms: true})).resolves.toBeTruthy()
+    })
+
     test("Should be able to send registration request", () => {
         const { getByTestId } = render(
             <BrowserRouter>
