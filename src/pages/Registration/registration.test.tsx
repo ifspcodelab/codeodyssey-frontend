@@ -77,9 +77,10 @@ describe("Registration", () => {
         expect(getByTestId("submitButton")).toBeInTheDocument();
     })
 
-    test("requires user's name", async () => {
+    test("Should name be validated", async () => {
         await expect(schema.validateAt('name', {})).rejects.toMatch(/name is a required field/)
         await expect(schema.validateAt('name', {name: "inv"})).rejects.toMatch(/name must be at least 5 characters/)
+        await expect(schema.validateAt('name', {name: "invalid nameinvalid nameinvalid nameinvalid nameinvalid nameinvalid nameinvalid nameinvalid nameinval"})).rejects.toMatch(/name must be at most 100 characters/)
         await expect(schema.validateAt('name', {name: "valid name"})).resolves.toBeTruthy()
     })
 
