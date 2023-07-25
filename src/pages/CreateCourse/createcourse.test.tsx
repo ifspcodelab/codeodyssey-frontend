@@ -51,6 +51,13 @@ describe("Create Course Form", () => {
     await expect(schema.validateAt('name', {name: "valid name"})).resolves.toBeTruthy()
   })
 
+  test("Should slug be validated", async () => {
+    await expect(schema.validateAt('slug', {slug: ""})).rejects.toMatch(/This field is required./)
+    await expect(schema.validateAt('slug', {slug: "react native"})).rejects.toMatch(/This field cannot contain white space and special character/)
+    await expect(schema.validateAt('slug', {slug: "react#3"})).rejects.toMatch(/This field cannot contain white space and special character/)
+    await expect(schema.validateAt('slug', {slug: "validslug"})).resolves.toBeTruthy()
+  })
+
   test("Should endDate be validated", async () => {
     await expect(schema.validateAt('endDate', {endDate: null})).rejects.toMatch(/This field is required./)
   })
