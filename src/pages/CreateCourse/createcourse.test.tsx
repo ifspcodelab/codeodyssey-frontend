@@ -49,7 +49,11 @@ describe("Create Course Form", () => {
     await expect(schema.validateAt('name', {name: ""})).rejects.toMatch(/This field is required./)
     await expect(schema.validateAt('name', {name: "react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react "})).rejects.toMatch(/This field should be smaller than 255./)
     await expect(schema.validateAt('name', {name: "valid name"})).resolves.toBeTruthy()
-})
+  })
+
+  test("Should endDate be validated", async () => {
+    await expect(schema.validateAt('endDate', {endDate: null})).rejects.toMatch(/This field is required./)
+  })
 
 
   test("Should be able to render the form fields", () => {
