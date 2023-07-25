@@ -2,6 +2,8 @@ import "@testing-library/jest-dom";
 import CreateCourse from "./index"
 import { render } from "@testing-library/react";
 import {describe, test, vi} from "vitest";
+import {schema} from "../CreateCourse/schema.ts"
+import {BrowserRouter} from "react-router-dom";
 
 const cancelButtonId = "cancelButton"
 const submitButtonId = "submitButton"
@@ -15,7 +17,9 @@ describe("Create Course Form", () => {
   
   test("Should be able to see the title on the screen", () => {
     const {getByText} = render(
-      <CreateCourse/>
+      <BrowserRouter>
+        <CreateCourse/>
+      </BrowserRouter>
     )
 
     expect(getByText("Create Course")).toBeInTheDocument();
@@ -23,7 +27,9 @@ describe("Create Course Form", () => {
 
   test("Should be able to render the cancel button", () => {
     const {getByTestId} = render(
-      <CreateCourse/>
+      <BrowserRouter>
+        <CreateCourse/>
+      </BrowserRouter>
     )
 
     expect(getByTestId(cancelButtonId)).toBeInTheDocument();
@@ -31,16 +37,26 @@ describe("Create Course Form", () => {
 
   test("Should be able to render the submit button", () => {
     const {getByTestId} = render(
-      <CreateCourse/>
+      <BrowserRouter>
+        <CreateCourse/>
+      </BrowserRouter>
     )
 
     expect(getByTestId(submitButtonId)).toBeInTheDocument();
   })
 
+  test("Should name be validated", async () => {
+    await expect(schema.validateAt('name', {name: ""})).rejects.toMatch(/This field is required./)
+    await expect(schema.validateAt('name', {name: "react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react "})).rejects.toMatch(/This field should be smaller than 255./)
+    await expect(schema.validateAt('name', {name: "valid name"})).resolves.toBeTruthy()
+})
+
 
   test("Should be able to render the form fields", () => {
     const {getByTestId, getByLabelText} = render(
-      <CreateCourse/>
+      <BrowserRouter>
+        <CreateCourse/>
+      </BrowserRouter>
     )
 
     expect(getByTestId(nameFieldId)).toBeInTheDocument();
