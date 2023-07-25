@@ -65,7 +65,9 @@ const handleError = (error) => {
   let responseStatus: number
   responseStatus = error.response.data.status
   if (responseStatus == 400) {
-      alert(i18n.t("registration.exception.badRequest"))
+      alert(i18n.t("createcourse.exception.badRequest"))
+  } else if (responseStatus === 409) {
+    alert(i18n.t("createcourse.exception.duplicate"))
   }
 }
 
