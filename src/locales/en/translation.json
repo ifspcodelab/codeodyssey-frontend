@@ -9,6 +9,10 @@
     "endDate": "End Date",
     "submit": "Create",
     "cancel": "Cancel"
+  },
+  "exception": {
+    "badRequest": "Bad Request",
+    "duplicate": "This value already exists in the database"
   }
 },
   "privacypolicy": {

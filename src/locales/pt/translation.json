@@ -9,6 +9,10 @@
       "endDate": "Data final",
       "submit": "Criar",
       "cancel": "Cancelar"
+    },
+    "exception": {
+      "badRequest": "Solicitação inválida",
+      "duplicate": "Dado já existe no banco de dados"
     }
   },
   "privacypolicy": {
