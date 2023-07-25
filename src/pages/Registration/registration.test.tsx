@@ -83,12 +83,22 @@ describe("Registration", () => {
         await expect(schema.validateAt('name', {name: "valid name"})).resolves.toBeTruthy()
     })
 
-    test("requires user's email", async () => {
+    test("Should email be validated", async () => {
         await expect(schema.validateAt('email', {})).rejects.toMatch(/email is a required field/)
         await expect(schema.validateAt('email', {email: "email"})).rejects.toMatch(/email must be a valid email/)
         await expect(schema.validateAt('email', {email: "email@emailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemaile.com"})).rejects.toMatch(/email must be a valid email/)
         await expect(schema.validateAt('email', {email: 'ema`i´l\'"@email'})).rejects.toMatch(/email must be a valid email/)
         await expect(schema.validateAt('email', {email: "email@email"})).resolves.toBeTruthy()
+    })
+
+    test("Should password be validated", async () => {
+        await expect(schema.validateAt('password', {})).rejects.toMatch(/password is a required field/)
+        await expect(schema.validateAt('password', {password: "1A$a"})).rejects.toMatch(/password must be at least 8 characters/)
+        await expect(schema.validateAt('password', {password: "invalidpassword"})).rejects.toMatch(/Password must have at least one digit/)
+        await expect(schema.validateAt('password', {password: "invalidpassword1"})).rejects.toMatch(/Password must have at least one uppercase letter/)
+        await expect(schema.validateAt('password', {password: "invalidpassword1A"})).rejects.toMatch(/Password must have at least one special character/)
+        await expect(schema.validateAt('password', {password: "invalidpassword1Ainvalidpassword1Ainvalidpassword1Ainvalidpasswor"})).rejects.toMatch(/password must be at most 64 characters/)
+        await expect(schema.validateAt('password', {password: "ValidPassword@1"})).resolves.toBeTruthy()
     })
 
     test("Should be able to send registration request", () => {
