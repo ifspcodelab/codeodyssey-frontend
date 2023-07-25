@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import CreateCourse from "./index"
-import { render } from "@testing-library/react";
+import { render, fireEvent  } from "@testing-library/react";
 import {describe, test, vi} from "vitest";
 import {schema} from "../CreateCourse/schema.ts"
 import {BrowserRouter} from "react-router-dom";
@@ -75,6 +75,32 @@ describe("Create Course Form", () => {
     expect(getByLabelText(startDateLabelName)).toBeInTheDocument();
     expect(getByLabelText(endDateLabelName)).toBeInTheDocument();
   })
+
+  test("Should be able to send create course form", () => {
+    const { getByTestId } = render(
+        <BrowserRouter>
+            <CreateCourse/>
+        </BrowserRouter>
+    );
+
+    fireEvent.click(getByTestId("submitButton"));
+})
+
+test("Should send to my courses page after clicking the submit button", async () => {
+  const { getByTestId } = render(
+      <BrowserRouter>
+          <CreateCourse />
+      </BrowserRouter>
+  );
+
+  const submitButton = getByTestId("submitButton")
+
+  fireEvent.click(submitButton)
+
+  const result = await vitest.fn();
+
+  expect(result).toMatchSnapshot("My Courses Page");
+})
 
 //   test("Should be able to fire event", () => {
 //     const handleClick = vi.fn()
