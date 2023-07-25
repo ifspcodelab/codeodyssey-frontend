@@ -1,10 +1,26 @@
 import "@testing-library/jest-dom";
 import { render, fireEvent } from "@testing-library/react";
-import {describe, test, vitest} from "vitest";
+import {describe, test, vitest, vi} from "vitest";
 import Registration from "./index";
 import {BrowserRouter} from "react-router-dom";
 import {schema} from "../Registration/index.tsx"
+import {useTranslation} from "react-i18next";
 
+vi.mock('react-i18next')
+
+const tSpy = vi.fn((str: string) => str)
+const useTranslationSpy = useTranslation as vi.Mock
+
+beforeEach(() => {
+    vi.clearAllMocks()
+
+    useTranslationSpy.mockReturnValue({
+        t: tSpy,
+        i18n: {
+            language: 'en',
+        },
+    })
+})
 
 describe("Registration", () => {
 
@@ -15,7 +31,7 @@ describe("Registration", () => {
            </BrowserRouter>
        );
 
-       expect(getByText("Registration")).toBeInTheDocument();
+       expect(getByText("registration.title")).toBeInTheDocument();
    })
 
     test("Should be able to see all the form fields", () => {
@@ -25,25 +41,21 @@ describe("Registration", () => {
             </BrowserRouter>
         );
 
-        expect(getByText("Name")).toBeInTheDocument();
-        expect(getByText("Email")).toBeInTheDocument();
-        expect(getByText("Password")).toBeInTheDocument();
-        expect(getByLabelText('I have read and agree with the Terms of Use and Privacy Policy')).toBeInTheDocument();
+        expect(getByText("registration.form.name")).toBeInTheDocument();
+        expect(getByText("registration.form.email")).toBeInTheDocument();
+        expect(getByText("registration.form.password")).toBeInTheDocument();
+        expect(getByLabelText('registration.form.termsCheckbox')).toBeInTheDocument();
     })
 
-    //TODO: RODAR COMO SE FOSSE PORTu
-    // test("Should be able to see all the form fields", () => {
-    //     const { getByLabelText, getByText } = render(
-    //         <BrowserRouter>
-    //             <Registration/>
-    //         </BrowserRouter>
-    //     );
-    //
-    //     expect(getByText("Name")).toBeInTheDocument();
-    //     expect(getByText("Email")).toBeInTheDocument();
-    //     expect(getByText("Password")).toBeInTheDocument();
-    //     expect(getByLabelText('I have read and agree with the Terms of Use and Privacy Policy')).toBeInTheDocument();
-    // })
+    test("Should verify that translation is being called", () => {
+        render(
+            <BrowserRouter>
+                <Registration/>
+            </BrowserRouter>
+        );
+
+        expect(tSpy).toHaveBeenCalled()
+    })
 
     test("Should be able to see the login button text", () => {
         const { getByTestId } = render(
@@ -88,10 +100,10 @@ describe("Registration", () => {
             </BrowserRouter>
         );
 
-        const inputName = getByLabelText('Name');
-        const inputEmail = getByLabelText('Email');
-        const inputPassword = getByLabelText('Password');
-        const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy')
+        const inputName = getByLabelText('registration.form.name');
+        const inputEmail = getByLabelText('registration.form.email');
+        const inputPassword = getByLabelText('registration.form.password');
+        const inputTerms = getByLabelText('registration.form.termsCheckbox')
         const submitButton =getByTestId('submitButton');
 
         fireEvent.change(inputName, { target: { value: 'John Doe' } });
