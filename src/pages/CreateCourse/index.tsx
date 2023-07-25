@@ -11,6 +11,7 @@ import axios from "axios";
 import dayjs from 'dayjs';
 import {useNavigate} from "react-router-dom"
 import i18n from "../../locales/i18n";
+import { ptBR } from "@mui/x-date-pickers";
 
 
 function CreateCourse() {
@@ -106,7 +107,7 @@ const handleError = (error) => {
                 defaultValue={dayjs(new Date())}
 
                 render={({ field: { onChange, value } }) => (
-                <DatePicker label="Start Date" disablePast  value={value ?? " "} onChange={onChange} 
+                <DatePicker label={t("createcourse.form.startDate")} disablePast  value={value ?? " "} onChange={onChange} 
                 slotProps={{
                   textField: {
                     helperText: errors.startDate && <span>{errors.startDate.message}</span> 
@@ -118,13 +119,13 @@ const handleError = (error) => {
             </Grid>
 
             <Grid >
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} localeText={ptBR}>
             <Controller
                 name={"endDate"}
                 control={control}
                 defaultValue={null}
                 render={({ field: { onChange, value } }) => (
-                    <DatePicker label="End Date" data-testid="endDateField" value={value || null} onChange={onChange} minDate={watch().startDate}
+                    <DatePicker label={t("createcourse.form.endDate")} data-testid="endDateField" value={value || null} onChange={onChange} minDate={watch().startDate}
                      slotProps={{
                       textField: {
                         helperText: errors.endDate && <span>{errors.endDate.message}</span> 
