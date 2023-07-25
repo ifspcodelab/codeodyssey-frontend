@@ -4,6 +4,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import PageHeader from "../../components/PageHeader";
 import { useState } from 'react';
 import axios from "axios";
 import React from "react";
@@ -23,7 +24,7 @@ function Courses() {
 
     return (
         <>
-            <h1>{t("courses.title")}</h1>
+             <PageHeader title={t('courses.title')} text={t('courses.text')} />
         <div>
             {courses.map((course) => (
             <Card variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>

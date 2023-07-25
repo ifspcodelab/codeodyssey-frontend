@@ -1,6 +1,7 @@
 {
   "courses": {
     "title": "Meus Cursos",
+    "text": "Cursos que estou participando",
     "button": {
       "invite": "Criar Convite",
       "students": "Visualizar Alunos"

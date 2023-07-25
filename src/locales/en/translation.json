@@ -1,6 +1,7 @@
 {
   "courses": {
     "title": "My Courses",
+    "text": "Courses that i'm participating",
     "button": {
       "invite": "Create Invite",
       "students": "Visualize Students"
