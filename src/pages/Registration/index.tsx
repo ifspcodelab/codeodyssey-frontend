@@ -37,7 +37,7 @@ function Registration() {
         try {
             await axios.post<CreateUserResponse>(
                 BASE_URL + '/users',
-                { name: data.name, email: data.email, password: data.password },
+                { name: data.name, email: data.email.toLowerCase(), password: data.password },
                 {
                     headers: {
                         'Content-Type': 'application/json',
