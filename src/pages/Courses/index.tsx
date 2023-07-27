@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import PageHeader from "../../components/PageHeader";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import React from "react"
 
   type User = {
     name: string;
@@ -25,7 +24,8 @@ import React from "react"
     data: Course[];
   }
 
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwic3ViIjoibW9yaWFydHlAZ21haWwuY29tIiwiaWF0IjoxNjkwNDg0OTI1LCJleHAiOjE2OTA0ODU4MjV9.jt6aqQbwmm3vIIdLXnEra9-NUsza9BDQ6HVnczKQyA0'
+  // const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwic3ViIjoibW9yaWFydHlAZ21haWwuY29tIiwiaWF0IjoxNjkwNDg0OTI1LCJleHAiOjE2OTA0ODU4MjV9.jt6aqQbwmm3vIIdLXnEra9-NUsza9BDQ6HVnczKQyA0'
+  // const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
   // async function getCourses(): Promise<Course> {
   //   const response = await axios.get<Course>(
@@ -63,7 +63,6 @@ import React from "react"
   
       console.log(JSON.stringify(data, null, 4));
   
-      // 👇️ "response status is: 200"
       console.log('response status is: ', status);
   
       return data;
