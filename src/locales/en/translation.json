@@ -27,5 +27,21 @@
     "string_min": "This field should be bigger than ${min}.",
     "number_max": "This field should be smaller than ${max}.",
     "number_min": "This field should be bigger than ${min}."
-  }
+  },
+  "login": {
+    "title": "Login",
+    "text": "Sign in or Register",
+    "form": {
+      "email": "Email",
+      "password": "Password",
+      "login": "Login",
+      "submit": "Submit",
+      "validation": {
+        "password": {
+          "number": "Password must have at least one digit",
+          "lowercase": "Password must have at least one lowercase letter",
+          "uppercase": "Password must have at least one uppercase letter",
+          "special": "Password must have at least one special character"
+        }
+      }}}
 }

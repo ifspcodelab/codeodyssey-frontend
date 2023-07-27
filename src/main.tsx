@@ -9,6 +9,7 @@ import Contact from "./pages/Contact";
 import './locales/i18n.ts'
 import Login from './pages/Login/index.tsx';
 
+
 const router = createBrowserRouter([
     {
         path: "/",
