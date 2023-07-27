@@ -7,7 +7,8 @@
       "students": "Visualizar Alunos"
     },
     "intlDate": "{{date, datetime}}",
-    "until": "até"
+    "until": "até",
+    "emptyList": "Você ainda não participa de nenhum curso"
   },
   "privacypolicy": {
     "title": "Política de Privacidade"

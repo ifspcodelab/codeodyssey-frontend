@@ -7,7 +7,8 @@
       "students": "Visualize Students"
     },
     "intlDate": "{{date, datetime}}",
-    "until": "until"
+    "until": "until",
+    "emptyList": "You do not participate in any course yet"
   },
   "privacypolicy": {
     "title": "Privacy Policy"

@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import PageHeader from "../../components/PageHeader";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import React from "react"
 
   type User = {
     name: string;
@@ -20,58 +21,87 @@ import axios from "axios";
     professor: User,
   };
 
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwic3ViIjoibW9yaWFydHlAZ21haWwuY29tIiwiaWF0IjoxNjkwNDc4NTAyLCJleHAiOjE2OTA0Nzk0MDJ9.31BDiKdHLUGFhyzFfQ8PuY8VTTL7Hh130hsm1NazRCA'
-
-  async function getCourses(): Promise<Course[]> {
-    const response = await axios.get<Course>(
-      'http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/courses',
-      {
-        headers: {
-          Accept: 'application/json',
-          'Authorization': `Basic ${token}` ,
-          'Content-Type': 'application/json',
-          "Access-Control-Allow-Origin": "http://localhost:8080/api/v1/"
-        },
-      },
-    );
-
-    return response.data.courses;
+  type GetCoursesResponse = {
+    data: Course[];
   }
 
+  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwic3ViIjoibW9yaWFydHlAZ21haWwuY29tIiwiaWF0IjoxNjkwNDg0OTI1LCJleHAiOjE2OTA0ODU4MjV9.jt6aqQbwmm3vIIdLXnEra9-NUsza9BDQ6HVnczKQyA0'
+
+  // async function getCourses(): Promise<Course> {
+  //   const response = await axios.get<Course>(
+  //     'http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/courses',
+  //     {
+  //       headers: {
+  //         Accept: 'application/json',
+  //         'Authorization': `Basic ${token}` ,
+  //         'Content-Type': 'application/json',
+  //         "Access-Control-Allow-Origin": "http://localhost:8080/api/v1/"
+  //       },
+  //     },
+  //   );
+
+  //   return response.data;
+  // }
+
+  async function getCourses() {
+    try {
+
+      // const response = await Promise.all([
+      //   axios.get<GetCoursesResponse>('http://localhost:3000/enrollments'),
+      //   axios.get<GetCoursesResponse>('http://localhost:3000/courses'),
+      // ])
+
+      const { data, status } = await axios.get<GetCoursesResponse>(
+        'http://localhost:3000/enrollments',
+        {
+          headers: {
+            Accept: 'application/json',
+            'Authorization': `Basic ${token}` ,
+          },
+        },
+      );
+  
+      console.log(JSON.stringify(data, null, 4));
+  
+      // 👇️ "response status is: 200"
+      console.log('response status is: ', status);
+  
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log('error message: ', error.message);
+        return error.message;
+      } else {
+        console.log('unexpected error: ', error);
+        return 'An unexpected error occurred';
+      }
+    }
+  }
 
 function Courses() {
     const { t } = useTranslation();
 
-    const baseURL = "http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/courses";
-
-    // React.useEffect(() => {
-    //     axios.get(baseURL).then((response) => {
-    //         setCourses(response.data);
-    //     });
-    //   }, []);
-
-   
     const [courses, setCourses] = useState<[] | Course[]>([]);
 
 
     useEffect(() => {
       (async () => {
-        const courses = await getCourses();
-        setCourses(courses);
+        const course = await getCourses();
+        setCourses(course);
       })();
     }, []);
 
     return (
         <>
-             <PageHeader title={t('courses.title')} text={t('courses.text')} />
-        <div>
-            {courses.map((course: Course) => (
+        <PageHeader title={t('courses.title')} text={t('courses.text')} />
+        
+        {courses.length ? <div>{courses?.map((course: Course) => (
             <Card variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>
                 <CardContent>
                     <Typography variant="h5" component="div">
                         {course.name}
                     </Typography>
-                    {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         {course.professor.name}    
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
@@ -89,7 +119,7 @@ function Courses() {
                       }
                     }
                   })}
-                    </Typography> */}
+                    </Typography>
                 </CardContent>
 
                 <CardActions sx={{ display: "flex", flexDirection: "column", alignItems: "center",justifyContent: "center",marginLeft: "auto", }}>
@@ -97,9 +127,7 @@ function Courses() {
                     <Button variant="contained" size="medium" sx={{ p: 1, m: 1,  width:200 }}>{t("courses.button.students")}</Button>
                 </CardActions>
             </Card>
-            ))}
-            
-        </div>
+            ))}</div> : <Typography>{t("courses.emptyList")}</Typography>}
         </>
     );
 }
