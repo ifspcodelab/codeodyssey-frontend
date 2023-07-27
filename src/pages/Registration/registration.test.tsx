@@ -1,9 +1,12 @@
 import "@testing-library/jest-dom";
-import { render, fireEvent } from "@testing-library/react";
-import {describe, test, vitest, vi} from "vitest";
+import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import userEvent from '@testing-library/user-event'
+import {describe, test, vi} from "vitest";
 import Registration from "./index";
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter, Router} from "react-router-dom";
 import {schema} from "../Registration/index.tsx"
+import { createMemoryHistory } from 'history';
+
 
 describe("Registration", () => {
 
@@ -116,18 +119,28 @@ describe("Registration", () => {
     })
 
     test("Should send to login page after clicking the login button", async () => {
-        const { getByTestId } = render(
-            <BrowserRouter>
+        const history = createMemoryHistory();
+
+        history.push = vi.fn();
+
+        const { getByText, getByTestId } = render(
+            <Router location={history.location} navigator={history}>
                 <Registration />
-            </BrowserRouter>
+            </Router>
         );
 
-        const loginButton = getByTestId("loginButton")
+        expect(getByText(/^Registration$/i)).toBeInTheDocument()
 
-        fireEvent.click(loginButton)
-
-        const result = await vitest.fn();
-
-        expect(result).toMatchSnapshot("Login Page");
+        await waitFor(() => {
+            userEvent.click(getByTestId("loginButton"))
+            expect(history.push).toHaveBeenLastCalledWith({
+                    "hash": "",
+                    "pathname": "/login",
+                    "search": "",
+                },
+                    undefined,
+                    {},
+            );
+        })
     })
 });
