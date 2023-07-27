@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import PageHeader from "../../components/PageHeader";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {useNavigate} from "react-router-dom"
 
   type User = {
     name: string;
@@ -56,7 +57,7 @@ import axios from "axios";
         {
           headers: {
             Accept: 'application/json',
-            'Authorization': `Basic ${token}` ,
+            // 'Authorization': `Basic ${token}` ,
           },
         },
       );
@@ -77,11 +78,13 @@ import axios from "axios";
     }
   }
 
+
 function Courses() {
     const { t } = useTranslation();
 
     const [courses, setCourses] = useState<[] | Course[]>([]);
 
+    const navigate = useNavigate()
 
     useEffect(() => {
       (async () => {
@@ -122,8 +125,16 @@ function Courses() {
                 </CardContent>
 
                 <CardActions sx={{ display: "flex", flexDirection: "column", alignItems: "center",justifyContent: "center",marginLeft: "auto", }}>
-                    <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width:200 }}>{t("courses.button.invite")}</Button>
-                    <Button variant="contained" size="medium" sx={{ p: 1, m: 1,  width:200 }}>{t("courses.button.students")}</Button>
+                    <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width:200 }}
+                      onClick={() => {
+                        navigate('/invitation')
+                      }}
+                    >{t("courses.button.invite")}</Button>
+                    <Button variant="contained" size="medium" sx={{ p: 1, m: 1,  width:200 }}
+                      onClick={() => {
+                        navigate('/students')
+                      }}
+                    >{t("courses.button.students")}</Button>
                 </CardActions>
             </Card>
             ))}</div> : <Typography>{t("courses.emptyList")}</Typography>}

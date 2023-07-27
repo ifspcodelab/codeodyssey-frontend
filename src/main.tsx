@@ -7,6 +7,8 @@ import Courses from "./pages/Courses";
 import TermsOfUse from "./pages/TermsOfUse";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Contact from "./pages/Contact";
+import Invitation from "./pages/Invitation";
+import Students from "./pages/Students";
 import './locales/i18n.ts'
 
 const router = createBrowserRouter([
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
             {
                 path: "contact",
                 element: <Contact/>
+            },
+            {
+                path: "students",
+                element: <Students/>
+            },
+            {
+                path: "invitation",
+                element: <Invitation/>
             },
         ],
     },
