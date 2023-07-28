@@ -18,7 +18,8 @@
     },
     "exception": {
       "badRequest": "Solicitação inválida",
-      "duplicate": "Dado já existe no banco de dados"
+      "duplicate": "Dado já existe no banco de dados",
+      "unauthorized": "Sem permissão para criar curso"
     }
   },
   "privacypolicy": {

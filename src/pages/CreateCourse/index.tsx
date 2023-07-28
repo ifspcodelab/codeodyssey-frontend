@@ -84,6 +84,8 @@ type CourseResponse = {
         alert(i18n.t("createcourse.exception.badRequest"))
     } else if (responseStatus === 409) {
       alert(i18n.t("createcourse.exception.duplicate"))
+    } else if (responseStatus === 401) {
+      alert(i18n.t("createcourse.exception.unauthorized"))
     } 
   }
 

@@ -18,7 +18,8 @@
   },
   "exception": {
     "badRequest": "Bad Request",
-    "duplicate": "This value already exists in the database"
+    "duplicate": "This value already exists in the database",
+    "unauthorized": "No permission to create the course"
   }
 },
   "privacypolicy": {
