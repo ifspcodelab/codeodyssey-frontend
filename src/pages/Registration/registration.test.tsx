@@ -151,4 +151,19 @@ describe("Registration", () => {
             );
         })
     })
+
+    test("Should show immutability message when hover email tooltip", () => {
+        const {getByTestId, getByTitle} = render(
+            <BrowserRouter>
+                <Registration/>
+            </BrowserRouter>
+        )
+
+        const toolTip = getByTestId("immutabilityMessage")
+        const immutabilityMessage = getByTitle("the email is immutable")
+
+        fireEvent.mouseEnter(toolTip)
+
+        expect(immutabilityMessage).toBeVisible()
+    })
 });
