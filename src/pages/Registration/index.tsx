@@ -8,7 +8,7 @@ import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup";
 import {useTranslation} from "react-i18next";
 import i18n from "../../locales/i18n";
-import axios from "axios";
+import {CreateUserResponse} from "../../core/models/CreateUserResponse";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
@@ -23,57 +23,19 @@ export const schema = yup.object({
     terms: yup.boolean().oneOf([true], i18n.t('registration.form.validation.termsCheckbox'))
 }).required()
 
-function Registration() {
+function Registration({createUser}) {
     const {t} = useTranslation()
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
     const navigate = useNavigate()
     const [isChecked, setIsChecked] = useState(false);
 
     const onSubmit = (data: CreateUserResponse) => {
-            void createUser(data)
-    }
-
-    async function createUser(data: CreateUserResponse) {
-        try {
-            await axios.post<CreateUserResponse>(
-                BASE_URL + '/users',
-                { name: data.name, email: data.email.toLowerCase(), password: data.password },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json',
-                    },
-                },
-            );
-            navigate('/resend-email', { state: { data: data.email }})
-        }
-        catch(error) {
-            if (axios.isAxiosError(error)) {
-                handleError(error)
-            } else {
-                console.log('unexpected error: ', error);
-                return 'An unexpected error ocurred';
-            }
-        }
+        void createUser(data.name, data.email, data.password, navigate)
     }
     
     const handleLogin = () => {
         return navigate("/login")
     }
-
-    const handleError = (error) => {
-        let responseStatus: number
-        let problemDetail: ProblemDetail
-        responseStatus = error.response.data.status
-        if (responseStatus == 400) {
-            alert(i18n.t("registration.exception.badRequest"))
-        } else if (responseStatus == 409) {
-            problemDetail = error.response.data;
-            if (problemDetail.title == "User Already exists" && problemDetail.detail == "Email already exists")
-                alert(i18n.t("registration.exception.email"))
-        }
-    }
-
 
     return (
         <>

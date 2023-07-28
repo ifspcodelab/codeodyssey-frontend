@@ -11,7 +11,7 @@ import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import './index.css'
 import ResendEmail from "./pages/ResendEmail";
-import RegistrationConfirmation from "./pages/RegistrationConfirmation";
+import {createUser} from "./core/services/UserService";
 
 const router = createBrowserRouter([
     {
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "registration",
-                element: <Registration/>
+                element: <Registration createUser={createUser}/>
             },
             {
                 path: "resend-email",
