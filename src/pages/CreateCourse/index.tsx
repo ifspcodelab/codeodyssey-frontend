@@ -34,14 +34,14 @@ type CourseResponse = {
   slug: string;
   startDate: Date;
   endDate: Date;
-  // professor: UserResponse;
+  professor: UserResponse;
 };
 
 
   const onSubmit: SubmitHandler<CourseResponse> = (data) => createCourse(data)
   const { register, handleSubmit, watch, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
   const navigate = useNavigate()
-  const professorId = "8544a9bc-6aa7-4e40-9f7f-88e0eb0e35c1"
+  const professorId = "d5b3354c-b738-4493-ab3d-1336daeaf975"
   const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
   const [open, setOpen] = React.useState(false);
 
@@ -84,7 +84,7 @@ type CourseResponse = {
         alert(i18n.t("createcourse.exception.badRequest"))
     } else if (responseStatus === 409) {
       alert(i18n.t("createcourse.exception.duplicate"))
-    }
+    } 
   }
 
   return (
