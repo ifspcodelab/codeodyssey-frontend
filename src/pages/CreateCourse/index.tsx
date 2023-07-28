@@ -41,9 +41,9 @@ type CourseResponse = {
   const onSubmit: SubmitHandler<CourseResponse> = (data) => createCourse(data)
   const { register, handleSubmit, watch, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
   const navigate = useNavigate()
-  const professorId = "d5b3354c-b738-4493-ab3d-1336daeaf975"
-  //   const professorId = "7d7e9b98-85a3-4766-a6d2-fa1f7dab6318"
   const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
+  const PROFESSOR_ID: string = import.meta.env.VITE_PROFESSOR_ID as string;
+  const STUDENT_ID: string = import.meta.env.VITE_STUDENT_ID as string;
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -57,7 +57,7 @@ type CourseResponse = {
   async function createCourse(data: CourseResponse) {
     try {
         await axios.post<CourseResponse>(
-          BASE_URL + "/users/" + professorId + "/courses",
+          BASE_URL + "/users/" + STUDENT_ID + "/courses",
             { name: data.name, slug: data.slug, startDate: data.startDate.toISOString(),  endDate: data.endDate.toISOString() },
             {
                 headers: {
