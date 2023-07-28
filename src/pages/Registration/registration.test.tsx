@@ -1,12 +1,15 @@
 import "@testing-library/jest-dom";
-import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from '@testing-library/user-event'
 import {describe, test, vi} from "vitest";
 import Registration from "./index";
 import {BrowserRouter, Router} from "react-router-dom";
-import {schema} from "../Registration/index.tsx"
+import {schema} from "./index"
 import { createMemoryHistory } from 'history';
 
+const mockCreateUser = vi.fn((name: string, email: string, password: string, navigate) => {
+    return Promise.resolve({ name, email, password, navigate })
+})
 
 describe("Registration", () => {
 
@@ -94,9 +97,9 @@ describe("Registration", () => {
     })
 
     test("Should send request with data after form submission", async () => {
-        const { getByLabelText, getByTestId } = render(
+        const { getByRole, getByLabelText } = render(
             <BrowserRouter>
-                <Registration />
+                <Registration createUser={mockCreateUser} />
             </BrowserRouter>
         );
 
@@ -104,18 +107,23 @@ describe("Registration", () => {
         const inputEmail = getByLabelText('Email');
         const inputPassword = getByLabelText('Password');
         const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy')
-        const submitButton =getByTestId('submitButton');
 
         fireEvent.change(inputName, { target: { value: 'John Doe' } });
         fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
         fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
         fireEvent.change(inputTerms, { target: {value: true}})
 
-        fireEvent.click(submitButton);
+        expect(inputName.value).toEqual('John Doe');
+        expect(inputEmail.value).toEqual('johndoe@email.com');
+        expect(inputPassword.value).toEqual('Password@01');
+        expect(inputTerms.value).toEqual("true");
 
-        const result = await vitest.fn();
+        fireEvent.click(inputTerms)
 
-        expect(result).toMatchSnapshot();
+        await waitFor(() => {
+            fireEvent.click(getByRole("button", {name: /submit/i}))
+            expect(mockCreateUser).toBeCalled()
+        })
     })
 
     test("Should send to login page after clicking the login button", async () => {
