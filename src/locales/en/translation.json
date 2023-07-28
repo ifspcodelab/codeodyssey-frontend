@@ -8,6 +8,7 @@
     "form": {
       "name": "Name",
       "email": "Email",
+      "email_message": "the email is immutable",
       "password": "Password",
       "login": "Login",
       "submit": "Submit",

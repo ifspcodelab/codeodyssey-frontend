@@ -7,7 +7,8 @@
     "text": "Por favor, preencha o formulário abaixo para usar a plataforma",
     "form": {
       "name": "Nome",
-      "email": "E-mail",
+      "email": "Email",
+      "email_message": "o email é imutável",
       "password": "Senha",
       "login": "Login",
       "submit": "Submeter",

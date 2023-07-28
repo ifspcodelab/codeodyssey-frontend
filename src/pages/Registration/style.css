@@ -21,6 +21,19 @@ form input {
     padding-left: 4px;
 }
 
+#email {
+    display: inline-block;
+}
+
+.formInput span {
+    display: initial;
+}
+
+.formInput span:hover {
+    color: #FF0000;
+    cursor: pointer;
+}
+
 .checkbox {
     display: block;
     align-items: center;
