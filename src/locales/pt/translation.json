@@ -8,7 +8,13 @@
       "startDate": "Data de início",
       "endDate": "Data final",
       "submit": "Criar",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "confimationdialog": {
+        "title": "Tem certeza que deseja sair?",
+        "description": "as alterações não serão salvas",
+        "leave": "sair",
+        "continue": "continuar"
+      }
     },
     "exception": {
       "badRequest": "Solicitação inválida",
@@ -41,6 +47,7 @@
     "string_email": "Esse campo precisa ser um email válido.",
     "string_max": "Esse campo deve ser menor que ${max}.",
     "string_min": "Esse campo deve ser maior que ${min}.",
+    "string_matches": "${path} deve corresponder ao padrão: '${regex}'",
     "number_max": "Esse campo deve ser menor que ${max}.",
     "number_min": "Esse campo deve ser maior que ${min}."
   }

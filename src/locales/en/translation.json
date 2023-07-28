@@ -8,7 +8,13 @@
     "startDate": "Start Date",
     "endDate": "End Date",
     "submit": "Create",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "confimationdialog": {
+      "title": "Are you sure you want to quit?",
+      "description": "changes will not be saved",
+      "leave": "leave",
+      "continue": "continue"
+    }
   },
   "exception": {
     "badRequest": "Bad Request",
@@ -41,6 +47,7 @@
     "string_email": "This field needs to be a valid email.",
     "string_max": "This field should be smaller than ${max}.",
     "string_min": "This field should be bigger than ${min}.",
+    "string_matches": "${path} must not contain special characters or spaces",
     "number_max": "This field should be smaller than ${max}.",
     "number_min": "This field should be bigger than ${min}."
   }
