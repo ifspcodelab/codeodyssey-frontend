@@ -25,6 +25,37 @@
   "privacypolicy": {
     "title": "Política de Privacidade"
   },
+  "registration": {
+    "title": "Cadastro",
+    "text": "Por favor, preencha o formulário abaixo para usar a plataforma",
+    "form": {
+      "name": "Nome",
+      "email": "Email",
+      "email_message": "o email é imutável",
+      "password": "Senha",
+      "login": "Login",
+      "submit": "Submeter",
+      "termsCheckbox": "Eu li e concordo com os Termos de Uso e a Política de Privacidade",
+      "validation": {
+        "termsCheckbox": "Você deve aceitar os termos e a política de privacidade",
+        "password": {
+          "number": "A senha deve ter pelo menos um digito",
+          "lowercase": "A senha deve ter pelo menos uma letra minúscula",
+          "uppercase": "A senha deve ter pelo menos uma letra maiúscula",
+          "special": "A senha deve ter pelo menos um caractere especial"
+        }
+      }
+    },
+    "footer": "Texto do footer do registro",
+    "exception": {
+      "email": "Houve um problema com o email usado",
+      "badRequest": "Requisição mal formada"
+    }
+  },
+  "resendEmail":{
+    "title": "Reenviar o email",
+    "text": "O sistema mandou um email de confirmação para {{email}}. Verifique seu email."
+  },
   "contact": {
     "title": "Entre em Contato",
     "text": "Utilize o formulário abaixo para entrar em contato conosco.",
@@ -45,11 +76,32 @@
     "mixed_one_of": "Este campo não corresponde",
     "mixed_max": "Esse campo deve ser menor que ${max}.",
     "mixed_min": "Esse campo deve ser maior que ${min}.",
+    "mixed_defined": "${path} não deve ser indefinido",
+    "mixed_not_null": "${path} não deve ser nulo",
     "string_email": "Esse campo precisa ser um email válido.",
     "string_max": "Esse campo deve ser menor que ${max}.",
     "string_min": "Esse campo deve ser maior que ${min}.",
-    "string_matches": "${path} deve corresponder ao padrão: '${regex}'",
+    "string_matches": "${path} deve corresponder ao padrão: \"${regex}\"",
+    "string_length": "${path} deve ter exatamente ${length} caracter(es)",
+    "string_url": "${path} deve ser uma URL válida",
+    "string_uuid": "${path} deve ser um UUID válido",
+    "string_trim": "${path} não deve conter espaços adicionais no início nem no fim",
+    "string_lowercase": "${path} deve estar em letras minúsculas",
+    "string_uppercase": "${path} deve estar em letras maiúsculas",
     "number_max": "Esse campo deve ser menor que ${max}.",
-    "number_min": "Esse campo deve ser maior que ${min}."
+    "number_min": "Esse campo deve ser maior que ${min}.",
+    "number_less_than": "${path} deve ser menor que ${less}",
+    "number_more_than": "${path} deve ser maior que ${more}",
+    "number_not_equal": "${path} não deve ser igual a ${notEqual}",
+    "number_positive": "${path} deve ser um número positivo",
+    "number_negative": "${path} deve ser um número negativo",
+    "number_integer": "${path} deve ser um número inteiro",
+    "date_min": "${path} deve ser posterior a ${min}",
+    "date_max": "${path} deve ser anterior a ${max}",
+    "boolean_is_value": "O campo ${path} precisa ser ${value}",
+    "object_no_unknown": "${path} tem chaves desconhecidas: ${unknown}",
+    "array_min": "${path} deve ter pelo menos ${min} item(ns)",
+    "array_max": "${path} deve ter no máximo ${max} item(ns)",
+    "array_length": "${path} deve ter ${length} itens"
   }
 }

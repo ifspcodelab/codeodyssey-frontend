@@ -9,6 +9,11 @@ import Contact from "./pages/Contact";
 import CreateCourse from "./pages/CreateCourse";
 import Courses from "./pages/Courses";
 import './locales/i18n.ts'
+import Registration from "./pages/Registration";
+import Login from "./pages/Login";
+import './index.css'
+import ResendEmail from "./pages/ResendEmail";
+import {createUser} from "./core/services/UserService";
 
 const router = createBrowserRouter([
     {
@@ -25,7 +30,19 @@ const router = createBrowserRouter([
             },
             {
                 path: "courses",
-                element: <Courses/>
+                element: <Courses/> 
+            },
+            {
+                path: "registration",
+                element: <Registration createUser={createUser}/>
+            },
+            {
+                path: "resend-email",
+                element: <ResendEmail/>
+            },
+            {
+                path: "login",
+                element: <Login/>
             },
             {
                 path: "terms-of-use",
