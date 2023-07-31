@@ -1,4 +1,27 @@
 {
+  "createcourse": {
+    "title": "Criar Curso",
+    "text": "Crie um curso preenchendo o formulário abaixo",
+    "form": {
+      "name": "Nome",
+      "slug": "Caminho",
+      "startDate": "Data de início",
+      "endDate": "Data final",
+      "submit": "Criar",
+      "cancel": "Cancelar",
+      "confimationdialog": {
+        "title": "Tem certeza que deseja sair?",
+        "description": "as alterações não serão salvas",
+        "leave": "sair",
+        "continue": "continuar"
+      }
+    },
+    "exception": {
+      "badRequest": "Solicitação inválida",
+      "duplicate": "Dado já existe no banco de dados",
+      "unauthorized": "Sem permissão para criar curso"
+    }
+  },
   "privacypolicy": {
     "title": "Política de Privacidade"
   },

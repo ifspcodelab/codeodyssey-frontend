@@ -1,4 +1,27 @@
-{
+{ 
+  "createcourse": {
+  "title": "Create Course",
+  "text": "Create a course by filling out the form below",
+  "form": {
+    "name": "Name",
+    "slug": "Slug",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "submit": "Create",
+    "cancel": "Cancel",
+    "confimationdialog": {
+      "title": "Are you sure you want to quit?",
+      "description": "changes will not be saved",
+      "leave": "leave",
+      "continue": "continue"
+    }
+  },
+  "exception": {
+    "badRequest": "Bad Request",
+    "duplicate": "This value already exists in the database",
+    "unauthorized": "No permission to create the course"
+  }
+},
   "privacypolicy": {
     "title": "Privacy Policy"
   },
