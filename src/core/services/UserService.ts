@@ -1,5 +1,6 @@
 import axios from "axios";
 import i18n from "../../locales/i18n";
+import {CreateUserResponse} from "../models/CreateUserResponse";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
@@ -7,7 +8,7 @@ export async function createUser(name: string, email: string, password: string, 
     try {
         await axios.post<CreateUserResponse>(
             BASE_URL + '/users',
-            { name: name, email: email.toLowerCase(), password: password },
+            { name: name.trim(), email: email.toLowerCase().trim(), password: password },
             {
                 headers: {
                     'Content-Type': 'application/json',
