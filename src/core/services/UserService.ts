@@ -4,7 +4,7 @@ import {CreateUserResponse} from "../models/CreateUserResponse";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
-export async function createUser(name: string, email: string, password: string, navigate) {
+export async function createUser(name: string, email: string, password: string, navigate: any) {
     try {
         await axios.post<CreateUserResponse>(
             BASE_URL + '/users',
@@ -18,7 +18,7 @@ export async function createUser(name: string, email: string, password: string, 
         );
         navigate('/resend-email', { state: { data: email }})
     }
-    catch(error) {
+    catch(error: any) {
         if (axios.isAxiosError(error)) {
             handleError(error)
         } else {
@@ -28,7 +28,7 @@ export async function createUser(name: string, email: string, password: string, 
     }
 }
 
-const handleError = (error) => {
+const handleError = (error: any) => {
     let responseStatus: number
     let problemDetail: ProblemDetail
     responseStatus = error.response.data.status

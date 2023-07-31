@@ -7,7 +7,7 @@ import {BrowserRouter, Router} from "react-router-dom";
 import {schema} from "./index"
 import { createMemoryHistory } from 'history';
 
-const mockCreateUser = vi.fn((name: string, email: string, password: string, navigate) => {
+const mockCreateUser = vi.fn((name: string, email: string, password: string, navigate:never) => {
     return Promise.resolve({ name, email, password, navigate })
 })
 
@@ -16,7 +16,7 @@ describe("Registration", () => {
    test("Should be able to see the Page Header title on the screen", () => {
        const { getByText } = render(
            <BrowserRouter>
-               <Registration/>
+               <Registration createUser={mockCreateUser}/>
            </BrowserRouter>
        );
 
@@ -26,7 +26,7 @@ describe("Registration", () => {
     test("Should be able to see all the form fields", () => {
         const { getByLabelText, getByText } = render(
             <BrowserRouter>
-                <Registration/>
+                <Registration createUser={mockCreateUser}/>
             </BrowserRouter>
         );
 
@@ -39,7 +39,7 @@ describe("Registration", () => {
     test("Should be able to see the login button text", () => {
         const { getByTestId } = render(
             <BrowserRouter>
-                <Registration/>
+                <Registration createUser={mockCreateUser}/>
             </BrowserRouter>
         );
 
@@ -49,7 +49,7 @@ describe("Registration", () => {
     test("Should be able to see the submit button text", () => {
         const { getByTestId } = render(
             <BrowserRouter>
-                <Registration/>
+                <Registration createUser={mockCreateUser}/>
             </BrowserRouter>
         );
 
@@ -89,7 +89,7 @@ describe("Registration", () => {
     test("Should be able to send registration request", () => {
         const { getByTestId } = render(
             <BrowserRouter>
-                <Registration/>
+                <Registration createUser={mockCreateUser}/>
             </BrowserRouter>
         );
 
@@ -103,10 +103,10 @@ describe("Registration", () => {
             </BrowserRouter>
         );
 
-        const inputName = getByLabelText('Name');
-        const inputEmail = getByLabelText('Email');
-        const inputPassword = getByLabelText('Password');
-        const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy')
+        const inputName = getByLabelText('Name') as HTMLInputElement;
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy') as HTMLInputElement
 
         fireEvent.change(inputName, { target: { value: 'John Doe' } });
         fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
@@ -116,7 +116,7 @@ describe("Registration", () => {
         expect(inputName.value).toEqual('John Doe');
         expect(inputEmail.value).toEqual('johndoe@email.com');
         expect(inputPassword.value).toEqual('Password@01');
-        expect(inputTerms.value).toEqual("true");
+        expect(inputTerms.checked).toEqual("true");
 
         fireEvent.click(inputTerms)
 
@@ -133,7 +133,7 @@ describe("Registration", () => {
 
         const { getByText, getByTestId } = render(
             <Router location={history.location} navigator={history}>
-                <Registration />
+                <Registration createUser={mockCreateUser}/>
             </Router>
         );
 
@@ -155,7 +155,7 @@ describe("Registration", () => {
     test("Should show immutability message when hover email tooltip", () => {
         const {getByTestId, getByTitle} = render(
             <BrowserRouter>
-                <Registration/>
+                <Registration createUser={mockCreateUser}/>
             </BrowserRouter>
         )
 
