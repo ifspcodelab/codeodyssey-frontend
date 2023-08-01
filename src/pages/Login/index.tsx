@@ -1,5 +1,4 @@
 import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
 import "./style.css";
 import Button from "@mui/material/Button";
 import * as yup from "yup";
@@ -11,11 +10,16 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-interface UserRequest {
+interface LoginRequest {
   email: string;
   password: string;
+}
+
+interface LoginResponse {
+  accessToken: string,
+  refreshToken: string,
 }
 
 export const schema = yup
@@ -39,51 +43,80 @@ function Login() {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
+    // setValue,
   } = useForm({ resolver: yupResolver(schema) });
   const navigate = useNavigate();
 
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  const onSubmit = (data: UserRequest) => {
-    const storedEmail = localStorage.getItem("email");
-    const storedPassword = localStorage.getItem("password");
+  const onSubmit = (data: LoginRequest) => {
+    console.log(data);
+    loginUser(data)
+         .then(() => navigate('/courses'))
+         .catch((errors) => {
+           console.log(errors);
+           setLoginError('An error has occurred')
+         });
+  };
 
-    if (storedEmail === data.email && storedPassword === data.password) {
-      void loginUser(data)
-        .then(() => navigate("/?"))
-        .catch((error) => {
-          setLoginError("Invalid credentials. Please try again."); // Update the error state with the error message
-        });
-    } else {
-      setLoginError("Invalid credentials. Please try again."); // Update the error state with the error message
+  const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
+  const loginUser = async (data: LoginRequest) => {
+    try {
+      await axios.post<LoginResponse>(
+          BASE_URL + '/login',
+          { email: data.email, password: data.password },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+          },
+      );
+    }
+    catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        handleError(error)
+      } else {
+        console.log('An error has occurred: ', error);
+        return 'An error has occurred.';
+      }
     }
   };
-  //const BASE_URL: string = import.meta.env.VITE_BASE_URL;
-  //base_url vai ser usado na production
-  const loginUser = async (data: UserRequest) => {
-    return await axios.post(BASE_URL + "/login", {
-      email: data.email,
-      password: data.password,
-    });
-  };
 
-  useEffect(() => {
-    const storedEmail = localStorage.getItem("email");
-    const storedPassword = localStorage.getItem("password");
+  const handleError = (error: any) => {
+    // TODO: 403 error format:
+    // detail
+    //     :
+    //     "Bad credentials"
+    // instance
+    //     :
+    //     "/api/v1/login"
+    // status
+    //     :
+    //     403
+    const responseStatus: number = error.response.data.status as number;
+    const problemDetail: ProblemDetail = error.response.data as ProblemDetail;
+    console.log('Response status code: ', responseStatus);
+    console.log('Problem detail: ', problemDetail);
+  }
 
-    if (storedEmail && storedPassword) {
-      setValue("email", storedEmail);
-      setValue("password", storedPassword);
-    }
-  }, [setValue]);
+  // const handleLogin = () => {
+  //   return navigate("/courses");
+  // };
 
-  const handleLogin = () => {
-    return navigate("/courses");
-  };
   const handleRegister = () => {
     return navigate("/registration");
   };
+
+  // useEffect(() => {
+  //   const storedEmail = localStorage.getItem("email");
+  //   const storedPassword = localStorage.getItem("password");
+  //
+  //   if (storedEmail && storedPassword) {
+  //     setValue("email", storedEmail);
+  //     setValue("password", storedPassword);
+  //   }
+  // }, [setValue]);
 
   return (
     <Container maxWidth="sm" className="formContainer">
@@ -116,7 +149,7 @@ function Login() {
             Log In!
           </Button>
         </div>
-{loginError && <p className="error">{loginError}</p>}
+        {loginError && <p className="error">{loginError}</p>}
         <div>
           <Button variant="contained" onClick={handleRegister}>
             Register
