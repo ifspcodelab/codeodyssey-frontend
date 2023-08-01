@@ -9,9 +9,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import {useTranslation} from "react-i18next";
 import i18n from "../../locales/i18n";
 import {CreateUserResponse} from "../../core/models/CreateUserResponse";
-
-const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
-
 export const schema = yup.object({
     name: yup.string().required().min(5).max(100),
     email: yup.string().required().email().max(350),
@@ -23,7 +20,7 @@ export const schema = yup.object({
     terms: yup.boolean().oneOf([true], i18n.t('registration.form.validation.termsCheckbox'))
 }).required()
 
-function Registration({createUser}) {
+function Registration({createUser}: any) {
     const {t} = useTranslation()
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
     const navigate = useNavigate()

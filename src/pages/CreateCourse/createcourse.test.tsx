@@ -106,7 +106,7 @@ test("Should send request with data after form submission", async () => {
 
   fireEvent.click(submitButton);
 
-  const result = await vitest.fn();
+  const result = await vi.fn();
 
   expect(result).toMatchSnapshot();
 })
@@ -122,7 +122,7 @@ test("Should send to my courses page after clicking the submit button", async ()
 
   fireEvent.click(submitButton)
 
-  const result = await vitest.fn();
+  const result = await vi.fn();
 
   expect(result).toMatchSnapshot("My Courses Page");
 })
