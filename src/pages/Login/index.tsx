@@ -5,19 +5,19 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import i18n from "../../locales/i18n";
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
 import { useState } from "react";
 
-interface LoginRequest {
+type LoginRequest = {
   email: string;
   password: string;
 }
 
-interface LoginResponse {
+type LoginResponse = {
   accessToken: string,
   refreshToken: string,
 }
@@ -50,59 +50,46 @@ function Login() {
   const [loginError, setLoginError] = useState<string | null>(null);
 
   const onSubmit = (data: LoginRequest) => {
-    console.log(data);
     loginUser(data)
-         .then(() => navigate('/courses'))
-         .catch((errors) => {
-           console.log(errors);
-           setLoginError('An error has occurred')
+         .then((response) => handleLoginResponse(response))
+         .catch((error: AxiosError) => {
+           if (error.response) {
+             handleLoginError(error.response.data as ProblemDetail)
+           } else {
+             console.log('An unexpected error has occurred.');
+             setLoginError('An unexpected error has occurred. Please, try again.');
+           }
          });
   };
 
   const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
-  const loginUser = async (data: LoginRequest) => {
-    try {
-      await axios.post<LoginResponse>(
-          BASE_URL + '/login',
-          { email: data.email, password: data.password },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-            },
+  const loginUser = async (data: LoginRequest): Promise<LoginResponse | ProblemDetail> => {
+    const loginResponse = await axios.post<LoginResponse | ProblemDetail>(
+        BASE_URL + '/login',
+        { email: data.email, password: data.password },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
           },
-      );
-    }
-    catch (error: any) {
-      if (axios.isAxiosError(error)) {
-        handleError(error)
-      } else {
-        console.log('An error has occurred: ', error);
-        return 'An error has occurred.';
-      }
-    }
+        },
+    );
+
+    return loginResponse.data;
   };
 
-  const handleError = (error: any) => {
-    // TODO: 403 error format:
-    // detail
-    //     :
-    //     "Bad credentials"
-    // instance
-    //     :
-    //     "/api/v1/login"
-    // status
-    //     :
-    //     403
-    const responseStatus: number = error.response.data.status as number;
-    const problemDetail: ProblemDetail = error.response.data as ProblemDetail;
-    console.log('Response status code: ', responseStatus);
-    console.log('Problem detail: ', problemDetail);
-  }
+  const handleLoginResponse = (response: LoginResponse | ProblemDetail) => {
+    console.log(typeof response)
+    console.log(response)
+    // TODO: handle tokens on login success
+    return navigate("/courses");
+  };
 
-  // const handleLogin = () => {
-  //   return navigate("/courses");
-  // };
+  const handleLoginError = (error: ProblemDetail): void => {
+    if (error.detail == 'Bad credentials' && error.status == 403) {
+      setLoginError('Email or password is incorrect');
+    }
+  }
 
   const handleRegister = () => {
     return navigate("/registration");
