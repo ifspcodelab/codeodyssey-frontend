@@ -8,16 +8,21 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import {useTranslation} from "react-i18next";
 import {CreateUserResponse} from "../../core/models/CreateUserResponse";
 import {schema} from "./schema";
+import {useApi} from "../../core/hooks/useApi";
 
 
-function Registration({createUser}: any) {
+function Registration() {
     const {t} = useTranslation()
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
     const navigate = useNavigate()
+    const api = useApi()
     const [isChecked, setIsChecked] = useState(false);
 
-    const onSubmit = (data: CreateUserResponse) => {
-        void createUser(data.name, data.email, data.password, navigate)
+    const onSubmit = async (data: CreateUserResponse) => {
+        const response = await api.register(data.name, data.email, data.password)
+        if (response) {
+            navigate('/resend-email', { state: { data: data.email }})
+        }
     }
     
     const handleLogin = () => {
