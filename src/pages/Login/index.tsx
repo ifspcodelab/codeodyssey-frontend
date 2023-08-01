@@ -11,6 +11,9 @@ import { useNavigate } from "react-router-dom";
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
 import { useState } from "react";
+import jwtDecode from "jwt-decode";
+
+// TODO: refactor to move types, api call, error handling and such to its own files and directories
 
 type LoginRequest = {
   email: string;
@@ -43,7 +46,6 @@ function Login() {
     register,
     handleSubmit,
     formState: { errors },
-    // setValue,
   } = useForm({ resolver: yupResolver(schema) });
   const navigate = useNavigate();
 
@@ -51,7 +53,7 @@ function Login() {
 
   const onSubmit = (data: LoginRequest) => {
     loginUser(data)
-         .then((response) => handleLoginResponse(response))
+         .then((response) => handleLoginResponse(response as LoginResponse))
          .catch((error: AxiosError) => {
            if (error.response) {
              handleLoginError(error.response.data as ProblemDetail)
@@ -78,10 +80,13 @@ function Login() {
     return loginResponse.data;
   };
 
-  const handleLoginResponse = (response: LoginResponse | ProblemDetail) => {
-    console.log(typeof response)
-    console.log(response)
-    // TODO: handle tokens on login success
+  const handleLoginResponse = (response: LoginResponse) => {
+    console.log(jwtDecode(response.accessToken));
+    const accessToken: string = response.accessToken;
+    const refreshToken: string = response.refreshToken;
+    localStorage.setItem('access_token', accessToken);
+    localStorage.setItem('refresh_token', refreshToken);
+
     return navigate("/courses");
   };
 
@@ -94,16 +99,6 @@ function Login() {
   const handleRegister = () => {
     return navigate("/registration");
   };
-
-  // useEffect(() => {
-  //   const storedEmail = localStorage.getItem("email");
-  //   const storedPassword = localStorage.getItem("password");
-  //
-  //   if (storedEmail && storedPassword) {
-  //     setValue("email", storedEmail);
-  //     setValue("password", storedPassword);
-  //   }
-  // }, [setValue]);
 
   return (
     <Container maxWidth="sm" className="formContainer">
