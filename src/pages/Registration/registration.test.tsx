@@ -116,7 +116,7 @@ describe("Registration", () => {
         expect(inputName.value).toEqual('John Doe');
         expect(inputEmail.value).toEqual('johndoe@email.com');
         expect(inputPassword.value).toEqual('Password@01');
-        expect(inputTerms.checked).toEqual("true");
+        expect(inputTerms.value).toEqual("true");
 
         fireEvent.click(inputTerms)
 
