@@ -1,6 +1,60 @@
 {
+  "createcourse": {
+  "title": "Create Course",
+  "text": "Create a course by filling out the form below",
+  "form": {
+    "name": "Name",
+    "slug": "Slug",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "submit": "Create",
+    "cancel": "Cancel",
+    "confimationdialog": {
+      "title": "Are you sure you want to quit?",
+      "description": "changes will not be saved",
+      "leave": "leave",
+      "continue": "continue"
+    }
+  },
+  "exception": {
+    "badRequest": "Bad Request",
+    "duplicate": "This value already exists in the database",
+    "unauthorized": "No permission to create the course"
+  }
+},
   "privacypolicy": {
     "title": "Privacy Policy"
+  },
+  "registration": {
+    "title": "Registration",
+    "text": "Please, fill out the form bellow to use the platform",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "email_message": "the email is immutable",
+      "password": "Password",
+      "login": "Login",
+      "submit": "Submit",
+      "termsCheckbox": "I have read and agree with the Terms of Use and Privacy Policy",
+      "validation": {
+        "termsCheckbox": "You must agree with the terms and privacy policy",
+        "password": {
+          "number": "Password must have at least one digit",
+          "lowercase": "Password must have at least one lowercase letter",
+          "uppercase": "Password must have at least one uppercase letter",
+          "special": "Password must have at least one special character"
+        }
+      }
+    },
+    "footer": "Registration footer",
+    "exception": {
+      "email": "There was a problem with the email used",
+      "badRequest": "Bad request"
+    }
+  },
+  "resendEmail":{
+    "title": "Resend email",
+    "text": "The system has sent a confirmation email to {{email}}. Check your email."
   },
   "contact": {
     "title": "Contact",
@@ -22,11 +76,33 @@
     "mixed_one_of": "This field doesn't match.",
     "mixed_max": "This field should be smaller than ${max}.",
     "mixed_min": "This field should be bigger than ${min}.",
+    "mixed_defined": "${path} must be defined",
+    "mixed_not_null": "${path} cannot be null",
     "string_email": "This field needs to be a valid email.",
     "string_max": "This field should be smaller than ${max}.",
     "string_min": "This field should be bigger than ${min}.",
+    "string_matches": "${path} must match the following: \"${regex}\"",
+    "string_length": "${path} must be exactly ${length} character(s)",
+    "string_url": "${path} must be a valid URL",
+    "string_uuid": "${path} must be a valid UUID",
+    "string_trim": "${path} must be a trimmed string",
+    "string_lowercase": "${path} must be a lowercase string",
+    "string_uppercase": "${path} must be a upper case string",
     "number_max": "This field should be smaller than ${max}.",
-    "number_min": "This field should be bigger than ${min}."
+    "number_min": "This field should be bigger than ${min}.",
+    "number_less_than":"${path} must be less than ${less}",
+    "number_more_than": "${path} must be greater than ${more}",
+    "number_not_equal": "${path} must not be equal to ${notEqual}",
+    "number_positive": "${path} must be a positive number",
+    "number_negative": "${path} must be a negative number",
+    "number_integer": "${path} must be an integer",
+    "date_min": "${path} field must be later than ${min}",
+    "date_max": "${path} field must be at earlier than ${max}",
+    "boolean_is_value": "${path} field must be ${value}",
+    "object_no_unknown": "${path} field has unspecified keys: ${unknown}",
+    "array_min": "${path} field must have at least ${min} items",
+    "array_max": "${path} field must have less than or equal to ${max} items",
+    "array_length": "${path} must have ${length} items"
   },
   "login": {
     "title": "Login",
