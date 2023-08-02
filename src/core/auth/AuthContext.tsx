@@ -1,6 +1,6 @@
 import {createContext, ReactNode, useState} from "react";
 import {UserRole} from "./JwtService.ts";
-import {useNavigate} from "react-router-dom";
+// import {useNavigate} from "react-router-dom";
 
 interface Props {
     children?: ReactNode,
@@ -40,7 +40,7 @@ const AuthProvider = ({children}: Props) => {
     const [ email, setEmail ] = useState(authContextInitialValue.email);
     const [ role, setRole ] = useState(authContextInitialValue.role);
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     return (
         <AuthContext.Provider
@@ -55,3 +55,5 @@ const AuthProvider = ({children}: Props) => {
         </AuthContext.Provider>
     )
 }
+
+export { AuthContext, AuthProvider }

@@ -14,6 +14,8 @@ import Registration from "./pages/Registration";
 import './index.css'
 import ResendEmail from "./pages/ResendEmail";
 import {createUser} from "./core/services/UserService";
+import {PrivateRoute} from "./core/auth/PrivateRoute.tsx";
+import {UserRole} from "./core/auth/JwtService.ts";
 
 const router = createBrowserRouter([
     {
@@ -26,7 +28,10 @@ const router = createBrowserRouter([
             },
             {
                 path: "create-course",
-                element: <CreateCourse/>
+                element:
+                    <PrivateRoute userRole={UserRole.PROFESSOR}>
+                        <CreateCourse/>
+                    </PrivateRoute>
             },
             {
                 path: "courses",
