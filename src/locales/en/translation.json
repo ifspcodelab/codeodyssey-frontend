@@ -34,7 +34,7 @@
       "email_message": "the email is immutable",
       "password": "Password",
       "login": "Login",
-      "submit": "Submit",
+      "submit": "Register",
       "termsCheckbox": "I have read and agree with the <1>Terms of Use</1> and <3>Privacy Policy</3>",
       "validation": {
         "termsCheckbox": "You must agree with the terms and privacy policy",
