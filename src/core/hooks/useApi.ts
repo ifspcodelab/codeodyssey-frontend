@@ -31,12 +31,14 @@ export const useApi = () => ({
 const handleError = (error: any) => {
     let responseStatus: number
     let problemDetail: ProblemDetail
-    responseStatus = error.response.data.status
-    if (responseStatus == 400) {
-        alert(i18n.t("registration.exception.badRequest"))
-    } else if (responseStatus == 409) {
-        problemDetail = error.response.data;
-        if (problemDetail.title == "User Already exists" && problemDetail.detail == "Email already exists")
-            alert(i18n.t("registration.exception.email"))
+    if (error.response) {
+        responseStatus = error.response.data.status
+        if (responseStatus == 400) {
+            alert(i18n.t("registration.exception.badRequest"))
+        } else if (responseStatus == 409) {
+            problemDetail = error.response.data;
+            if (problemDetail.title == "User Already exists" && problemDetail.detail == "Email already exists")
+                alert(i18n.t("registration.exception.email"))
+        }
     }
 }

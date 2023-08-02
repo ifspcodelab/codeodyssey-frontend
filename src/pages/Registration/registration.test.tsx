@@ -4,9 +4,35 @@ import userEvent from '@testing-library/user-event'
 import {describe, test, vi} from "vitest";
 import Registration from "./index";
 import {BrowserRouter, Router} from "react-router-dom";
-import {schema} from "./index"
+import {schema} from "./schema";
 import { createMemoryHistory } from 'history';
+import {setupServer} from "msw/node";
+import {rest} from "msw";
 
+export const restHandlers = [
+    rest.post('http://localhost:3000/users', (req, res, ctx) => {
+            return res(
+                ctx.status(201),
+                ctx.json(
+                    {
+                        id: "9693be41-0eb2-44e8-8514-1379707c92b6",
+                        name: "John Doe",
+                        email: "johndoe@email.com",
+                        role: "STUDENT",
+                        createdAt: "2023-07-26T13:20:31.230343Z"
+                    }
+                )
+            )
+        }),
+]
+
+const server = setupServer(...restHandlers)
+
+beforeAll(() => void server.listen({ onUnhandledRequest: 'error' }))
+
+afterAll(() => void server.close())
+
+afterEach(() => server.resetHandlers())
 
 describe("Registration", () => {
 
@@ -94,11 +120,16 @@ describe("Registration", () => {
     })
 
     test("Should send request with data after form submission", async () => {
+        const history = createMemoryHistory();
+
+        history.push = vi.fn();
+
         const { getByRole, getByLabelText } = render(
-            <BrowserRouter>
+            <Router location={history.location} navigator={history}>
                 <Registration />
-            </BrowserRouter>
+            </Router>
         );
+
 
         const inputName = getByLabelText('Name') as HTMLInputElement;
         const inputEmail = getByLabelText('Email') as HTMLInputElement;
@@ -119,7 +150,7 @@ describe("Registration", () => {
 
         await waitFor(() => {
             fireEvent.click(getByRole("button", {name: /submit/i}))
-            expect(mockCreateUser).toBeCalled()
+            expect(history.push).toHaveBeenCalled()
         })
     })
 
