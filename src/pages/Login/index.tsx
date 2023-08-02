@@ -10,8 +10,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
-import { useState } from "react";
-import {JwtService} from "../../core/auth/JwtService.ts";
+import {useContext, useState} from "react";
+import {AccessToken, JwtService} from "../../core/auth/JwtService.ts";
+import {AuthContext} from "../../core/auth/AuthContext.tsx";
 
 // TODO: refactor to move types, api call, error handling and such to its own files and directories
 
@@ -80,11 +81,16 @@ function Login() {
     return loginResponse.data;
   };
 
+  const { setAuthenticated, setId, setEmail, setRole } = useContext(AuthContext);
   const handleLoginResponse = (response: LoginResponse) => {
     const jwtService = new JwtService();
     jwtService.setAccessToken(response.accessToken);
     jwtService.setRefreshToken(response.refreshToken);
-
+    const decodedAccessToken = jwtService.getAccessToken() as AccessToken;
+    setAuthenticated(true);
+    setId(decodedAccessToken.sub);
+    setEmail(decodedAccessToken.email);
+    setRole(decodedAccessToken.role);
     return navigate("/courses");
   };
 

@@ -5,7 +5,8 @@ export enum UserRole {
     STUDENT = "STUDENT",
     PROFESSOR = "PROFESSOR",
 }
-interface accessToken {
+
+export interface AccessToken {
     role: UserRole,
     name: string,
     email: string,
@@ -24,10 +25,10 @@ export class JwtService {
         localStorage.setItem('refresh_token', refreshToken);
     }
 
-    getAccessToken(): accessToken | null {
+    getAccessToken(): AccessToken | null {
         const rawAccessToken = localStorage.getItem('access_token');
         if (rawAccessToken) {
-            return jwtDecode<accessToken>(rawAccessToken);
+            return jwtDecode<AccessToken>(rawAccessToken);
         }
         return null;
     }
