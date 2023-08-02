@@ -11,16 +11,16 @@ import { useNavigate } from "react-router-dom";
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
 import { useState } from "react";
-import jwtDecode from "jwt-decode";
+import {JwtService} from "../../core/auth/JwtService.ts";
 
 // TODO: refactor to move types, api call, error handling and such to its own files and directories
 
-type LoginRequest = {
-  email: string;
-  password: string;
+interface LoginRequest {
+  email: string,
+  password: string,
 }
 
-type LoginResponse = {
+interface LoginResponse {
   accessToken: string,
   refreshToken: string,
 }
@@ -81,11 +81,9 @@ function Login() {
   };
 
   const handleLoginResponse = (response: LoginResponse) => {
-    console.log(jwtDecode(response.accessToken));
-    const accessToken: string = response.accessToken;
-    const refreshToken: string = response.refreshToken;
-    localStorage.setItem('access_token', accessToken);
-    localStorage.setItem('refresh_token', refreshToken);
+    const jwtService = new JwtService();
+    jwtService.setAccessToken(response.accessToken);
+    jwtService.setRefreshToken(response.refreshToken);
 
     return navigate("/courses");
   };
