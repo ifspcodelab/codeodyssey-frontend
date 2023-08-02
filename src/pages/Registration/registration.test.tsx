@@ -11,19 +11,20 @@ import {rest} from "msw";
 
 export const restHandlers = [
     rest.post('http://localhost:3000/users', (req, res, ctx) => {
-            return res(
-                ctx.status(201),
-                ctx.json(
-                    {
-                        id: "9693be41-0eb2-44e8-8514-1379707c92b6",
-                        name: "John Doe",
-                        email: "johndoe@email.com",
-                        role: "STUDENT",
-                        createdAt: "2023-07-26T13:20:31.230343Z"
-                    }
-                )
+        console.log(req) // for build purposes
+        return res(
+            ctx.status(201),
+            ctx.json(
+                {
+                    id: "9693be41-0eb2-44e8-8514-1379707c92b6",
+                    name: "John Doe",
+                    email: "johndoe@email.com",
+                    role: "STUDENT",
+                    createdAt: "2023-07-26T13:20:31.230343Z"
+                }
             )
-        }),
+        )
+    }),
 ]
 
 const server = setupServer(...restHandlers)
@@ -124,7 +125,7 @@ describe("Registration", () => {
 
         history.push = vi.fn();
 
-        const { getByRole, getByLabelText } = render(
+        const { getByTestId, getByLabelText } = render(
             <Router location={history.location} navigator={history}>
                 <Registration />
             </Router>
@@ -149,8 +150,21 @@ describe("Registration", () => {
         fireEvent.click(inputTerms)
 
         await waitFor(() => {
-            fireEvent.click(getByRole("button", {name: /submit/i}))
-            expect(history.push).toHaveBeenCalled()
+            fireEvent.click(getByTestId("submitButton"))
+            expect(history.push).toHaveBeenLastCalledWith( {
+                    "hash": "",
+                    "pathname": "/resend-email",
+                    "search": "",
+                },
+                {
+                     "data": "johndoe@email.com",
+                },
+                {
+                    "state": {
+                        "data": "johndoe@email.com",
+                    },
+                }
+            )
         })
     })
 
