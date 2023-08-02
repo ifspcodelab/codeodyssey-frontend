@@ -35,7 +35,7 @@
       "password": "Senha",
       "login": "Login",
       "submit": "Submeter",
-      "termsCheckbox": "Eu li e concordo com os Termos de Uso e a Política de Privacidade",
+      "termsCheckbox": "Eu li e concordo com os <1>Termos de Uso</1> e a <3>Política de Privacidade</3>",
       "validation": {
         "termsCheckbox": "Você deve aceitar os termos e a política de privacidade",
         "password": {

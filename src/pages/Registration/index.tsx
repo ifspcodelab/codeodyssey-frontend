@@ -2,10 +2,10 @@ import {useState} from 'react';
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
 import './style.css'
-import {useNavigate} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {useTranslation} from "react-i18next";
+import {useTranslation, Trans} from "react-i18next";
 import {CreateUserResponse} from "../../core/models/CreateUserResponse";
 import {schema} from "./schema";
 import {useApi} from "../../core/hooks/useApi";
@@ -52,7 +52,11 @@ function Registration() {
                     <div className="checkbox">
                         <input aria-labelledby="terms" type="checkbox" checked={isChecked}
                                 {...register("terms", { onChange:(e) => setIsChecked(e.target.checked) })} />
-                        <label id="terms" htmlFor="terms">{t('registration.form.termsCheckbox')}</label>
+                        <label id="terms" htmlFor="terms">
+                            <Trans i18nKey="registration.form.termsCheckbox">
+                                I have read and agree with the <Link to="/terms-of-use">Terms of Use</Link> and <Link to="/privacy-policy">Privacy Policy</Link>
+                            </Trans>
+                        </label>
                         <p>{errors.terms?.message}</p>
                     </div>
                     <div id="buttons">
