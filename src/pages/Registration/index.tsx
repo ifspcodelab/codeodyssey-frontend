@@ -54,7 +54,7 @@ function Registration() {
                                 {...register("terms", { onChange:(e) => setIsChecked(e.target.checked) })} />
                         <label id="terms" htmlFor="terms">
                             <Trans i18nKey="registration.form.termsCheckbox">
-                                I have read and agree with the <Link to="/terms-of-use">Terms of Use</Link> and <Link to="/privacy-policy">Privacy Policy</Link>
+                                I have read and agree with the <Link to="/terms-of-use" target="_blank">Terms of Use</Link> and <Link to="/privacy-policy" target="_blank">Privacy Policy</Link>
                             </Trans>
                         </label>
                         <p>{errors.terms?.message}</p>
