@@ -1,6 +1,6 @@
 import jwtDecode from "jwt-decode";
 
-enum UserRole {
+export enum UserRole {
     ADMIN = "ADMIN",
     STUDENT = "STUDENT",
     PROFESSOR = "PROFESSOR",
