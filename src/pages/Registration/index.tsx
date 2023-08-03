@@ -40,7 +40,7 @@ function Registration() {
                         <p>{errors.name?.message}</p>
                     </div>
                     <div className="formInput">
-                        <label id="email" htmlFor={"email"}>{t('registration.form.email')}</label><span data-testid="immutabilityMessage">{t('registration.form.email_message')}</span>
+                        <label id="email" htmlFor={"email"}>{t('registration.form.email')}</label><span>{t('registration.form.email_message')}</span>
                         <input aria-labelledby="email" type="text" {...register("email", { required: true })} />
                         <p>{errors.email?.message}</p>
                     </div>
