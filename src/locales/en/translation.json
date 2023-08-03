@@ -31,9 +31,9 @@
     "form": {
       "name": "Name",
       "email": "Email",
-      "email_message": "It is not possible to change email",
+      "email_message": "Won't be possible to change email",
       "password": "Password",
-      "login": "Already have an account",
+      "login": "Already have an account? Go to login.",
       "submit": "Register",
       "termsCheckbox": "I have read and agree with the <1>Terms of Use</1> and <3>Privacy Policy</3>",
       "validation": {
