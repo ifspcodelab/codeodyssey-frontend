@@ -1,5 +1,6 @@
-import {createContext, ReactNode, useContext, useState} from "react";
-import {UserRole} from "./JwtService.ts";
+import {createContext, ReactNode, useContext, useEffect, useState} from "react";
+import {JwtService, UserRole} from "./JwtService.ts";
+
 // import {useNavigate} from "react-router-dom";
 
 interface Props {
@@ -35,23 +36,46 @@ const authContextInitialValue = {
 const AuthContext = createContext<IAuthContext>(authContextInitialValue);
 
 const AuthProvider = ({children}: Props) => {
-    const [ authenticated, setAuthenticated ] = useState(authContextInitialValue.authenticated);
-    const [ id, setId ] = useState(authContextInitialValue.id);
-    const [ email, setEmail ] = useState(authContextInitialValue.email);
-    const [ role, setRole ] = useState(authContextInitialValue.role);
+    const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+    const [id, setId] = useState<string | null>(null);
+    const [email, setEmail] = useState<string | null>(null);
+    const [role, setRole] = useState<UserRole | null>(null);
+
+    useEffect(() => {
+        const jwtService = new JwtService();
+        const jwt = jwtService.getAccessToken();
+        console.log(jwt);
+        if (jwt) {
+            console.log("@ if")
+            setAuthenticated(true);
+            setId(jwt.sub);
+            setEmail(jwt.email);
+            setRole(jwt.role);
+        } else {
+            console.log("@ else")
+            setAuthenticated(false);
+            setId("");
+            setEmail("");
+            setRole(UserRole.STUDENT);
+        }
+    }, []);
 
     // const navigate = useNavigate();
 
     return (
         <AuthContext.Provider
             value={{
-                authenticated, setAuthenticated,
-                id, setId,
-                email, setEmail,
-                role, setRole
+                authenticated: authenticated!,
+                setAuthenticated,
+                id: id!,
+                setId,
+                email: email!,
+                setEmail,
+                role: role!,
+                setRole
             }}
         >
-            {children}
+            { authenticated === null ? <></> :  children }
         </AuthContext.Provider>
     )
 }

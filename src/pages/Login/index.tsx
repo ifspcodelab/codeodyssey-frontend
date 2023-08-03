@@ -92,7 +92,7 @@ function Login() {
     authConsumer.setEmail(decodedAccessToken.email);
     authConsumer.setRole(decodedAccessToken.role);
     console.log(authConsumer)
-    return navigate("/courses");
+    return navigate("/");
   };
 
   const handleLoginError = (error: ProblemDetail): void => {
