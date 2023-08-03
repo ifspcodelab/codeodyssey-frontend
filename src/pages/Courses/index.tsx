@@ -25,47 +25,29 @@ import {useNavigate} from "react-router-dom"
     data: Course[];
   }
 
-  // const token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwic3ViIjoibW9yaWFydHlAZ21haWwuY29tIiwiaWF0IjoxNjkwNDg0OTI1LCJleHAiOjE2OTA0ODU4MjV9.jt6aqQbwmm3vIIdLXnEra9-NUsza9BDQ6HVnczKQyA0'
-  // const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
-  // async function getCourses(): Promise<Course> {
-  //   const response = await axios.get<Course>(
-  //     'http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/courses',
-  //     {
-  //       headers: {
-  //         Accept: 'application/json',
-  //         'Authorization': `Basic ${token}` ,
-  //         'Content-Type': 'application/json',
-  //         "Access-Control-Allow-Origin": "http://localhost:8080/api/v1/"
-  //       },
-  //     },
-  //   );
-
-  //   return response.data;
+  // async function getUserCourses() {
+  //   const res = await axios.get<GetCoursesResponse>('http://localhost:3000/courses')
+  //   return res.data;
   // }
 
-  async function getCourses() {
+  // async function getUserEnrollments() {
+  //   const res = await axios.get<GetCoursesResponse>('http://localhost:3000/enrollments');
+  //   return res.data;
+  // }
+
+  async function getProfessorCourses() {
     try {
-
-      // const response = await Promise.all([
-      //   axios.get<GetCoursesResponse>('http://localhost:3000/enrollments'),
-      //   axios.get<GetCoursesResponse>('http://localhost:3000/courses'),
-      // ])
-
       const { data, status } = await axios.get<GetCoursesResponse>(
-        'http://localhost:3000/enrollments',
+        'http://localhost:3000/courses',
         {
           headers: {
             Accept: 'application/json',
-            // 'Authorization': `Basic ${token}` ,
           },
         },
       );
-  
       console.log(JSON.stringify(data, null, 4));
-  
       console.log('response status is: ', status);
-  
       return data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -78,26 +60,57 @@ import {useNavigate} from "react-router-dom"
     }
   }
 
+  async function getStudentCourses() {
+    try {
+      const { data, status } = await axios.get<Course[]>(
+        'http://localhost:3000/courses',
+        {
+          headers: {
+            Accept: 'application/json',
+          },
+        },
+      );
+      console.log(JSON.stringify(data, null, 4));
+      console.log('response status is: ', status);
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log('error message: ', error.message);
+        return error.message;
+      } else {
+        console.log('unexpected error: ', error);
+        return 'An unexpected error occurred';
+      }
+    }
+  }
 
 function Courses() {
     const { t } = useTranslation();
 
-    const [courses, setCourses] = useState<[] | Course[]>([]);
-
+    const [coursesStudent, setCoursesStudent] = useState<[] | Course[]>([]);
+    const [coursesProfessor, setCoursesProfessor] = useState<[] | Course[]>([]);
     const navigate = useNavigate()
 
     useEffect(() => {
-      (async () => {
-        const course = await getCourses();
-        setCourses(course);
+      void (async () => {
+        const cursoAluno = await getStudentCourses();
+        const cursoProfessor = await getProfessorCourses();
+        setCoursesStudent(cursoAluno)
+        setCoursesProfessor(cursoProfessor)
       })();
     }, []);
+
+    
+
+    
 
     return (
         <>
         <PageHeader title={t('courses.title')} text={t('courses.text')} />
-        
-        {courses.length ? <div>{courses?.map((course: Course) => (
+          {coursesProfessor.length || coursesStudent.length ? 
+          
+          <div>
+            <div>{coursesProfessor?.map((course: Course) => (
             <Card variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>
                 <CardContent>
                     <Typography variant="h5" component="div">
@@ -137,9 +150,47 @@ function Courses() {
                     >{t("courses.button.students")}</Button>
                 </CardActions>
             </Card>
-            ))}</div> : <Typography>{t("courses.emptyList")}</Typography>}
-        </>
-    );
+            ))}</div> 
+          <div>{coursesStudent?.map((course: Course) => (
+            <Card variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>
+                <CardContent>
+                    <Typography variant="h5" component="div">
+                        {course.name}
+                    </Typography>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                        {course.professor.name}    
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    {t("courses.intlDate", { date: new Date(course.startDate),
+                formatParams: {
+                    date: { year: 'numeric', month: 'short', day: 'numeric'},
+                  },
+                })} {t("courses.until")} {t("courses.intlDate", {
+                    date: new Date((course.endDate)),
+                    formatParams: {
+                      date: {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric"
+                      }
+                    }
+                  })}
+                    </Typography>
+                </CardContent>
+
+                <CardActions sx={{ display: "flex", flexDirection: "column", alignItems: "center",justifyContent: "center",marginLeft: "auto", }}>
+                    <Button variant="contained" size="medium" sx={{ p: 1, m: 1,  width:200 }}
+                      onClick={() => {
+                        navigate('/students')
+                      }}
+                    >{t("courses.button.students")}</Button>
+                </CardActions>
+            </Card>
+            ))}</div> 
+
+          </div> : <Typography>{t("courses.emptyList")}</Typography>}
+
+        </>)
 }
 
 export default Courses
