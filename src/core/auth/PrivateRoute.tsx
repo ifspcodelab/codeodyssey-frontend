@@ -1,6 +1,6 @@
-import {JSX, useContext} from "react";
+import {JSX} from "react";
 import {UserRole} from "./JwtService.ts";
-import {AuthContext} from "./AuthContext.tsx";
+import {AuthConsumer} from "./AuthContext.tsx";
 import {Navigate, useLocation} from "react-router-dom";
 
 interface PrivateRouteProps {
@@ -9,7 +9,7 @@ interface PrivateRouteProps {
 }
 
 export function PrivateRoute({ children, userRole }: PrivateRouteProps) {
-    const { authenticated, role } = useContext(AuthContext);
+    const { authenticated, role } = AuthConsumer();
     const currentLocation = useLocation();
 
     console.log("hello there @ private route");

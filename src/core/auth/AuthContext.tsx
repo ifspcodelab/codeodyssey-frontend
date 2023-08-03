@@ -1,4 +1,4 @@
-import {createContext, ReactNode, useState} from "react";
+import {createContext, ReactNode, useContext, useState} from "react";
 import {UserRole} from "./JwtService.ts";
 // import {useNavigate} from "react-router-dom";
 
@@ -56,4 +56,8 @@ const AuthProvider = ({children}: Props) => {
     )
 }
 
-export { AuthContext, AuthProvider }
+const AuthConsumer = () => {
+    return useContext(AuthContext);
+}
+
+export { AuthContext, AuthProvider, AuthConsumer }
