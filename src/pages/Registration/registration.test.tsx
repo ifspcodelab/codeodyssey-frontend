@@ -67,7 +67,7 @@ describe("Registration", () => {
             </BrowserRouter>
         );
 
-        expect(getByTestId("loginButton")).toBeInTheDocument();
+        expect(getByTestId("loginLink")).toBeInTheDocument();
     })
 
     test("Should be able to see the submit button text", () => {
@@ -77,7 +77,7 @@ describe("Registration", () => {
             </BrowserRouter>
         );
 
-        expect(getByTestId("submitButton")).toBeInTheDocument();
+        expect(getByTestId("registerButton")).toBeInTheDocument();
     })
 
     test("Should name be validated", async () => {
@@ -117,7 +117,7 @@ describe("Registration", () => {
             </BrowserRouter>
         );
 
-        fireEvent.click(getByTestId("submitButton"));
+        fireEvent.click(getByTestId("registerButton"));
     })
 
     test("Should send request with data after form submission", async () => {
@@ -150,7 +150,7 @@ describe("Registration", () => {
         fireEvent.click(inputTerms)
 
         await waitFor(() => {
-            fireEvent.click(getByTestId("submitButton"))
+            fireEvent.click(getByTestId("registerButton"))
             expect(history.push).toHaveBeenLastCalledWith( {
                     "hash": "",
                     "pathname": "/resend-email",
@@ -182,7 +182,7 @@ describe("Registration", () => {
         expect(getByText(/^Registration$/i)).toBeInTheDocument()
 
         await waitFor(() => {
-            userEvent.click(getByTestId("loginButton"))
+            userEvent.click(getByTestId("loginLink"))
             expect(history.push).toHaveBeenLastCalledWith({
                     "hash": "",
                     "pathname": "/login",
