@@ -26,12 +26,8 @@ form input {
 }
 
 .formInput span {
-    display: initial;
-}
-
-.formInput span:hover {
-    color: #FF0000;
-    cursor: pointer;
+    font-style: italic;
+    color: #777;
 }
 
 .checkbox {

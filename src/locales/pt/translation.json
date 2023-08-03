@@ -31,7 +31,7 @@
     "form": {
       "name": "Nome",
       "email": "Email",
-      "email_message": "o email é imutável",
+      "email_message": "Não é possível mudar o email",
       "password": "Senha",
       "login": "Já tenho conta",
       "submit": "Registrar",
