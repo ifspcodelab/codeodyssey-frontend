@@ -24,10 +24,6 @@ function Registration() {
             navigate('/resend-email', { state: { data: data.email }})
         }
     }
-    
-    const handleLogin = () => {
-        return navigate("/login")
-    }
 
     return (
         <>
@@ -61,10 +57,10 @@ function Registration() {
                     </div>
                     <div id="registration-menu">
                         <button data-testid="registerButton" type="submit">{t('registration.form.submit')}</button>
-                        <Link data-testid="loginLink" onClick={handleLogin}>{t('registration.form.login')}</Link>
+                        <Link data-testid="loginLink" to="/login">{t('registration.form.login')}</Link>
                     </div>
                 </form>
-                <PageFooter id="registration-footer" text={t('registration.footer')}/>
+                <PageFooter text={t('registration.footer')}/>
             </div>
         </>
     );
