@@ -183,13 +183,18 @@ describe("Registration", () => {
 
         await waitFor(() => {
             userEvent.click(getByTestId("loginLink"))
-            expect(history.push).toHaveBeenLastCalledWith({
-                    "hash": "",
-                    "pathname": "/login",
-                    "search": "",
+            expect(history.push).toHaveBeenLastCalledWith( {
+                "hash": "",
+                "pathname": "/login",
+                "search": "",
                 },
-                    undefined,
-                    {},
+                undefined,
+                {
+                    "preventScrollReset": undefined,
+                    "relative": undefined,
+                    "replace": false,
+                    "state": undefined,
+                },
             );
         })
     })
