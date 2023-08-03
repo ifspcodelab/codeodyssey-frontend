@@ -59,12 +59,12 @@ function Registration() {
                         </label>
                         <p>{errors.terms?.message}</p>
                     </div>
-                    <div id="buttons">
-                        <button data-testid="loginButton" onClick={handleLogin}>{t('registration.form.login')}</button>
-                        <button data-testid="submitButton" type="submit">{t('registration.form.submit')}</button>
+                    <div id="registration-menu">
+                        <button data-testid="registerButton" type="submit">{t('registration.form.submit')}</button>
+                        <Link data-testid="loginLink" onClick={handleLogin}>{t('registration.form.login')}</Link>
                     </div>
                 </form>
-                <PageFooter text={t('registration.footer')}/>
+                <PageFooter id="registration-footer" text={t('registration.footer')}/>
             </div>
         </>
     );

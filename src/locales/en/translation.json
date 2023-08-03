@@ -33,7 +33,7 @@
       "email": "Email",
       "email_message": "the email is immutable",
       "password": "Password",
-      "login": "Login",
+      "login": "Already have an account",
       "submit": "Register",
       "termsCheckbox": "I have read and agree with the <1>Terms of Use</1> and <3>Privacy Policy</3>",
       "validation": {
