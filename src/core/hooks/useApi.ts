@@ -2,6 +2,7 @@ import axios, {AxiosError} from "axios";
 import i18n from "../../locales/i18n";
 import {CreateUserResponse} from "../models/CreateUserResponse";
 import {LoginResponse} from "../../pages/Login";
+import {JwtService} from "../auth/JwtService.ts";
 
 
 const api = axios.create({
@@ -11,6 +12,8 @@ const api = axios.create({
         Accept: 'application/json',
     }
 });
+
+const bearerToken: string = new JwtService().getRawAccessToken() as string;
 
 export const useApi = () => ({
     register: async (name: string, email: string, password: string) => {
@@ -32,6 +35,12 @@ export const useApi = () => ({
 
         return response.data;
     },
+    createCourse: async (name: string, slug: string, startDate: string, endDate: string, professorId: string) => {
+        api.defaults.headers['Authorization'] = 'Bearer ' + bearerToken;
+        const response = await api.post< | ProblemDetail>('/users/' + professorId +'/courses', {name, slug, startDate, endDate});
+
+        return response.data;
+    }
 })
 
 const handleError = (error: AxiosError<ProblemDetail>) => {

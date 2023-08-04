@@ -18,6 +18,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
+import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
+import {useApi} from "../../core/hooks/useApi.ts";
 
 
 function CreateCourse() {
@@ -38,13 +40,13 @@ type CourseResponse = {
 };
 
 
-  const onSubmit: SubmitHandler<CourseResponse> = (data) => createCourse(data)
+  const authConsumer = AuthConsumer();
+  const onSubmit: SubmitHandler<CourseResponse> = (data) => submitCreateCourse(data)
   const { register, handleSubmit, watch, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
   const navigate = useNavigate()
-  const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
-  //const PROFESSOR_ID: string = import.meta.env.VITE_PROFESSOR_ID as string;
-  const STUDENT_ID: string = import.meta.env.VITE_STUDENT_ID as string;
+  const PROFESSOR_ID: string = authConsumer.id;
   const [open, setOpen] = React.useState(false);
+  const { createCourse } = useApi();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -54,18 +56,9 @@ type CourseResponse = {
     setOpen(false);
   };
 
-  async function createCourse(data: CourseResponse) {
+  async function submitCreateCourse(data: CourseResponse) {
     try {
-        await axios.post<CourseResponse>(
-          BASE_URL + "/users/" + STUDENT_ID + "/courses",
-            { name: data.name, slug: data.slug, startDate: data.startDate.toISOString(),  endDate: data.endDate.toISOString() },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
+        await createCourse(data.name, data.slug, data.startDate.toISOString(),  data.endDate.toISOString(), PROFESSOR_ID);
         navigate('/courses')
     }
     catch(error) {
