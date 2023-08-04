@@ -3,6 +3,7 @@ import i18n from "../../locales/i18n";
 import {CreateUserResponse} from "../models/CreateUserResponse";
 import {LoginResponse} from "../../pages/Login";
 import {JwtService} from "../auth/JwtService.ts";
+import {Interceptors} from "../auth/Interceptors.ts";
 
 
 const api = axios.create({
@@ -12,6 +13,20 @@ const api = axios.create({
         Accept: 'application/json',
     }
 });
+
+const interceptors = new Interceptors();
+api.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error: AxiosError) => {
+        console.log("status code outside of 2xx. An error occurred: \n", error);
+        if (error.response && error.response.status === 401) {
+            interceptors.handleUnauthorized(error);
+        }
+        return Promise.reject(error);
+    }
+);
 
 const bearerToken: string = new JwtService().getRawAccessToken() as string;
 
