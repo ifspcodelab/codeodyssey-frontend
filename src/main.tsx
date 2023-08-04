@@ -13,7 +13,6 @@ import Login from './pages/Login/index.tsx';
 import Registration from "./pages/Registration";
 import './index.css'
 import ResendEmail from "./pages/ResendEmail";
-import {createUser} from "./core/services/UserService";
 import {PrivateRoute} from "./core/auth/PrivateRoute.tsx";
 import {UserRole} from "./core/auth/JwtService.ts";
 import {AuthProvider} from "./core/auth/AuthContext.tsx";
@@ -40,7 +39,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "registration",
-                element: <Registration createUser={createUser}/>
+                element: <Registration/>
             },
             {
                 path: "resend-email",

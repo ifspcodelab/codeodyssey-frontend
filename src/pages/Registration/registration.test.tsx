@@ -7,8 +7,8 @@ import {BrowserRouter, Router} from "react-router-dom";
 import {schema} from "./index"
 import { createMemoryHistory } from 'history';
 
-const mockCreateUser = vi.fn((name: string, email: string, password: string, navigate: never) => {
-    return Promise.resolve({ name, email, password, navigate })
+const mockCreateUser = vi.fn((name: string, email: string, password: string) => {
+    return Promise.resolve({ name, email, password })
 })
 
 describe("Registration", () => {
@@ -16,7 +16,7 @@ describe("Registration", () => {
    test("Should be able to see the Page Header title on the screen", () => {
        const { getByText } = render(
            <BrowserRouter>
-               <Registration createUser={mockCreateUser}/>
+               <Registration/>
            </BrowserRouter>
        );
 
@@ -26,7 +26,7 @@ describe("Registration", () => {
     test("Should be able to see all the form fields", () => {
         const { getByLabelText, getByText } = render(
             <BrowserRouter>
-                <Registration createUser={mockCreateUser}/>
+                <Registration/>
             </BrowserRouter>
         );
 
@@ -39,7 +39,7 @@ describe("Registration", () => {
     test("Should be able to see the login button text", () => {
         const { getByTestId } = render(
             <BrowserRouter>
-                <Registration createUser={mockCreateUser}/>
+                <Registration/>
             </BrowserRouter>
         );
 
@@ -49,7 +49,7 @@ describe("Registration", () => {
     test("Should be able to see the submit button text", () => {
         const { getByTestId } = render(
             <BrowserRouter>
-                <Registration createUser={mockCreateUser}/>
+                <Registration/>
             </BrowserRouter>
         );
 
@@ -89,7 +89,7 @@ describe("Registration", () => {
     test("Should be able to send registration request", () => {
         const { getByTestId } = render(
             <BrowserRouter>
-                <Registration createUser={mockCreateUser}/>
+                <Registration/>
             </BrowserRouter>
         );
 
@@ -99,7 +99,7 @@ describe("Registration", () => {
     test("Should send request with data after form submission", async () => {
         const { getByRole, getByLabelText } = render(
             <BrowserRouter>
-                <Registration createUser={mockCreateUser} />
+                <Registration/>
             </BrowserRouter>
         );
 
@@ -133,7 +133,7 @@ describe("Registration", () => {
 
         const { getByText, getByTestId } = render(
             <Router location={history.location} navigator={history}>
-                <Registration createUser={mockCreateUser}/>
+                <Registration/>
             </Router>
         );
 
@@ -155,7 +155,7 @@ describe("Registration", () => {
     test("Should show immutability message when hover email tooltip", () => {
         const {getByTestId, getByTitle} = render(
             <BrowserRouter>
-                <Registration createUser={mockCreateUser}/>
+                <Registration/>
             </BrowserRouter>
         )
 
