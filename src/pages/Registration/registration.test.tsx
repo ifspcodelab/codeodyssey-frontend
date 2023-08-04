@@ -1,9 +1,8 @@
 import "@testing-library/jest-dom";
 import { render, fireEvent, waitFor } from "@testing-library/react";
-import userEvent from '@testing-library/user-event'
 import {describe, test, vi} from "vitest";
 import Registration from "./index";
-import {BrowserRouter, Link, Router} from "react-router-dom";
+import {BrowserRouter, Router} from "react-router-dom";
 import {schema} from "./schema";
 import { createMemoryHistory } from 'history';
 import {setupServer} from "msw/node";
