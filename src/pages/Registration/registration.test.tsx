@@ -3,7 +3,7 @@ import { render, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from '@testing-library/user-event'
 import {describe, test, vi} from "vitest";
 import Registration from "./index";
-import {BrowserRouter, Router} from "react-router-dom";
+import {BrowserRouter, Link, Router} from "react-router-dom";
 import {schema} from "./schema";
 import { createMemoryHistory } from 'history';
 import {setupServer} from "msw/node";
@@ -48,15 +48,15 @@ describe("Registration", () => {
    })
 
     test("Should be able to see all the form fields", () => {
-        const { getByLabelText, getByText } = render(
+        const { getByLabelText } = render(
             <BrowserRouter>
                 <Registration/>
             </BrowserRouter>
         );
 
-        expect(getByText("Name")).toBeInTheDocument();
-        expect(getByText("Email")).toBeInTheDocument();
-        expect(getByText("Password")).toBeInTheDocument();
+        expect(getByLabelText("Name")).toBeInTheDocument();
+        expect(getByLabelText("Email")).toBeInTheDocument();
+        expect(getByLabelText("Password")).toBeInTheDocument();
         expect(getByLabelText("I have read and agree with the Terms of Use and Privacy Policy")).toBeInTheDocument();
     })
 
@@ -71,13 +71,13 @@ describe("Registration", () => {
     })
 
     test("Should be able to see the submit button text", () => {
-        const { getByTestId } = render(
+        const { getByRole } = render(
             <BrowserRouter>
                 <Registration/>
             </BrowserRouter>
         );
 
-        expect(getByTestId("registerButton")).toBeInTheDocument();
+        expect(getByRole("button", {name: "Register"})).toBeInTheDocument();
     })
 
     test("Should name be validated", async () => {
@@ -131,7 +131,6 @@ describe("Registration", () => {
             </Router>
         );
 
-
         const inputName = getByLabelText('Name') as HTMLInputElement;
         const inputEmail = getByLabelText('Email') as HTMLInputElement;
         const inputPassword = getByLabelText('Password') as HTMLInputElement;
@@ -169,34 +168,18 @@ describe("Registration", () => {
     })
 
     test("Should send to login page after clicking the login button", async () => {
-        const history = createMemoryHistory();
-
-        history.push = vi.fn();
-
-        const { getByText, getByTestId } = render(
-            <Router location={history.location} navigator={history}>
-                <Registration/>
-            </Router>
+        const { getByRole } = render(
+            <BrowserRouter>
+                <Registration />
+            </BrowserRouter>
         );
 
-        expect(getByText(/^Registration$/i)).toBeInTheDocument()
+        const registrationHeading = getByRole("heading", {name: "Registration"})
+        const loginLink = getByRole("link", {name: "Already have an account? Go to login."})
 
-        await waitFor(() => {
-            userEvent.click(getByTestId("loginLink"))
-            expect(history.push).toHaveBeenLastCalledWith( {
-                "hash": "",
-                "pathname": "/login",
-                "search": "",
-                },
-                undefined,
-                {
-                    "preventScrollReset": undefined,
-                    "relative": undefined,
-                    "replace": false,
-                    "state": undefined,
-                },
-            );
-        })
+        expect(registrationHeading).toBeInTheDocument()
+        expect(loginLink).toBeInTheDocument()
+        expect(loginLink).toHaveAttribute("href", "/login")
     })
 
     test("Should show immutability message", () => {
@@ -206,7 +189,7 @@ describe("Registration", () => {
             </BrowserRouter>
         )
 
-        const immutabilityMessage = getByText("It is not possible to change email")
+        const immutabilityMessage = getByText(/Won't be possible to change email/i)
 
         expect(immutabilityMessage).toBeInTheDocument()
     })
