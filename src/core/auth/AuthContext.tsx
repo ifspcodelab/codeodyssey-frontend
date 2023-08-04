@@ -10,6 +10,8 @@ interface Props {
 interface IAuthContext {
     authenticated: boolean,
     setAuthenticated: (newState: boolean) => void,
+    accessToken: string,
+    setAccessToken: (newState: string) => void,
     id: string,
     setId: (newState: string) => void,
     email: string,
@@ -25,6 +27,8 @@ const noop = () => {
 const authContextInitialValue = {
     authenticated: false,
     setAuthenticated: noop,
+    accessToken: "",
+    setAccessToken: noop,
     id: "",
     setId: noop,
     email: "",
@@ -37,6 +41,7 @@ const AuthContext = createContext<IAuthContext>(authContextInitialValue);
 
 const AuthProvider = ({children}: Props) => {
     const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+    const [accessToken, setAccessToken] = useState<string | null>(null);
     const [id, setId] = useState<string | null>(null);
     const [email, setEmail] = useState<string | null>(null);
     const [role, setRole] = useState<UserRole | null>(null);
@@ -47,13 +52,16 @@ const AuthProvider = ({children}: Props) => {
         console.log(jwt);
         if (jwt) {
             console.log("@ if")
+            const rawAccessToken = jwtService.getRawAccessToken() as string;
             setAuthenticated(true);
+            setAccessToken(rawAccessToken);
             setId(jwt.sub);
             setEmail(jwt.email);
             setRole(jwt.role);
         } else {
             console.log("@ else")
             setAuthenticated(false);
+            setAccessToken("");
             setId("");
             setEmail("");
             setRole(UserRole.STUDENT);
@@ -67,6 +75,8 @@ const AuthProvider = ({children}: Props) => {
             value={{
                 authenticated: authenticated!,
                 setAuthenticated,
+                accessToken: accessToken!,
+                setAccessToken,
                 id: id!,
                 setId,
                 email: email!,

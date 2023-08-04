@@ -32,4 +32,9 @@ export class JwtService {
         }
         return null;
     }
+
+    getRawAccessToken(): string | null {
+        const rawAccessToken = localStorage.getItem('access_token');
+        return rawAccessToken ? rawAccessToken : null;
+    }
 }
