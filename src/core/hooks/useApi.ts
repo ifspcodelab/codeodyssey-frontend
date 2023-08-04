@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import i18n from "../../locales/i18n";
 import {CreateUserResponse} from "../models/CreateUserResponse";
+import {LoginResponse} from "../../pages/Login";
 
 
 const api = axios.create({
@@ -19,16 +20,21 @@ export const useApi = () => ({
         }
         catch(error: any) {
             if (axios.isAxiosError(error)) {
-                handleError(error)
+                handleError(error as AxiosError<ProblemDetail>)
             } else {
                 console.log('unexpected error: ', error);
                 return 'An unexpected error ocurred';
             }
         }
-    }
+    },
+    login: async (email: string, password: string): Promise<LoginResponse | ProblemDetail> => {
+        const response = await api.post<LoginResponse | ProblemDetail>('/login', {email, password});
+
+        return response.data;
+    },
 })
 
-const handleError = (error: any) => {
+const handleError = (error: AxiosError<ProblemDetail>) => {
     let responseStatus: number
     let problemDetail: ProblemDetail
     if (error.response) {
@@ -41,4 +47,6 @@ const handleError = (error: any) => {
                 alert(i18n.t("registration.exception.email"))
         }
     }
+    // TODO: refactor this method to return a ProblemDetail to the components and make them handle error showing
+    // return error.response?.data as ProblemDetail;
 }

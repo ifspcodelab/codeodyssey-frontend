@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import i18n from "../../locales/i18n";
-import axios, {AxiosError} from "axios";
+import {AxiosError} from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../../components/PageHeader";
@@ -13,15 +13,16 @@ import PageFooter from "../../components/PageFooter";
 import {useState} from "react";
 import {AccessToken, JwtService} from "../../core/auth/JwtService.ts";
 import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
+import {useApi} from "../../core/hooks/useApi.ts";
 
 // TODO: refactor to move types, api call, error handling and such to its own files and directories
 
-interface LoginRequest {
+export interface LoginRequest {
   email: string,
   password: string,
 }
 
-interface LoginResponse {
+export interface LoginResponse {
   accessToken: string,
   refreshToken: string,
 }
@@ -52,33 +53,15 @@ function Login() {
 
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  const onSubmit = (data: LoginRequest) => {
-    loginUser(data)
-         .then((response) => handleLoginResponse(response as LoginResponse))
-         .catch((error: AxiosError) => {
-           if (error.response) {
-             handleLoginError(error.response.data as ProblemDetail)
-           } else {
-             console.log('An unexpected error has occurred.');
-             setLoginError('An unexpected error has occurred. Please, try again.');
-           }
-         });
-  };
+  const { login } = useApi();
 
-  const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
-  const loginUser = async (data: LoginRequest): Promise<LoginResponse | ProblemDetail> => {
-    const loginResponse = await axios.post<LoginResponse | ProblemDetail>(
-        BASE_URL + '/login',
-        { email: data.email, password: data.password },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-        },
-    );
-
-    return loginResponse.data;
+  const onSubmit = async (data: LoginRequest) => {
+    await login(data.email, data.password)
+        .then((response) => {
+          handleLoginResponse(response as LoginResponse);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleLoginError(error);
+        });
   };
 
   const authConsumer = AuthConsumer();
@@ -95,9 +78,13 @@ function Login() {
     return navigate("/");
   };
 
-  const handleLoginError = (error: ProblemDetail): void => {
-    if (error.detail == 'Bad credentials' && error.status == 403) {
-      setLoginError('Email or password is incorrect');
+  const handleLoginError = (error: AxiosError<ProblemDetail>): void => {
+    if (error.response) {
+      const problemDetail = error.response.data;
+      if (problemDetail.detail == 'Bad credentials' && problemDetail.status == 403) setLoginError('Email or password is incorrect');
+    } else {
+        setLoginError('Something went wrong, please try again later');
+        console.log('Something went wrong:\n', error);
     }
   }
 
