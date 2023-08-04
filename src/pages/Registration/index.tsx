@@ -7,7 +7,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {Trans, useTranslation} from "react-i18next";
 import {CreateUserResponse} from "../../core/models/CreateUserResponse";
 import {schema} from "./schema";
-import {useApi} from "../../core/hooks/useApi";
+import {useRegisterApi} from "../../core/hooks/useRegisterApi";
 import {
     Button,
     Checkbox,
@@ -17,20 +17,63 @@ import {
     Grid,
     TextField,
     Link,
-    Typography
+    Typography,
 } from "@mui/material";
+import axios, {AxiosError} from "axios";
+import {useState} from "react";
+import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 
 
 function Registration() {
     const {t} = useTranslation()
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
     const navigate = useNavigate()
-    const api = useApi()
+    const api = useRegisterApi()
+    const [open, setOpen] = useState(false);
+    const [errorType, setErrorType] = useState('');
 
     const onSubmit = async (data: CreateUserResponse) => {
-        const response = await api.register(data.name, data.email, data.password)
-        if (response) {
-            navigate('/resend-email', { state: { data: data.email }})
+        try {
+            const response = await api.register(data.name, data.email, data.password)
+            if (response.name != "AxiosError") {
+                navigate('/resend-email', { state: { data: data.email }})
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                handleError(error)
+            } else {
+                setErrorType('unexpected')
+                setOpen(true);
+            }
+        }
+    }
+
+    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway' || event === undefined) {
+            return;
+        }
+
+        setOpen(false);
+    };
+
+    const handleError = (error: AxiosError) => {
+        let responseStatus: number
+        let problemDetail: ProblemDetail = { title: '', detail: '' , instance: '', status: 0, type: ''}
+        if (error.response) {
+            problemDetail = error.response.data as ProblemDetail
+            responseStatus = problemDetail.status
+            if (responseStatus == 400) {
+                setErrorType('badRequest')
+                setOpen(true);
+            } else if (responseStatus == 409) {
+                if (error.response) problemDetail = error.response.data as ProblemDetail
+                if (problemDetail.title == "User Already exists" && problemDetail.detail == "Email already exists")
+                    setErrorType('emailAlreadyExists')
+                    setOpen(true);
+            }
+        } else if (error.message == "Network Error") {
+            setErrorType('networkError')
+            setOpen(true);
         }
     }
 
@@ -102,6 +145,7 @@ function Registration() {
                             </Grid>
                         </Grid>
                     </form>
+                    <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType}/>
                     <PageFooter text={t('registration.footer')}/>
                 </div>
             </Container>

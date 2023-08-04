@@ -49,7 +49,9 @@
     "footer": "Texto do footer do registro",
     "exception": {
       "email": "Houve um problema com o email usado",
-      "badRequest": "Requisição mal formada"
+      "badRequest": "Erro com a requisição",
+      "network": "Erro de conexão com o servidor",
+      "unexpected": "Um erro inesperado ocorreu"
     }
   },
   "resendEmail":{

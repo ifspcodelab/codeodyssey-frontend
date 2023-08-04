@@ -49,7 +49,9 @@
     "footer": "Registration footer",
     "exception": {
       "email": "There was a problem with the email used",
-      "badRequest": "Bad request"
+      "badRequest": "Request error",
+      "network": "Network error",
+      "unexpected": "An unexpected error has occurred"
     }
   },
   "resendEmail":{
