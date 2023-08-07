@@ -37,4 +37,9 @@ export class JwtService {
         const rawAccessToken = localStorage.getItem('access_token');
         return rawAccessToken ? rawAccessToken : null;
     }
+
+    getRefreshToken() {
+        const refreshToken = localStorage.getItem('refresh_token');
+        return refreshToken ? refreshToken : null;
+    }
 }

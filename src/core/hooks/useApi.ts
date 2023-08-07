@@ -4,9 +4,10 @@ import {CreateUserResponse} from "../models/CreateUserResponse";
 import {LoginResponse} from "../../pages/Login";
 import {JwtService} from "../auth/JwtService.ts";
 import {Interceptors} from "../auth/Interceptors.ts";
+import {RefreshTokenResponse} from "../models/RefreshTokenResponse.ts";
 
 
-const api = axios.create({
+export const api = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL as string,
     headers: {
         'Content-Type': 'application/json',
@@ -19,10 +20,10 @@ api.interceptors.response.use(
     (response) => {
         return response;
     },
-    (error: AxiosError) => {
+    async (error: AxiosError) => {
         console.log("status code outside of 2xx. An error occurred: \n", error);
         if (error.response && error.response.status === 401) {
-            interceptors.handleUnauthorized(error);
+            await interceptors.handleUnauthorized(error);
         }
         return Promise.reject(error);
     }
@@ -47,6 +48,11 @@ export const useApi = () => ({
     },
     login: async (email: string, password: string): Promise<LoginResponse | ProblemDetail> => {
         const response = await api.post<LoginResponse | ProblemDetail>('/login', {email, password});
+
+        return response.data;
+    },
+    refreshToken: async (refreshToken: string): Promise<RefreshTokenResponse | ProblemDetail> => {
+        const response = await api.post<RefreshTokenResponse | ProblemDetail>('/refreshtoken', {refreshToken});
 
         return response.data;
     },
