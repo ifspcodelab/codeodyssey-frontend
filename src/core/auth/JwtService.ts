@@ -42,4 +42,9 @@ export class JwtService {
         const refreshToken = localStorage.getItem('refresh_token');
         return refreshToken ? refreshToken : null;
     }
+
+    removeTokens() {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+    }
 }

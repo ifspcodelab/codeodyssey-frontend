@@ -32,14 +32,21 @@ export class Interceptors {
         console.log("@ handleUnauthorized");
 
         if (!error.response || !error.config) {
-            return new Error();
+            throw new Error();
         }
 
         const jwtService = new JwtService()
 
         const refreshToken = jwtService.getRefreshToken() as string;
-        const refreshTokenResponse = await this.postRefreshToken(refreshToken);
-        // TODO: handle error response from postRefreshToken, either here or on interceptor method call
+        const refreshTokenResponse = await this.postRefreshToken(refreshToken)
+            .then((response) => {
+                return response;
+            })
+            .catch(() => {
+                console.log("error in postRefreshToken")
+                throw new Error();
+            });
+
         if (refreshTokenResponse) {
             jwtService.setAccessToken(refreshTokenResponse.accessToken);
             jwtService.setRefreshToken(refreshTokenResponse.refreshToken);
@@ -50,6 +57,7 @@ export class Interceptors {
 
     private async postRefreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
         delete api.defaults.headers['Authorization'];
+        api.defaults.headers['Skip-Interceptor'] = true;
         const response = await api.post<RefreshTokenResponse>('/refreshtoken', {refreshToken});
 
         return response.data;

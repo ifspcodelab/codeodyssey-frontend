@@ -22,9 +22,20 @@ api.interceptors.response.use(
     },
     async (error: AxiosError) => {
         console.log("status code outside of 2xx. An error occurred: \n", error);
-        if (error.response && error.response.status === 401) {
-            await interceptors.handleUnauthorized(error);
+        if (error.config && error.config.headers['Skip-Interceptor']) {
+            delete error.config.headers['Skip-Interceptor'];
+            return Promise.reject(error);
         }
+
+        if (error.response && error.response.status === 401) {
+            await interceptors.handleUnauthorized(error)
+                .catch(() => {
+                    console.log("error in handleUnauthorized");
+                    new JwtService().removeTokens();
+                    window.location.href = "/login";
+                });
+        }
+
         return Promise.reject(error);
     }
 );
