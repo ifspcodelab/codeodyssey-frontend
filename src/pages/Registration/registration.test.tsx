@@ -265,4 +265,24 @@ describe("Registration", () => {
             expect(getByText("Network error")).toBeInTheDocument()
         })
     })
+
+    test("Should check if terms and privacy links have their respective href and target values", () => {
+        const { getByRole } = render(
+            <BrowserRouter>
+                <Registration />
+            </BrowserRouter>
+        );
+
+        const registrationHeading = getByRole("heading", {name: "Registration"})
+        const termsLink = getByRole("link", {name: "Terms of Use"})
+        const privacyLink = getByRole("link", {name: "Privacy Policy"})
+
+        expect(registrationHeading).toBeInTheDocument()
+        expect(termsLink).toBeInTheDocument()
+        expect(termsLink).toHaveAttribute("href", "/terms-of-use")
+        expect(termsLink).toHaveAttribute("target", "_blank")
+        expect(privacyLink).toBeInTheDocument()
+        expect(privacyLink).toHaveAttribute("href", "/privacy-policy")
+        expect(privacyLink).toHaveAttribute("target", "_blank")
+    })
 });
