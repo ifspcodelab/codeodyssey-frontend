@@ -192,4 +192,51 @@ describe("Registration", () => {
 
         expect(immutabilityMessage).toBeInTheDocument()
     })
+
+    test("Should show email error message on form submission", async () => {
+        server.use(
+            rest.post('http://localhost:3000/users', async (req, res, ctx) => {
+                console.log(req) // for build purposes
+                return res(
+                    ctx.status(409),
+                    ctx.json({
+                        "type": "about:blank",
+                        "title": "User Already exists",
+                        "status": 409,
+                        "detail": "Email already exists",
+                        "instance": "/api/v1/users"
+                    })
+                )
+            })
+        )
+
+        const {getByText, getByLabelText, getByTestId, debug} = render(
+            <BrowserRouter>
+                <Registration/>
+            </BrowserRouter>
+        )
+
+        const inputName = getByLabelText('Name') as HTMLInputElement;
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy') as HTMLInputElement
+
+        fireEvent.change(inputName, { target: { value: 'John Doe' } });
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
+        fireEvent.change(inputTerms, { target: {value: true}})
+
+        expect(inputName.value).toEqual('John Doe');
+        expect(inputEmail.value).toEqual('johndoe@email.com');
+        expect(inputPassword.value).toEqual('Password@01');
+        expect(inputTerms.value).toEqual("true");
+
+        fireEvent.click(inputTerms)
+
+        await waitFor(() => {
+            fireEvent.click(getByTestId("registerButton"))
+            expect(getByText("There was a problem with the email used")).toBeInTheDocument()
+            debug()
+        })
+    })
 });
