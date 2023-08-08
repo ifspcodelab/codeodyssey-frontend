@@ -33,16 +33,20 @@ function Registration() {
     const [open, setOpen] = useState(false);
     const [errorType, setErrorType] = useState('');
     const [loading, setLoading] = useState(false);
+    const [disableSubmitButton, setDisableSubmitButton] = useState(false);
 
     const onSubmit = async (data: CreateUserResponse) => {
         try {
+            setDisableSubmitButton(true)
             setLoading(true)
             const response = await api.register(data.name, data.email, data.password)
             if (response.name != "AxiosError") {
+                setDisableSubmitButton(false)
                 setLoading(false)
                 navigate('/resend-email', { state: { data: data.email }})
             }
         } catch (error) {
+            setDisableSubmitButton(false)
             setLoading(false)
             if (axios.isAxiosError(error)) {
                 handleError(error)
@@ -142,7 +146,7 @@ function Registration() {
                             </Grid>
                             <Grid item xs={12}>
                                 <div id="registration-menu">
-                                    <Button data-testid="registerButton" type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>{loading && <Spinner/>}
+                                    <Button data-testid="registerButton" disabled={disableSubmitButton} type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>{loading && <Spinner/>}
                                     <Link data-testid="loginLink" href="/login" rel="noopener noreferrer" underline="hover">
                                         {t('registration.form.login')}
                                     </Link>
