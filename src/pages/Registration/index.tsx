@@ -22,6 +22,7 @@ import {
 import axios, {AxiosError} from "axios";
 import {useState} from "react";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import Spinner from "../../components/Spinner";
 
 
 function Registration() {
@@ -31,14 +32,18 @@ function Registration() {
     const api = useRegisterApi()
     const [open, setOpen] = useState(false);
     const [errorType, setErrorType] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (data: CreateUserResponse) => {
         try {
+            setLoading(true)
             const response = await api.register(data.name, data.email, data.password)
             if (response.name != "AxiosError") {
+                setLoading(false)
                 navigate('/resend-email', { state: { data: data.email }})
             }
         } catch (error) {
+            setLoading(false)
             if (axios.isAxiosError(error)) {
                 handleError(error)
             } else {
@@ -137,7 +142,7 @@ function Registration() {
                             </Grid>
                             <Grid item xs={12}>
                                 <div id="registration-menu">
-                                    <Button data-testid="registerButton" type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>
+                                    <Button data-testid="registerButton" type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>{loading && <Spinner/>}
                                     <Link data-testid="loginLink" href="/login" rel="noopener noreferrer" underline="hover">
                                         {t('registration.form.login')}
                                     </Link>
