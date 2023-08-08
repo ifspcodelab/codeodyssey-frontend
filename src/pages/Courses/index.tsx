@@ -36,13 +36,16 @@ import {useNavigate} from "react-router-dom"
   //   return res.data;
   // }
 
+  const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwibmFtZSI6Ik1vcmlhcnR5IiwiZW1haWwiOiJtb3JpYXJ0eUBnbWFpbC5jb20iLCJzdWIiOiJiMDM0OWY2NS0xNDBkLTRiNzEtOGE3OS04MDYxNThiMzExZmUiLCJpc3MiOiJjb2RlLW9keXNzZXkiLCJpYXQiOjE2OTE1MjM2MjUsImV4cCI6MTY5MTUyNDUyNX0.xZnb-mOob3GgyBd0nsrBiq1xPfIvnTY962BFepo9aQU"
+
   async function getProfessorCourses() {
     try {
       const { data, status } = await axios.get<GetCoursesResponse>(
-        'http://localhost:3000/courses',
+        'http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/courses',
         {
           headers: {
             Accept: 'application/json',
+            'Authorization': `Bearer ${token}` 
           },
         },
       );
@@ -63,7 +66,7 @@ import {useNavigate} from "react-router-dom"
   async function getStudentCourses() {
     try {
       const { data, status } = await axios.get<Course[]>(
-        'http://localhost:3000/courses',
+        'http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/enrollments',
         {
           headers: {
             Accept: 'application/json',
@@ -87,22 +90,30 @@ import {useNavigate} from "react-router-dom"
 function Courses() {
     const { t } = useTranslation();
 
-    const [coursesStudent, setCoursesStudent] = useState<[] | Course[]>([]);
-    const [coursesProfessor, setCoursesProfessor] = useState<[] | Course[]>([]);
+    const [coursesStudent, setCoursesStudent] = useState([]);
+    const [coursesProfessor, setCoursesProfessor] = useState([]);
+    // const [emptyList, setEmptyList] = useState<string | null>(null);
     const navigate = useNavigate()
 
     useEffect(() => {
       void (async () => {
         const cursoAluno = await getStudentCourses();
         const cursoProfessor = await getProfessorCourses();
+        // console.log(Array.isArray(cursoAluno))
+        // console.log(Array.isArray(coursesStudent))
         setCoursesStudent(cursoAluno)
         setCoursesProfessor(cursoProfessor)
       })();
     }, []);
 
     
+    // useEffect(() => {
+    //   {Array.isArray(coursesStudent) ? <h1>é verdadeiro</h1> : setEmptyList('Nenhum aluno curso')}
+    // }, [coursesStudent])            
 
-    
+    // useEffect(() => {
+    //   {Array.isArray(coursesProfessor) ? <h1>é verdadeiro</h1> : setEmptyList('Nenhum professor curso')}
+    // }, [coursesProfessor]) 
 
     return (
         <>
@@ -151,7 +162,10 @@ function Courses() {
                 </CardActions>
             </Card>
             ))}</div> 
-          <div>{coursesStudent?.map((course: Course) => (
+          </div> : <Typography>{t("courses.emptyList")}</Typography>}
+          
+
+          {/* <div>{coursesStudent?.map((course: Course) => (
             <Card variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>
                 <CardContent>
                     <Typography variant="h5" component="div">
@@ -186,10 +200,9 @@ function Courses() {
                     >{t("courses.button.students")}</Button>
                 </CardActions>
             </Card>
-            ))}</div> 
+            ))}</div>  */}
 
-          </div> : <Typography>{t("courses.emptyList")}</Typography>}
-
+          {/* {emptyList && <p>{emptyList}</p>} */}
         </>)
 }
 
