@@ -20,6 +20,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
 import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
 import {useApi} from "../../core/hooks/useApi.ts";
+import {JwtService} from "../../core/auth/JwtService.ts";
 
 
 function CreateCourse() {
@@ -45,6 +46,7 @@ type CourseResponse = {
   const { register, handleSubmit, watch, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
   const navigate = useNavigate()
   const PROFESSOR_ID: string = authConsumer.id;
+  const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const [open, setOpen] = React.useState(false);
   const { createCourse } = useApi();
 
@@ -58,7 +60,8 @@ type CourseResponse = {
 
   async function submitCreateCourse(data: CourseResponse) {
     try {
-        await createCourse(data.name, data.slug, data.startDate.toISOString(),  data.endDate.toISOString(), PROFESSOR_ID);
+      console.log("@ create course | rawAccessToken", rawAccessToken)
+        await createCourse(data.name, data.slug, data.startDate.toISOString(),  data.endDate.toISOString(), PROFESSOR_ID, rawAccessToken);
         navigate('/courses')
     }
     catch(error) {

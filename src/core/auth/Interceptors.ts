@@ -59,6 +59,7 @@ export class Interceptors {
         delete api.defaults.headers['Authorization'];
         api.defaults.headers['Skip-Interceptor'] = true;
         const response = await api.post<RefreshTokenResponse>('/refreshtoken', {refreshToken});
+        delete api.defaults.headers['Skip-Interceptor'];
 
         return response.data;
     }

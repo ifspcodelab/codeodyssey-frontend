@@ -26,13 +26,18 @@ api.interceptors.response.use(
             delete error.config.headers['Skip-Interceptor'];
             return Promise.reject(error);
         }
+        console.log("error after skip-interceptor delete", error);
 
         if (error.response && error.response.status === 401) {
             await interceptors.handleUnauthorized(error)
-                .catch(() => {
-                    console.log("error in handleUnauthorized");
-                    new JwtService().removeTokens();
-                    window.location.href = "/login";
+                .catch((error: AxiosError) => {
+                    console.log(error)
+                    if (error.response && error.response.status === 401) {
+                        console.log("error in handleUnauthorized");
+                        new JwtService().removeTokens();
+                        window.location.href = "/login";
+                    }
+                    return Promise.reject(error);
                 });
         }
 
@@ -40,7 +45,8 @@ api.interceptors.response.use(
     }
 );
 
-const bearerToken: string = new JwtService().getRawAccessToken() as string;
+// TODO: verify why it is not working (anymore)
+// const bearerToken: string = new JwtService().getRawAccessToken() as string;
 
 export const useApi = () => ({
     register: async (name: string, email: string, password: string) => {
@@ -67,8 +73,9 @@ export const useApi = () => ({
 
         return response.data;
     },
-    createCourse: async (name: string, slug: string, startDate: string, endDate: string, professorId: string) => {
-        api.defaults.headers['Authorization'] = 'Bearer ' + bearerToken;
+    createCourse: async (name: string, slug: string, startDate: string, endDate: string, professorId: string, rawAccessToken: string) => {
+        console.log("rawAccessToken: ", rawAccessToken);
+        api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
         const response = await api.post< | ProblemDetail>('/users/' + professorId +'/courses', {name, slug, startDate, endDate});
 
         return response.data;
