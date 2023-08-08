@@ -17,6 +17,13 @@ export class Interceptors {
         status: 401
         statusText: ""
          */
+        /* error.response.data:
+            detail: "refresh token was expired"
+            instance: "/api/v1/refreshtoken"
+            status: 403
+            title: "RefreshToken expired refresh token"
+            type: "about:blank"
+        */
 
         /* AxiosError.config:
         config.headers
@@ -25,15 +32,16 @@ export class Interceptors {
         config.url
          */
 
+        console.log("@ handleUnauthorized");
+
+        if (!error.response || !error.config || !error.response.data) {
+            throw new Error();
+        }
+
         // invalid access token, valid refresh token:
         // post refresh token request;
         // store new access and refresh token in local storage;
         // redo original request with new authorization header;
-        console.log("@ handleUnauthorized");
-
-        if (!error.response || !error.config) {
-            throw new Error();
-        }
 
         const jwtService = new JwtService()
 
@@ -42,7 +50,18 @@ export class Interceptors {
             .then((response) => {
                 return response;
             })
-            .catch(() => {
+            .catch((error: AxiosError<ProblemDetail>) => {
+                const errorDetail = error.response?.data as ProblemDetail;
+
+                //invalid access token, invalid refresh token
+                // force logout by removing tokens and redirecting to login page
+                if (errorDetail.status === 403 && errorDetail.title === "RefreshToken expired refresh token") {
+                    console.log("error in handleUnauthorized: refresh token expired");
+                    new JwtService().removeTokens();
+                    window.location.href = "/login";
+                    return Promise.reject(error);
+                }
+
                 console.log("error in postRefreshToken")
                 throw new Error();
             });
