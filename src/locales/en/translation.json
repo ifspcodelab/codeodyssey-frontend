@@ -69,6 +69,13 @@
     },
     "footer": "Footer text here"
   },
+  "errorPage":{
+    "title": "Error {{statusCode}}",
+    "subTitle": "An unexpected error has occurred.",
+    "notFound": {
+    "message": "Page not found."
+    }
+  },
   "yup": {
     "invalid_field_length": "This field must have at least ${min} characters",
     "invalid_number_length": "This field should be bigger than ${min}.",

@@ -13,11 +13,13 @@ import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import './index.css'
 import ResendEmail from "./pages/ResendEmail";
+import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App/>,
+        errorElement: <ErrorPage/>,
         children: [
             {
                 path: "",

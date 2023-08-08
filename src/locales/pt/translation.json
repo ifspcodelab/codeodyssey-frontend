@@ -69,6 +69,13 @@
     },
     "footer": "Texto do footer aqui"
   },
+  "errorPage":{
+    "title": "Erro {{statusCode}}",
+    "subTitle": "Um erro inesperado ocorreu.",
+    "notFound": {
+      "message": "Página não encontrada."
+    }
+  },
   "yup": {
     "invalid_field_length": "Esse campo deve ter pelo menos {{ min }} caracteres.",
     "invalid_number_length": "Esse campo deve ser maior que {{ min }} caracteres.",
