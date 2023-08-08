@@ -10,7 +10,7 @@ const api = axios.create({
     }
 });
 
-export const useRegisterApi = () => ({
+export const useApiUser = () => ({
     register: async (name: string, email: string, password: string) => {
         const response = await api.post<CreateUserResponse>('/users', {name, email, password});
         return response.data;
