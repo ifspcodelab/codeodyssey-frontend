@@ -18,27 +18,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
-
+import {CreateCourseResponse} from "../../core/models/CreateCourseResponse";
 
 function CreateCourse() {
   const {t} = useTranslation();
 
-type UserResponse = {
-  name: string;
-  email: string;
-  role: string;
-};
 
-type CourseResponse = {
-  name: string;
-  slug: string;
-  startDate: Date;
-  endDate: Date;
-  professor: UserResponse;
-};
-
-
-  const onSubmit: SubmitHandler<CourseResponse> = (data) => createCourse(data)
+  const onSubmit: SubmitHandler<CreateCourseResponse> = (data) => createCourse(data)
   const { register, handleSubmit, watch, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
   const navigate = useNavigate()
   const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
@@ -54,15 +40,18 @@ type CourseResponse = {
     setOpen(false);
   };
 
-  async function createCourse(data: CourseResponse) {
+  const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwibmFtZSI6Ik1vcmlhcnR5IiwiZW1haWwiOiJtb3JpYXJ0eUBnbWFpbC5jb20iLCJzdWIiOiJiMDM0OWY2NS0xNDBkLTRiNzEtOGE3OS04MDYxNThiMzExZmUiLCJpc3MiOiJjb2RlLW9keXNzZXkiLCJpYXQiOjE2OTE1MjY1MjEsImV4cCI6MTY5MTUyNzQyMX0.P0Ii_SIt85GcswntPDXmtT6cX6vs4Uzpp-clUQNJlq4"
+
+  async function createCourse(data: CreateCourseResponse) {
     try {
-        await axios.post<CourseResponse>(
-          BASE_URL + "/users/" + STUDENT_ID + "/courses",
+        await axios.post<CreateCourseResponse>(
+          BASE_URL + "/users/" + PROFESSOR_ID + "/courses",
             { name: data.name, slug: data.slug, startDate: data.startDate.toISOString(),  endDate: data.endDate.toISOString() },
             {
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
+                    'Authorization': `Bearer ${token}` 
                 },
             },
         );
