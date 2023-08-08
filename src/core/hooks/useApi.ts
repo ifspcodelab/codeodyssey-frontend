@@ -2,7 +2,6 @@ import axios, {AxiosError} from "axios";
 import i18n from "../../locales/i18n";
 import {CreateUserResponse} from "../models/CreateUserResponse";
 import {LoginResponse} from "../../pages/Login";
-import {JwtService} from "../auth/JwtService.ts";
 import {Interceptors} from "../auth/Interceptors.ts";
 import {RefreshTokenResponse} from "../models/RefreshTokenResponse.ts";
 
@@ -34,8 +33,7 @@ api.interceptors.response.use(
                     console.log(error)
                     if (error.response && error.response.status === 401) {
                         console.log("error in handleUnauthorized");
-                        new JwtService().removeTokens();
-                        window.location.href = "/login";
+                        interceptors.forceLogout();
                     }
                     return Promise.reject(error);
                 });

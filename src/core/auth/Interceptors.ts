@@ -57,8 +57,7 @@ export class Interceptors {
                 // force logout by removing tokens and redirecting to login page
                 if (errorDetail.status === 403 && errorDetail.title === "RefreshToken expired refresh token") {
                     console.log("error in handleUnauthorized: refresh token expired");
-                    new JwtService().removeTokens();
-                    window.location.href = "/login";
+                    this.forceLogout();
                     return Promise.reject(error);
                 }
 
@@ -81,5 +80,10 @@ export class Interceptors {
         delete api.defaults.headers['Skip-Interceptor'];
 
         return response.data;
+    }
+
+    public forceLogout() {
+        new JwtService().removeTokens();
+        window.location.href = "/login";
     }
 }
