@@ -1,4 +1,6 @@
 import PageHeader from "../../components/PageHeader";
+import ConfirmationDialog from "../../components/ConfirmationDialog/index.tsx";
+import useConfirmationDialog from "../../core/hooks/useConfirmationDialog.tsx";
 import {useTranslation} from "react-i18next";
 import {Button, Container, Grid, TextField} from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -12,12 +14,6 @@ import dayjs from 'dayjs';
 import {useNavigate} from "react-router-dom"
 import i18n from "../../locales/i18n";
 import { ptBR } from "@mui/x-date-pickers";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import * as React from 'react';
 import {CreateCourseResponse} from "../../core/models/CreateCourseResponse";
 
 function CreateCourse() {
@@ -30,15 +26,9 @@ function CreateCourse() {
   const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
   const PROFESSOR_ID: string = import.meta.env.VITE_PROFESSOR_ID as string;
   const STUDENT_ID: string = import.meta.env.VITE_STUDENT_ID as string;
-  const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const {isShowing, toggle} = useConfirmationDialog()
 
   const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwibmFtZSI6Ik1vcmlhcnR5IiwiZW1haWwiOiJtb3JpYXJ0eUBnbWFpbC5jb20iLCJzdWIiOiJiMDM0OWY2NS0xNDBkLTRiNzEtOGE3OS04MDYxNThiMzExZmUiLCJpc3MiOiJjb2RlLW9keXNzZXkiLCJpYXQiOjE2OTE1MjY1MjEsImV4cCI6MTY5MTUyNzQyMX0.P0Ii_SIt85GcswntPDXmtT6cX6vs4Uzpp-clUQNJlq4"
 
@@ -151,34 +141,14 @@ function CreateCourse() {
             </Grid>
 
             <Grid item xs={12} textAlign="right">
-              <Button data-testid="cancelButton" variant="outlined" color="error" onClick={handleClickOpen}>{t('createcourse.form.cancel')}</Button>
+              <Button data-testid="cancelButton" variant="outlined" color="error" onClick={toggle}>{t('createcourse.form.cancel')}</Button>
               <Button data-testid="submitButton" variant="outlined" type="submit">{t('createcourse.form.submit')}</Button>
+              <ConfirmationDialog isShowing={isShowing}
+              hide={toggle} title={t('createcourse.form.confimationdialog.title')} desc={t('createcourse.form.confimationdialog.description')}> leave={t('createcourse.form.confimationdialog.leave')} ok={t('createcourse.form.confimationdialog.continue')} </ConfirmationDialog>
             </Grid>
           </Grid>
         </form>
       </Container>
-
-        <Dialog
-        open={open}
-        onClose={handleClose}
-        >
-          <DialogTitle>
-            {t('createcourse.form.confimationdialog.title')}  
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              {t('createcourse.form.confimationdialog.description')}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => {navigate("/");}}> 
-              {t('createcourse.form.confimationdialog.leave')}
-            </Button>
-            <Button onClick={handleClose} autoFocus>
-              {t('createcourse.form.confimationdialog.continue')}
-            </Button>
-          </DialogActions>
-        </Dialog>
       </>
   )
 }
