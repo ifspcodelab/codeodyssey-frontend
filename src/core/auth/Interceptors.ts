@@ -5,6 +5,29 @@ import {api} from "../hooks/useApi.ts";
 
 export class Interceptors {
 
+    public async onRejectedResponse(error: AxiosError) {
+        console.log("status code outside of 2xx. An error occurred: \n", error);
+        if (error.config && error.config.headers['Skip-Interceptor']) {
+            delete error.config.headers['Skip-Interceptor'];
+            return Promise.reject(error);
+        }
+        console.log("error after skip-interceptor delete", error);
+
+        if (error.response && error.response.status === 401) {
+            await this.handleUnauthorized(error)
+                .catch((error: AxiosError) => {
+                    console.log(error)
+                    if (error.response && error.response.status === 401) {
+                        console.log("error in handleUnauthorized");
+                        this.forceLogout();
+                    }
+                    return Promise.reject(error);
+                });
+        }
+
+        return Promise.reject(error);
+    }
+
     async handleUnauthorized(error: AxiosError) {
         console.log(error)
         /* AxiosError.response:

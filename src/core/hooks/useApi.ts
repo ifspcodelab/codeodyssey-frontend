@@ -15,31 +15,13 @@ export const api = axios.create({
 });
 
 const interceptors = new Interceptors();
+
 api.interceptors.response.use(
     (response) => {
         return response;
     },
     async (error: AxiosError) => {
-        console.log("status code outside of 2xx. An error occurred: \n", error);
-        if (error.config && error.config.headers['Skip-Interceptor']) {
-            delete error.config.headers['Skip-Interceptor'];
-            return Promise.reject(error);
-        }
-        console.log("error after skip-interceptor delete", error);
-
-        if (error.response && error.response.status === 401) {
-            await interceptors.handleUnauthorized(error)
-                .catch((error: AxiosError) => {
-                    console.log(error)
-                    if (error.response && error.response.status === 401) {
-                        console.log("error in handleUnauthorized");
-                        interceptors.forceLogout();
-                    }
-                    return Promise.reject(error);
-                });
-        }
-
-        return Promise.reject(error);
+        return interceptors.onRejectedResponse(error)
     }
 );
 
