@@ -8,39 +8,14 @@ import PageHeader from "../../components/PageHeader";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom"
+import {CourseResponse} from "../../core/models/CourseResponse";
+import {useApiCourse} from "../../core/hooks/useApiCourse";
 
-  type User = {
-    name: string;
-  };
-
-  type Course = {
-    name: string,
-    slug: string,
-    startDate: Date,
-    endDate: Date,
-    professor: User,
-  };
-
-  type GetCoursesResponse = {
-    data: Course[];
-  }
-
-
-  // async function getUserCourses() {
-  //   const res = await axios.get<GetCoursesResponse>('http://localhost:3000/courses')
-  //   return res.data;
-  // }
-
-  // async function getUserEnrollments() {
-  //   const res = await axios.get<GetCoursesResponse>('http://localhost:3000/enrollments');
-  //   return res.data;
-  // }
-
-  const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwibmFtZSI6Ik1vcmlhcnR5IiwiZW1haWwiOiJtb3JpYXJ0eUBnbWFpbC5jb20iLCJzdWIiOiJiMDM0OWY2NS0xNDBkLTRiNzEtOGE3OS04MDYxNThiMzExZmUiLCJpc3MiOiJjb2RlLW9keXNzZXkiLCJpYXQiOjE2OTE1MjM2MjUsImV4cCI6MTY5MTUyNDUyNX0.xZnb-mOob3GgyBd0nsrBiq1xPfIvnTY962BFepo9aQU"
+  const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwibmFtZSI6Ik1vcmlhcnR5IiwiZW1haWwiOiJtb3JpYXJ0eUBnbWFpbC5jb20iLCJzdWIiOiJiMDM0OWY2NS0xNDBkLTRiNzEtOGE3OS04MDYxNThiMzExZmUiLCJpc3MiOiJjb2RlLW9keXNzZXkiLCJpYXQiOjE2OTE3MDY5MzAsImV4cCI6MTY5MTcwNzgzMH0.jl-Us8PHnVygjJ7z3qn2_KDv1cCj1C8GlW8m5Bs7W5M"
 
   async function getProfessorCourses() {
     try {
-      const { data, status } = await axios.get<GetCoursesResponse>(
+      const { data, status } = await axios.get<CourseResponse>(
         'http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/courses',
         {
           headers: {
@@ -65,7 +40,7 @@ import {useNavigate} from "react-router-dom"
 
   async function getStudentCourses() {
     try {
-      const { data, status } = await axios.get<Course[]>(
+      const { data, status } = await axios.get<CourseResponse[]>(
         'http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/enrollments',
         {
           headers: {
@@ -121,7 +96,7 @@ function Courses() {
           {coursesProfessor.length || coursesStudent.length ? 
           
           <div>
-            <div>{coursesProfessor?.map((course: Course) => (
+            <div>{coursesProfessor?.map((course: CourseResponse) => (
             <Card variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>
                 <CardContent>
                     <Typography variant="h5" component="div">
