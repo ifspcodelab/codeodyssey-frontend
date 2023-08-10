@@ -9,13 +9,14 @@ import {SubmitHandler, useForm, Controller} from "react-hook-form";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import dayjs from 'dayjs';
 import {useNavigate} from "react-router-dom"
-import i18n from "../../locales/i18n";
 import { ptBR } from "@mui/x-date-pickers";
 import {CreateCourseResponse} from "../../core/models/CreateCourseResponse";
 import {useApiCourse} from "../../core/hooks/useApiCourse";
+import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import {useState} from "react";
 
 function CreateCourse() {
   const {t} = useTranslation();
@@ -27,6 +28,8 @@ function CreateCourse() {
   const { createCourse } = useApiCourse();
 
   const {isShowing, toggle} = useConfirmationDialog()
+  const [errorType, setErrorType] = useState('');
+  const [open, setOpen] = useState(false);
 
   async function submitCreateCourse(data: CreateCourseResponse) {
     try {
@@ -38,23 +41,40 @@ function CreateCourse() {
         if (axios.isAxiosError(error)) {
           handleError(error)
         } else {
-            console.log('unexpected error: ', error);
-            return 'An unexpected error ocurred';
+          setErrorType('unexpected')
+          setOpen(true);
         }
     }
   }
 
-  const handleError = (error) => {
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || event === undefined) {
+        return;
+    }
+
+    setOpen(false);
+};
+
+  const handleError = (error: AxiosError) => {
     let responseStatus: number
-    responseStatus = error.response.data.status
-    if (responseStatus == 400) {
-        alert(i18n.t("createcourse.exception.badRequest"))
-    } else if (responseStatus === 409) {
-      alert(i18n.t("createcourse.exception.duplicate"))
-    } else if (responseStatus === 401) {
-      alert(i18n.t("createcourse.exception.unauthorized"))
-    } 
-  }
+    let problemDetail: ProblemDetail = { title: '', detail: '' , instance: '', status: 0, type: ''}
+    if (error.response) {
+        problemDetail = error.response.data as ProblemDetail
+        responseStatus = problemDetail.status
+        if (responseStatus == 400) {
+            setErrorType('badRequest')
+            setOpen(true);
+        } else if (responseStatus == 409) {
+            // if (error.response) problemDetail = error.response.data as ProblemDetail
+            // if (problemDetail.title == "Slug Already exists" && problemDetail.detail == "Slug already exists")
+                setErrorType('sluglAlreadyExists')
+                setOpen(true);
+        } 
+    } else if (error.message == "Network Error") {
+        setErrorType('networkError')
+        setOpen(true);
+    }
+}
 
   return (
     <>
@@ -135,6 +155,7 @@ function CreateCourse() {
             </Grid>
           </Grid>
         </form>
+        <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType}/>
       </Container>
       </>
   )

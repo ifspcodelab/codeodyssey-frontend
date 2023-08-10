@@ -9,7 +9,7 @@ const api = axios.create({
     }
 });
 
-const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwibmFtZSI6Ik1vcmlhcnR5IiwiZW1haWwiOiJtb3JpYXJ0eUBnbWFpbC5jb20iLCJzdWIiOiJiMDM0OWY2NS0xNDBkLTRiNzEtOGE3OS04MDYxNThiMzExZmUiLCJpc3MiOiJjb2RlLW9keXNzZXkiLCJpYXQiOjE2OTE2OTk5ODcsImV4cCI6MTY5MTcwMDg4N30.e_uLGKongqa0Jh8X939s4KoKHr_422yGMhoU7D8Ylzo"
+const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwibmFtZSI6Ik1vcmlhcnR5IiwiZW1haWwiOiJtb3JpYXJ0eUBnbWFpbC5jb20iLCJzdWIiOiJiMDM0OWY2NS0xNDBkLTRiNzEtOGE3OS04MDYxNThiMzExZmUiLCJpc3MiOiJjb2RlLW9keXNzZXkiLCJpYXQiOjE2OTE3MDUwMDEsImV4cCI6MTY5MTcwNTkwMX0.pt_EWyJxOMH2JB0BfIsZ7twNIGV7JYLyerZ6Vdrposc"
 
 export const useApiCourse = () => ({
     createCourse: async (name: string, slug: string, startDate: Date, endDate: Date, professorId: string) => {
