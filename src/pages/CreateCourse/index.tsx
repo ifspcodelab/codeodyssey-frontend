@@ -15,37 +15,24 @@ import {useNavigate} from "react-router-dom"
 import i18n from "../../locales/i18n";
 import { ptBR } from "@mui/x-date-pickers";
 import {CreateCourseResponse} from "../../core/models/CreateCourseResponse";
+import {useApiCourse} from "../../core/hooks/useApiCourse";
 
 function CreateCourse() {
   const {t} = useTranslation();
 
-
-  const onSubmit: SubmitHandler<CreateCourseResponse> = (data) => createCourse(data)
+  const onSubmit: SubmitHandler<CreateCourseResponse> = (data) => submitCreateCourse(data)
   const { register, handleSubmit, watch, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
   const navigate = useNavigate()
-  const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
   const PROFESSOR_ID: string = import.meta.env.VITE_PROFESSOR_ID as string;
-  const STUDENT_ID: string = import.meta.env.VITE_STUDENT_ID as string;
-
+  const { createCourse } = useApiCourse();
 
   const {isShowing, toggle} = useConfirmationDialog()
 
-  const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwibmFtZSI6Ik1vcmlhcnR5IiwiZW1haWwiOiJtb3JpYXJ0eUBnbWFpbC5jb20iLCJzdWIiOiJiMDM0OWY2NS0xNDBkLTRiNzEtOGE3OS04MDYxNThiMzExZmUiLCJpc3MiOiJjb2RlLW9keXNzZXkiLCJpYXQiOjE2OTE1MjY1MjEsImV4cCI6MTY5MTUyNzQyMX0.P0Ii_SIt85GcswntPDXmtT6cX6vs4Uzpp-clUQNJlq4"
-
-  async function createCourse(data: CreateCourseResponse) {
+  async function submitCreateCourse(data: CreateCourseResponse) {
     try {
-        await axios.post<CreateCourseResponse>(
-          BASE_URL + "/users/" + PROFESSOR_ID + "/courses",
-            { name: data.name, slug: data.slug, startDate: data.startDate.toISOString(),  endDate: data.endDate.toISOString() },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'Authorization': `Bearer ${token}` 
-                },
-            },
-        );
-        navigate('/courses')
+      await createCourse(data.name, data.slug, data.startDate.toISOString(),  data.endDate.toISOString(), PROFESSOR_ID);
+
+      navigate('/courses')
     }
     catch(error) {
         if (axios.isAxiosError(error)) {
