@@ -52,6 +52,27 @@
       "badRequest": "Requisição mal formada"
     }
   },
+  "login": {
+    "title": "Login",
+    "text": "Faça o Login ou Registre-se",
+    "form": {
+      "email": "Email",
+      "password": "Senha",
+      "login": "Login",
+      "submit": "Logar",
+      "validation": {
+        "password": {
+          "number": "A Senha deve ter pelo menos um digito",
+          "lowercase": "A Senha deve ter pelo menos uma letra minúscula",
+          "uppercase": "A Senha deve ter pelo menos uma letra maiúscula",
+          "special": "A Senha deve ter pelo menos um caractere especial"
+        }
+      }},
+    "login": "Faça login!",
+    "register": "Registrar",
+    "loginError": "Houve um erro, por favor tente novamente",
+    "footer": "Login footer"
+  },
   "resendEmail":{
     "title": "Reenviar o email",
     "text": "O sistema mandou um email de confirmação para {{email}}. Verifique seu email."

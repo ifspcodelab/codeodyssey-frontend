@@ -83,7 +83,7 @@ function Login() {
       const problemDetail = error.response.data;
       if (problemDetail.detail == 'Bad credentials' && problemDetail.status == 403) setLoginError('Email or password is incorrect');
     } else {
-        setLoginError('Something went wrong, please try again later');
+        setLoginError(i18n.t("login.loginError"));
         console.log('Something went wrong:\n', error);
     }
   }
@@ -94,11 +94,11 @@ function Login() {
 
   return (
     <Container maxWidth="sm" className="formContainer">
-      <PageHeader title={"Login"} text={"Log in or Register"} />
+      <PageHeader title={t("login.title")} text={t("login.text")} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="formInput">
           <label id="email" htmlFor={"email"}>
-            {t("Email")}
+            {t("login.form.email")}
           </label>
           <input
             aria-labelledby="email"
@@ -109,7 +109,7 @@ function Login() {
         </div>
         <div className="formInput">
           <label id="password" htmlFor={"password"}>
-            {t("Password")}
+            {t("login.form.password")}
           </label>
           <input
             aria-labelledby="password"
@@ -120,17 +120,17 @@ function Login() {
         </div>
         <div>
           <Button type="submit" variant="contained">
-            Log In!
+            {t("login.form.login")}
           </Button>
         </div>
         {loginError && <p className="error">{loginError}</p>}
         <div>
           <Button variant="contained" onClick={handleRegister}>
-            Register
+            {t("login.register")}
           </Button>
         </div>
       </form>
-      <PageFooter text={"login"} />
+      <PageFooter text={t("login.footer")} />
     </Container>
   );
 }
