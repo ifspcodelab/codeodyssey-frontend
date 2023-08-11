@@ -13,7 +13,7 @@ const ErrorSnackBar = (props: SnackBarProps) => {
 
     switch (props.errorType) {
         case 'badRequest': { message = i18n.t("createcourse.exception.badRequest"); break; }
-        case 'sluglAlreadyExists': { message = i18n.t("createcourse.exception.slug");break }
+        case 'courselAlreadyExists': { message = i18n.t("createcourse.exception.slug");break }
         case 'networkError': { message = i18n.t("createcourse.exception.network"); break; }
         case 'unexpected': { message = i18n.t("createcourse.exception.unexpected"); break; }
     }

@@ -61,15 +61,16 @@ function CreateCourse() {
     if (error.response) {
         problemDetail = error.response.data as ProblemDetail
         responseStatus = problemDetail.status
+        console.log(error.response.data)
         if (responseStatus == 400) {
             setErrorType('badRequest')
             setOpen(true);
         } else if (responseStatus == 409) {
-            // if (error.response) problemDetail = error.response.data as ProblemDetail
-            // if (problemDetail.title == "Slug Already exists" && problemDetail.detail == "Slug already exists")
-                setErrorType('sluglAlreadyExists')
+            if (error.response) problemDetail = error.response.data as ProblemDetail
+            if (problemDetail.title == "Course Already exists")
+                setErrorType('courselAlreadyExists')
                 setOpen(true);
-        } 
+        }  
     } else if (error.message == "Network Error") {
         setErrorType('networkError')
         setOpen(true);
