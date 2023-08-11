@@ -1,8 +1,9 @@
 import {describe, test} from "vitest";
 import Login from "./index";
-import {render} from "@testing-library/react";
+import {render, fireEvent, waitFor} from "@testing-library/react";
 import {BrowserRouter} from "react-router-dom";
 import "@testing-library/jest-dom";
+import userEvent from '@testing-library/user-event'
 
 
 describe("Login", () => {
@@ -19,5 +20,27 @@ describe("Login", () => {
         expect(getByLabelText("Password")).toBeInTheDocument();
         expect(getByRole("button", { name: "Log In!"})).toBeInTheDocument();
         expect(getByRole("button", { name: "Register"})).toBeInTheDocument();
+    })
+
+    test("Should send valid email error message", async () => {
+        const {getByText, getByLabelText} = render(
+            <BrowserRouter>
+                <Login/>
+            </BrowserRouter>
+        );
+
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const submitButton = getByText('Log In!') as HTMLButtonElement;
+
+        fireEvent.change(inputEmail, {target: {value: 'johndoeemail.com'}});
+        fireEvent.change(inputPassword, {target: {value: 'Password@01'}});
+
+        expect(inputPassword.value).toEqual('Password@01');
+        
+        await waitFor(() => {
+            void userEvent.click(submitButton);
+            expect(getByText(/email must be a valid email/i)).toBeInTheDocument();
+        })
     })
 })
