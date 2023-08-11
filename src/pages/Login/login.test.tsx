@@ -175,4 +175,26 @@ describe("Login", () => {
             expect(getByText(/password is a required field/i)).toBeInTheDocument();
         })
     })
+
+    test("Should send minimum characters length error message", async () => {
+        const {getByText, getByLabelText} = render(
+            <BrowserRouter>
+                <Login/>
+            </BrowserRouter>
+        );
+
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const submitButton = getByText('Log In!') as HTMLButtonElement;
+
+        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
+        fireEvent.change(inputPassword, {target: {value: 'Pass@01'}});
+
+        expect(inputEmail.value).toEqual('johndoe@email.com');
+
+        await waitFor(() => {
+            void userEvent.click(submitButton);
+            expect(getByText(/password must be at least 8 characters/i)).toBeInTheDocument();
+        })
+    })
 })
