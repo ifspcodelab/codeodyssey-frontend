@@ -22,6 +22,28 @@ describe("Login", () => {
         expect(getByRole("button", { name: "Register"})).toBeInTheDocument();
     })
 
+    test("Should send required email error message", async () => {
+        const {getByText, getByLabelText} = render(
+            <BrowserRouter>
+                <Login/>
+            </BrowserRouter>
+        );
+
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const submitButton = getByText('Log In!') as HTMLButtonElement;
+
+        fireEvent.change(inputEmail, {target: {value: ''}});
+        fireEvent.change(inputPassword, {target: {value: 'Password@01'}});
+
+        expect(inputPassword.value).toEqual('Password@01');
+
+        await waitFor(() => {
+            void userEvent.click(submitButton);
+            expect(getByText(/email is a required field/i)).toBeInTheDocument();
+        })
+    })
+
     test("Should send valid email error message", async () => {
         const {getByText, getByLabelText} = render(
             <BrowserRouter>
