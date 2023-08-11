@@ -197,4 +197,26 @@ describe("Login", () => {
             expect(getByText(/password must be at least 8 characters/i)).toBeInTheDocument();
         })
     })
+
+    test("Should send maximum characters length error message", async () => {
+        const {getByText, getByLabelText} = render(
+            <BrowserRouter>
+                <Login/>
+            </BrowserRouter>
+        );
+
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const submitButton = getByText('Log In!') as HTMLButtonElement;
+
+        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
+        fireEvent.change(inputPassword, {target: {value: 'Password@01Password@01Password@01Password@01Password@01Password@0'}});
+
+        expect(inputEmail.value).toEqual('johndoe@email.com');
+
+        await waitFor(() => {
+            void userEvent.click(submitButton);
+            expect(getByText(/password must be at most 64 characters/i)).toBeInTheDocument();
+        })
+    })
 })
