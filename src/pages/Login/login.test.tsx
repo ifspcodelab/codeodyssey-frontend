@@ -131,4 +131,26 @@ describe("Login", () => {
             expect(getByText(/Password must have at least one special character/i)).toBeInTheDocument();
         })
     })
+
+    test("Should send digits error message", async () => {
+        const {getByText, getByLabelText} = render(
+            <BrowserRouter>
+                <Login/>
+            </BrowserRouter>
+        );
+
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const submitButton = getByText('Log In!') as HTMLButtonElement;
+
+        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
+        fireEvent.change(inputPassword, {target: {value: 'Password@ab'}});
+
+        expect(inputEmail.value).toEqual('johndoe@email.com');
+
+        await waitFor(() => {
+            void userEvent.click(submitButton);
+            expect(getByText(/Password must have at least one digit/i)).toBeInTheDocument();
+        })
+    })
 })
