@@ -152,7 +152,7 @@ function CreateCourse() {
               <Button data-testid="cancelButton" variant="outlined" color="error" onClick={toggle}>{t('createcourse.form.cancel')}</Button>
               <Button data-testid="submitButton" variant="outlined" type="submit">{t('createcourse.form.submit')}</Button>
               <ConfirmationDialog isShowing={isShowing}
-              hide={toggle} title={t('createcourse.form.confimationdialog.title')} desc={t('createcourse.form.confimationdialog.description')}> leave={t('createcourse.form.confimationdialog.leave')} ok={t('createcourse.form.confimationdialog.continue')} </ConfirmationDialog>
+              hide={toggle} title={t('createcourse.form.confimationdialog.title')} desc={t('createcourse.form.confimationdialog.description')}>   </ConfirmationDialog>
             </Grid>
           </Grid>
         </form>

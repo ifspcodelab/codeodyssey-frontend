@@ -5,18 +5,18 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {Button} from "@mui/material";
 import {useNavigate} from "react-router-dom"
+import {useTranslation} from "react-i18next";
 
 interface ConfirmationDialogProps {
   title: string;
   desc: string;
-  leave: string;
-  ok: string;
   isShowing: boolean;
-  hide: () => void;
+  hide: boolean;
 }
 
-function ConfirmationDialog({ isShowing, hide, title, desc, leave, ok}: ConfirmationDialogProps) {
+function ConfirmationDialog({ isShowing, hide, title, desc}: ConfirmationDialogProps) {
   const navigate = useNavigate()
+  const {t} = useTranslation();
 
   return isShowing ? (
     <Dialog open={hide} fullWidth>
@@ -26,10 +26,10 @@ function ConfirmationDialog({ isShowing, hide, title, desc, leave, ok}: Confirma
       </DialogContent>
       <DialogActions>
         <Button color="error" variant="outlined" onClick={() => {navigate("/");}}>
-          {leave}
+        {t('createcourse.form.confimationdialog.leave')}
         </Button>
-        <Button color="success" onClick={hide} autoFocus>
-          {ok}
+        <Button color="success" variant="outlined" onClick={hide} autoFocus>
+        {t('createcourse.form.confimationdialog.continue')}
         </Button>
       </DialogActions>
     </Dialog>
@@ -37,33 +37,3 @@ function ConfirmationDialog({ isShowing, hide, title, desc, leave, ok}: Confirma
 }
 
 export default ConfirmationDialog
-
-
-
-// function ConfirmationDialog({ isShowing, hide, title, desc, cancel, ok }: ConfirmationDialogProps) {
-//   return (
-//     <>
-//       <Dialog
-//       open={hide}
-//       fullWidth
-//     >
-//       <DialogTitle>
-//         {title}  
-//       </DialogTitle>
-//       <DialogContent>
-//         <DialogContentText>
-//           {desc}
-//         </DialogContentText>
-//       </DialogContent>
-//       <DialogActions>
-//         <Button color="error" variant="outlined" onClick={() => {navigate("/");}}>  
-//           {cancel}
-//         </Button>
-//         <Button color="success" onClick={hide} autoFocus>
-//           {ok}
-//         </Button>
-//       </DialogActions>
-//     </Dialog>
-//     </>
-// ) 
-// }
