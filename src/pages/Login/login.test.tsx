@@ -65,4 +65,26 @@ describe("Login", () => {
             expect(getByText(/Password must have at least one uppercase letter/i)).toBeInTheDocument();
         })
     })
+
+    test("Should send uppercase letter error message", async () => {
+        const {getByText, getByLabelText} = render(
+            <BrowserRouter>
+                <Login/>
+            </BrowserRouter>
+        );
+
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const submitButton = getByText('Log In!') as HTMLButtonElement;
+
+        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
+        fireEvent.change(inputPassword, {target: {value: 'PASSWORD@01'}});
+
+        expect(inputEmail.value).toEqual('johndoe@email.com');
+
+        await waitFor(() => {
+            void userEvent.click(submitButton);
+            expect(getByText(/Password must have at least one lowercase letter/i)).toBeInTheDocument();
+        })
+    })
 })
