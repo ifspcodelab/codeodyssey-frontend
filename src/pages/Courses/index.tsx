@@ -6,12 +6,13 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import PageHeader from "../../components/PageHeader";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom"
 import {CourseResponse} from "../../core/models/CourseResponse";
-import {useApiCourse} from "../../core/hooks/useApiCourse";
+import {useApiGetCourses} from "../../core/hooks/useApiGetCourses.ts";
 import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
 import {JwtService} from "../../core/auth/JwtService.ts";
+import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 
 function Courses() {
   
@@ -20,79 +21,60 @@ function Courses() {
     const [coursesStudent, setCoursesStudent] = useState([]);
     const [coursesProfessor, setCoursesProfessor] = useState([]);
     const navigate = useNavigate()
-    const PROFESSOR_ID: string = authConsumer.id;
     const USER_ID: string = authConsumer.id;
     const USER_ROLE: string = authConsumer.role;
     const rawAccessToken = new JwtService().getRawAccessToken() as string;
-
-    async function getStudentCourses() {
-      try {
-        const { data, status } = await axios.get<CourseResponse[]>(
-          // 'http://localhost:8080/api/v1/users/' + USER_ID + '/enrollments',
-          'http://localhost:3000/enrollments',
-          {
-            headers: {
-              Accept: 'application/json',
-              'Authorization': `Bearer ${rawAccessToken}` 
-
-            },
-          },
-        );
-        console.log(JSON.stringify(data, null, 4));
-        console.log('response status is: ', status);
-        return data;
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.log('error message: ', error.message);
-          return error.message;
-        } else {
-          console.log('unexpected error: ', error);
-          return 'An unexpected error occurred';
-        }
-      }
-    }
-
-    async function getProfessorCourses() {
-      try {
-        const { data, status } = await axios.get<CourseResponse>(
-          'http://localhost:8080/api/v1/users/' + USER_ID + '/courses',
-          {
-            headers: {
-              Accept: 'application/json',
-              'Authorization': `Bearer ${rawAccessToken}` 
-            },
-          },
-        );
-  
-        console.log(USER_ROLE)
-        console.log(PROFESSOR_ID)
-        console.log(JSON.stringify(data, null, 4));
-        console.log('response status is: ', status);
-        return data;
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.log('error message: ', error.message);
-          return error.message;
-        } else {
-          console.log('unexpected error: ', error);
-          return 'An unexpected error occurred';
-        }
-      }
-    }
+    const {getCoursesProfessor, getCoursesStudent} = useApiGetCourses()
+    const [errorType, setErrorType] = useState('');
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
       void (async () => {
         if(USER_ROLE == "PROFESSOR") {
-          const cursoProfessor = await getProfessorCourses();
-          setCoursesProfessor(cursoProfessor)
-          const cursoAluno = await getStudentCourses()
-          setCoursesStudent(cursoAluno)
+          try {
+            const cursoProfessor = await getCoursesProfessor(USER_ID, rawAccessToken);
+            setCoursesProfessor(cursoProfessor)
+            const cursoAluno = await getCoursesStudent(USER_ID, rawAccessToken)
+            setCoursesStudent(cursoAluno)
+          } catch (error) {
+            if (axios.isAxiosError(error)) {
+                handleError(error)
+            } else {
+                setErrorType('unexpected')
+            }
+        }
         } else if(USER_ROLE == "STUDENT") {
-          const cursoAluno = await getStudentCourses()
+          const cursoAluno = await getCoursesStudent(USER_ID, rawAccessToken)
           setCoursesStudent(cursoAluno)
         }
       })();
     }, []);
+
+
+    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway' || event === undefined) {
+          return;
+      }
+
+      setOpen(false);
+  };
+
+
+    const handleError = (error: AxiosError) => {
+      let responseStatus: number
+      let problemDetail: ProblemDetail = { title: '', detail: '' , instance: '', status: 0, type: ''}
+      if (error.response) {
+          problemDetail = error.response.data as ProblemDetail
+          responseStatus = problemDetail.status
+          if (responseStatus == 400) {
+              setErrorType('badRequest')
+              setOpen(true);
+          } 
+      } else if (error.message == "Network Error") {
+          setErrorType('networkError')
+          setOpen(true);
+      }
+  }
 
     return (
         <>
@@ -179,6 +161,8 @@ function Courses() {
             ))}</div>  
           </div> 
         : <Typography>{t("courses.emptyList")}</Typography>}
+
+        <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType}/>
         </>)
 }
 
