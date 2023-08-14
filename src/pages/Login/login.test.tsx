@@ -273,4 +273,23 @@ describe("Login", () => {
             expect(getByText(/Email or password is incorrect/i)).toBeInTheDocument();
         });
     });
+
+    test("Should show error message when given network error", async () => {
+        server.use(
+            rest.post('http://localhost:3000/login', (req, res, ctx) => {
+                    console.log(req, ctx) // for build purposes
+                    return res.networkError('Failed to connect')
+                }
+            ))
+
+        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+
+        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
+        fireEvent.change(inputPassword, {target: {value: 'Password@01'}});
+
+        await waitFor(() => {
+            void userEvent.click(loginButton);
+            expect(getByText(/Something went wrong, please try again later/i)).toBeInTheDocument();
+        });
+    })
 });
