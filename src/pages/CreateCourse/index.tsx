@@ -19,8 +19,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
 import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
-import {useApi} from "../../core/hooks/useApi.ts";
 import {JwtService} from "../../core/auth/JwtService.ts";
+import {useApiCreateCourse} from "../../core/hooks/useApiCreateCourse";
 
 
 function CreateCourse() {
@@ -48,7 +48,7 @@ type CourseResponse = {
   const PROFESSOR_ID: string = authConsumer.id;
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const [open, setOpen] = React.useState(false);
-  const { createCourse } = useApi();
+  const { createCourse } = useApiCreateCourse();
 
   const handleClickOpen = () => {
     setOpen(true);
