@@ -245,4 +245,32 @@ describe("Login", () => {
             );
         });
     });
+
+    test("Should show error message when login fails", async () => {
+        server.use(
+            rest.post('http://localhost:3000/login', async (req, res, ctx) => {
+                console.log(req) // for build purposes
+                return res(
+                    ctx.status(403),
+                    ctx.json({
+                        "type": "about:blank",
+                        "title": "org.springframework.security.authentication.BadCredentialsException",
+                        "status": 403,
+                        "detail": "Bad credentials",
+                        "instance": "/api/v1/login"
+                    })
+                )
+            })
+        );
+
+        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+
+        fireEvent.change(inputEmail, {target: {value: 'john_doe@email.com'}});
+        fireEvent.change(inputPassword, {target: {value: 'Password@02'}});
+
+        await waitFor(() => {
+            void userEvent.click(loginButton);
+            expect(getByText(/Email or password is incorrect/i)).toBeInTheDocument();
+        });
+    });
 });
