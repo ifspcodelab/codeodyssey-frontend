@@ -10,73 +10,94 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom"
 import {CourseResponse} from "../../core/models/CourseResponse";
 import {useApiCourse} from "../../core/hooks/useApiCourse";
+import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
+import {JwtService} from "../../core/auth/JwtService.ts";
+
+
 
   const token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUFJPRkVTU09SIiwibmFtZSI6Ik1vcmlhcnR5IiwiZW1haWwiOiJtb3JpYXJ0eUBnbWFpbC5jb20iLCJzdWIiOiJiMDM0OWY2NS0xNDBkLTRiNzEtOGE3OS04MDYxNThiMzExZmUiLCJpc3MiOiJjb2RlLW9keXNzZXkiLCJpYXQiOjE2OTE3MDY5MzAsImV4cCI6MTY5MTcwNzgzMH0.jl-Us8PHnVygjJ7z3qn2_KDv1cCj1C8GlW8m5Bs7W5M"
+  
+  
 
-  async function getProfessorCourses() {
-    try {
-      const { data, status } = await axios.get<CourseResponse>(
-        'http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/courses',
-        {
-          headers: {
-            Accept: 'application/json',
-            'Authorization': `Bearer ${token}` 
-          },
-        },
-      );
-      console.log(JSON.stringify(data, null, 4));
-      console.log('response status is: ', status);
-      return data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log('error message: ', error.message);
-        return error.message;
-      } else {
-        console.log('unexpected error: ', error);
-        return 'An unexpected error occurred';
-      }
-    }
-  }
-
-  async function getStudentCourses() {
-    try {
-      const { data, status } = await axios.get<CourseResponse[]>(
-        'http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/enrollments',
-        {
-          headers: {
-            Accept: 'application/json',
-          },
-        },
-      );
-      console.log(JSON.stringify(data, null, 4));
-      console.log('response status is: ', status);
-      return data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log('error message: ', error.message);
-        return error.message;
-      } else {
-        console.log('unexpected error: ', error);
-        return 'An unexpected error occurred';
-      }
-    }
-  }
+  // async function getStudentCourses() {
+  //   try {
+  //     const { data, status } = await axios.get<CourseResponse[]>(
+  //       'http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/enrollments',
+  //       {
+  //         headers: {
+  //           Accept: 'application/json',
+  //         },
+  //       },
+  //     );
+  //     console.log(JSON.stringify(data, null, 4));
+  //     console.log('response status is: ', status);
+  //     return data;
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error)) {
+  //       console.log('error message: ', error.message);
+  //       return error.message;
+  //     } else {
+  //       console.log('unexpected error: ', error);
+  //       return 'An unexpected error occurred';
+  //     }
+  //   }
+  // }
 
 function Courses() {
+  
     const { t } = useTranslation();
+    const authConsumer = AuthConsumer();
+   
 
     const [coursesStudent, setCoursesStudent] = useState([]);
     const [coursesProfessor, setCoursesProfessor] = useState([]);
     // const [emptyList, setEmptyList] = useState<string | null>(null);
     const navigate = useNavigate()
+    async function getProfessorCourses() {
+      try {
+        const rawAccessToken = new JwtService().getRawAccessToken() as string;
+        const PROFESSOR_ID: string = authConsumer.id;
+        const USER_ROLE: string = authConsumer.role;
+        let URL = ""
+        if(USER_ROLE == "PROFESSOR") {
+          URL = "http://localhost:8080/api/v1/users/b0349f65-140d-4b71-8a79-806158b311fe/courses"
+        } else if(USER_ROLE == "STUDENT") {
+          URL = "http://localhost:8080/api/v1/users/444613dd-bdc7-4b78-8617-3134b6d5af95/enrollments"
+        }
 
+        const { data, status } = await axios.get<CourseResponse>(
+          URL,
+          {
+            headers: {
+              Accept: 'application/json',
+              'Authorization': `Bearer ${rawAccessToken}` 
+            },
+          },
+        );
+  
+        console.log(rawAccessToken )
+        console.log(USER_ROLE)
+        console.log(PROFESSOR_ID)
+        console.log(JSON.stringify(data, null, 4));
+        console.log('response status is: ', status);
+        return data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.log('error message: ', error.message);
+          return error.message;
+        } else {
+          console.log('unexpected error: ', error);
+          return 'An unexpected error occurred';
+        }
+      }
+    }
     useEffect(() => {
       void (async () => {
-        const cursoAluno = await getStudentCourses();
+        // const cursoAluno = await getStudentCourses();
         const cursoProfessor = await getProfessorCourses();
         // console.log(Array.isArray(cursoAluno))
         // console.log(Array.isArray(coursesStudent))
-        setCoursesStudent(cursoAluno)
+        // setCoursesStudent(cursoAluno)
         setCoursesProfessor(cursoProfessor)
       })();
     }, []);
