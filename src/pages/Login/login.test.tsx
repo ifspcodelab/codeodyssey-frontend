@@ -5,6 +5,31 @@ import {BrowserRouter, Router} from "react-router-dom";
 import "@testing-library/jest-dom";
 import userEvent from '@testing-library/user-event'
 import {createMemoryHistory} from "history";
+import {rest} from "msw";
+import {setupServer} from "msw/node";
+
+export const restHandlers = [
+    rest.post('http://localhost:3000/login', (req, res, ctx) => {
+        console.log(req) // for build purposes
+        return res(
+            ctx.status(200),
+            ctx.json(
+                {
+                    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsIm5hbWUiOiJSYWZhZWwgU2ltw7VlcyBkZSBQYXVsYSIsImVtYWlsIjoicnNkZXBhdWxhNjdAZ21haWwuY29tIiwic3ViIjoiOWUwMDliODEtYTAwNi00ODEzLWI1NGYtMzdlYzYyODk5MDdhIiwiaXNzIjoiY29kZS1vZHlzc2V5IiwiaWF0IjoxNjkyMDIwMDE2LCJleHAiOjE2OTIwMjA5MTZ9.-BfeZnE_KVvefPLIDfo4fQ_ywg7YZkJ5a3OCMxG7pHM",
+                    "refreshToken": "c96f21f3-545b-4893-9609-525fd829bf94"
+                }
+            )
+        )
+    }),
+];
+
+const server = setupServer(...restHandlers)
+
+beforeAll(() => void server.listen({ onUnhandledRequest: 'error' }))
+
+afterAll(() => void server.close())
+
+afterEach(() => server.resetHandlers())
 
 function renderLogin() {
     return render(
@@ -163,7 +188,7 @@ describe("Login", () => {
         })
     })
 
-    test("Should send to login page after clicking the login button", async () => {
+    test("Should send to registration page after clicking the register button", async () => {
         const history = createMemoryHistory();
         history.push = vi.fn();
 
@@ -183,6 +208,36 @@ describe("Login", () => {
             expect(history.push).toHaveBeenLastCalledWith({
                     "hash": "",
                     "pathname": "/registration",
+                    "search": "",
+                },
+                undefined,
+                {},
+            );
+        });
+    });
+
+    test("Should send to home page after clicking the login button", async () => {
+        const history = createMemoryHistory();
+        history.push = vi.fn();
+
+        const { getByLabelText, getByRole } = render(
+            <Router location={history.location} navigator={history}>
+                <Login />
+            </Router>
+        );
+
+        const inputEmail = getByRole("textbox", {name: "Email"});
+        const inputPassword = getByLabelText("Password");
+        const loginButton = getByRole("button", {name: "Login"});
+
+        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
+        fireEvent.change(inputPassword, {target: {value: 'Password@01'}});
+
+        await waitFor(() => {
+            void userEvent.click(loginButton)
+            expect(history.push).toHaveBeenLastCalledWith({
+                    "hash": "",
+                    "pathname": "/",
                     "search": "",
                 },
                 undefined,
