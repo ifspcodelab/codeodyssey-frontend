@@ -14,18 +14,9 @@ import {AccessToken, JwtService} from "../../core/auth/JwtService.ts";
 import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
 import {useApi} from "../../core/hooks/useApi.ts";
 import {schema} from "./schema";
+import {LoginRequest, LoginResponse} from "../../core/models/login";
 
 // TODO: refactor to move types, api call, error handling and such to its own files and directories
-
-export interface LoginRequest {
-  email: string,
-  password: string,
-}
-
-export interface LoginResponse {
-  accessToken: string,
-  refreshToken: string,
-}
 
 function Login() {
   const { t } = useTranslation();
