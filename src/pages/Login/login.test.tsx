@@ -1,9 +1,10 @@
-import {describe, test} from "vitest";
+import {describe, test, vi} from "vitest";
 import Login from "./index";
 import {render, fireEvent, waitFor} from "@testing-library/react";
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter, Router} from "react-router-dom";
 import "@testing-library/jest-dom";
 import userEvent from '@testing-library/user-event'
+import {createMemoryHistory} from "history";
 
 function renderLogin() {
     return render(
@@ -161,4 +162,32 @@ describe("Login", () => {
             expect(getByText(/password must be at most 64 characters/i)).toBeInTheDocument();
         })
     })
-})
+
+    test("Should send to login page after clicking the login button", async () => {
+        const history = createMemoryHistory();
+        history.push = vi.fn();
+
+        const { getByRole } = render(
+            <Router location={history.location} navigator={history}>
+                <Login />
+            </Router>
+        );
+
+        const loginHeading = getByRole("heading", {name: "Login"});
+        const registrationButton = getByRole("button", {name: "Register"});
+
+        expect(loginHeading).toBeInTheDocument();
+
+        await waitFor(() => {
+            void userEvent.click(registrationButton)
+            expect(history.push).toHaveBeenLastCalledWith({
+                    "hash": "",
+                    "pathname": "/registration",
+                    "search": "",
+                },
+                undefined,
+                {},
+            );
+        });
+    });
+});
