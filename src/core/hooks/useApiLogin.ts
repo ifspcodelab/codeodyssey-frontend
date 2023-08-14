@@ -1,6 +1,6 @@
-import {LoginResponse} from "../../pages/Login";
 import {RefreshTokenResponse} from "../models/RefreshTokenResponse.ts";
 import {api} from "../services/axios";
+import {LoginResponse} from "../models/login";
 
 
 // TODO: verify why it is not working (anymore)

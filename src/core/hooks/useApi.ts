@@ -1,9 +1,9 @@
 import axios, {AxiosError} from "axios";
 import i18n from "../../locales/i18n";
 import {CreateUserResponse} from "../models/CreateUserResponse";
-import {LoginResponse} from "../../pages/Login";
 import {RefreshTokenResponse} from "../models/RefreshTokenResponse.ts";
 import {api} from "../services/axios";
+import {LoginResponse} from "../models/login";
 
 
 // TODO: verify why it is not working (anymore)
