@@ -38,25 +38,32 @@ describe("Courses", () => {
       })  
 
       test('should render all professor courses', async () => {
-        const { findAllByText } = render(<BrowserRouter>
-          <Courses/>
-      </BrowserRouter>);
+        const { findAllByText } = render(
+          <BrowserRouter>
+            <Courses/>
+          </BrowserRouter>);
+
         const courseNames = await findAllByText(/Course \d/i);
+
         expect(courseNames).toHaveLength(2); 
       });
 
       test('should render all student courses', async () => {
-        const { findAllByText } = render(<BrowserRouter>
-          <Courses/>
-      </BrowserRouter>);
+        const { findAllByText } = render(
+          <BrowserRouter>
+            <Courses/>
+        </BrowserRouter>);
+
         const courseNames = await findAllByText(/Course \d/i);
+
         expect(courseNames).toHaveLength(2);
       });
 
       test('should render course attributes correctly', async () => {
-        const { findByText } = render(<BrowserRouter>
-          <Courses/>
-      </BrowserRouter>);
+        const { findByText } = render(
+          <BrowserRouter>
+            <Courses/>
+          </BrowserRouter>);
         
         const courseName = await findByText(/Course 3/i);
         const professorName = await findByText(/Professor C/i);
@@ -70,11 +77,25 @@ describe("Courses", () => {
       });
 
 
-      test('renders empty course list message for professor', () => {
-        const { getByText }  = render(<BrowserRouter>
-          <Courses/>
-      </BrowserRouter>);
+      test('should render empty course list message', () => {
+        const { getByText }  = render(
+          <BrowserRouter>
+            <Courses/>
+          </BrowserRouter>);
+
         const emptyListMessage = getByText(/You do not participate in any course yet/i);
+
         expect(emptyListMessage).toBeInTheDocument();
+      });
+
+      test('should render visualize students button for student', async () => {
+        const { findAllByText } = render(
+          <BrowserRouter>
+            <Courses />
+          </BrowserRouter>
+        );
+    
+        const studentsButtons = await findAllByText(/Visualize Students/i);
+        expect(studentsButtons).toHaveLength(2);
       });
 });
