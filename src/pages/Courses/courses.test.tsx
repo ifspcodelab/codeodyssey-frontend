@@ -40,4 +40,12 @@ describe("Courses", () => {
         const courseNames = await findAllByText(/Course \d/i);
         expect(courseNames).toHaveLength(2); 
       });
+
+      test('should render all student courses', async () => {
+        const { findAllByText } = render(<BrowserRouter>
+          <Courses/>
+      </BrowserRouter>);
+        const courseNames = await findAllByText(/Course \d/i);
+        expect(courseNames).toHaveLength(2);
+      });
 });
