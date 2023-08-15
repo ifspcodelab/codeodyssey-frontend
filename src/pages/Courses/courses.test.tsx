@@ -53,7 +53,7 @@ describe("Courses", () => {
         expect(courseNames).toHaveLength(2);
       });
 
-      it('renders course attributes correctly', async () => {
+      test('should render course attributes correctly', async () => {
         const { findByText } = render(<BrowserRouter>
           <Courses/>
       </BrowserRouter>);
@@ -67,5 +67,14 @@ describe("Courses", () => {
         expect(professorName).toBeInTheDocument();
         expect(startDate).toBeInTheDocument();
         expect(endDate).toBeInTheDocument();
+      });
+
+
+      test('renders empty course list message for professor', () => {
+        const { getByText }  = render(<BrowserRouter>
+          <Courses/>
+      </BrowserRouter>);
+        const emptyListMessage = getByText(/You do not participate in any course yet/i);
+        expect(emptyListMessage).toBeInTheDocument();
       });
 });
