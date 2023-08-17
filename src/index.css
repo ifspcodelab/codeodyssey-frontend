@@ -4,3 +4,21 @@ html, body {
     border: 0;
     box-sizing: border-box;
 }
+
+#error-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer * {
+    margin: 5px 0;
+}

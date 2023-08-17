@@ -1,4 +1,4 @@
-{ 
+{
   "createcourse": {
     "title": "Create Course",
     "text": "Create a course by filling out the form below",
@@ -32,11 +32,11 @@
     "form": {
       "name": "Name",
       "email": "Email",
-      "email_message": "the email is immutable",
+      "email_message": "Won't be possible to change email",
       "password": "Password",
-      "login": "Login",
-      "submit": "Submit",
-      "termsCheckbox": "I have read and agree with the Terms of Use and Privacy Policy",
+      "login": "Already have an account? Go to login.",
+      "submit": "Register",
+      "termsCheckbox": "I have read and agree with the <1>Terms of Use</1> and <3>Privacy Policy</3>",
       "validation": {
         "termsCheckbox": "You must agree with the terms and privacy policy",
         "password": {
@@ -50,8 +50,31 @@
     "footer": "Registration footer",
     "exception": {
       "email": "There was a problem with the email used",
-      "badRequest": "Bad request"
+      "badRequest": "Request error",
+      "network": "Network error",
+      "unexpected": "An unexpected error has occurred"
     }
+  },
+  "login": {
+    "title": "Login",
+    "text": "Sign in or Register",
+    "form": {
+      "email": "Email",
+      "password": "Password",
+      "login": "Login",
+      "submit": "Submit",
+      "validation": {
+        "password": {
+          "number": "Password must have at least one digit",
+          "lowercase": "Password must have at least one lowercase letter",
+          "uppercase": "Password must have at least one uppercase letter",
+          "special": "Password must have at least one special character"
+        }
+      }},
+    "login": "Log In!",
+    "register": "Register",
+    "loginError": "Something went wrong, please try again later",
+    "footer": "Login footer"
   },
   "resendEmail":{
     "title": "Resend email",
@@ -67,6 +90,13 @@
       "submit": "Send"
     },
     "footer": "Footer text here"
+  },
+  "errorPage":{
+    "title": "Error {{statusCode}}",
+    "subTitle": "An unexpected error has occurred.",
+    "notFound": {
+    "message": "Page not found."
+    }
   },
   "yup": {
     "invalid_field_length": "This field must have at least ${min} characters",

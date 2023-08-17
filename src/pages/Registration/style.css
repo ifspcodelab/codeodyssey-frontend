@@ -1,68 +1,15 @@
-.formContainer {
-    width: 400px;
-    margin: 20px auto;
-    height: 200px;
+#emailMessage {
+    margin: 10px 0 0 10px;
+    font-style: italic;
+    color: #777;
 }
 
-form input {
-    width: 100%;
-    padding: 0;
+#registration-menu {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto 15px;
 }
 
-.formInput * {
-    display: block;
-}
-
-.formInput p {
-    color: #FF0000;
-}
-
-.formInput input {
-    padding-left: 4px;
-}
-
-#email {
-    display: inline-block;
-}
-
-.formInput span {
-    display: initial;
-}
-
-.formInput span:hover {
-    color: #FF0000;
-    cursor: pointer;
-}
-
-.checkbox {
-    display: block;
-    align-items: center;
+#registration-menu * {
     margin: 10px auto;
-    width: 100%;
-}
-
-.checkbox input {
-    margin-right: 10px;
-    width: 15px;
-    aspect-ratio: 1;
-}
-
-.checkbox p {
-    color: #FF0000;
-}
-
-#terms {
-    position: relative;
-    top: -2px;
-}
-
-#buttons {
-    display: flex;
-    justify-content: space-between;
-}
-
-#footer {
-    display: flex;
-    left: 50%;
-    background-color: aqua;
 }

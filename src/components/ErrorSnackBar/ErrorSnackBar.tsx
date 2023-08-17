@@ -12,10 +12,10 @@ const ErrorSnackBar = (props: SnackBarProps) => {
     let message = '';
 
     switch (props.errorType) {
-        case 'badRequest': { message = i18n.t("createcourse.exception.badRequest"); break; }
-        case 'courselAlreadyExists': { message = i18n.t("createcourse.exception.slug");break }
-        case 'networkError': { message = i18n.t("createcourse.exception.network"); break; }
-        case 'unexpected': { message = i18n.t("createcourse.exception.unexpected"); break; }
+        case 'badRequest': { message = i18n.t("registration.exception.badRequest"); break; }
+        case 'emailAlreadyExists': { message = i18n.t("registration.exception.email"); break; }
+        case 'networkError': { message = i18n.t("registration.exception.network"); break; }
+        case 'unexpected': { message = i18n.t("registration.exception.unexpected"); break; }
     }
 
     return (

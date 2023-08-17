@@ -14,28 +14,34 @@ import dayjs from 'dayjs';
 import {useNavigate} from "react-router-dom"
 import { ptBR } from "@mui/x-date-pickers";
 import {CreateCourseResponse} from "../../core/models/CreateCourseResponse";
-import {useApiCourse} from "../../core/hooks/useApiCourse";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import {useState} from "react";
+import * as React from 'react';
+import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
+import {JwtService} from "../../core/auth/JwtService.ts";
+import {useApiCreateCourse} from "../../core/hooks/useApiCreateCourse";
+
 
 function CreateCourse() {
   const {t} = useTranslation();
 
+  const authConsumer = AuthConsumer();
   const onSubmit: SubmitHandler<CreateCourseResponse> = (data) => submitCreateCourse(data)
   const { register, handleSubmit, watch, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
   const navigate = useNavigate()
-  const PROFESSOR_ID: string = import.meta.env.VITE_PROFESSOR_ID as string;
-  const { createCourse } = useApiCourse();
+  const PROFESSOR_ID: string = authConsumer.id;
+  const rawAccessToken = new JwtService().getRawAccessToken() as string;
+  const [open, setOpen] = React.useState(false);
+  const { createCourse } = useApiCreateCourse();
 
   const {isShowing, toggle} = useConfirmationDialog()
   const [errorType, setErrorType] = useState('');
-  const [open, setOpen] = useState(false);
 
-  async function submitCreateCourse(data: CreateCourseResponse) {
+  async function submitCreateCourse(data: CourseResponse) {
     try {
-      await createCourse(data.name, data.slug, data.startDate.toISOString(),  data.endDate.toISOString(), PROFESSOR_ID);
-
-      navigate('/courses')
+      console.log("@ create course | rawAccessToken", rawAccessToken)
+        await createCourse(data.name, data.slug, data.startDate.toISOString(),  data.endDate.toISOString(), PROFESSOR_ID, rawAccessToken);
+        navigate('/courses')
     }
     catch(error) {
         if (axios.isAxiosError(error)) {
@@ -81,7 +87,7 @@ function CreateCourse() {
     <>
       <Container maxWidth="md">
         <PageHeader title={t('createcourse.title')} text={t('createcourse.text')} />
-        <form onSubmit={handleSubmit(onSubmit) }>
+        <form onSubmit={handleSubmit(onSubmit as any) }>
           <Grid container spacing={1} rowSpacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -113,10 +119,10 @@ function CreateCourse() {
                 <Controller
                   name={"startDate"}
                   control={control}
-                  defaultValue={dayjs(new Date())}
+                  defaultValue={dayjs(new Date()) as any}
 
                   render={({ field: { onChange, value } }) => (
-                  <DatePicker label={t("createcourse.form.startDate")} disablePast  value={value ?? " "} onChange={onChange} 
+                  <DatePicker label={t("createcourse.form.startDate")} disablePast  value={value ?? " "} onChange={onChange as any}
                   slotProps={{
                     textField: {
                       helperText: errors.startDate && <span>{errors.startDate.message}</span> 
@@ -128,13 +134,13 @@ function CreateCourse() {
               </Grid>
 
               <Grid >
-              <LocalizationProvider dateAdapter={AdapterDayjs} localeText={ptBR}>
+              <LocalizationProvider dateAdapter={AdapterDayjs} localeText={ptBR as any}>
               <Controller
                   name={"endDate"}
                   control={control}
-                  defaultValue={null}
+                  defaultValue={undefined}
                   render={({ field: { onChange, value } }) => (
-                      <DatePicker label={t("createcourse.form.endDate")} data-testid="endDateField" value={value || null} onChange={onChange} minDate={watch().startDate}
+                      <DatePicker label={t("createcourse.form.endDate")} data-testid="endDateField" value={value || null} onChange={onChange as any} minDate={watch().startDate}
                       slotProps={{
                         textField: {
                           helperText: errors.endDate && <span>{errors.endDate.message}</span> 
