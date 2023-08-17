@@ -1,4 +1,6 @@
 import PageHeader from "../../components/PageHeader";
+import ConfirmationDialog from "../../components/ConfirmationDialog/index.tsx";
+import useConfirmationDialog from "../../core/hooks/useConfirmationDialog.tsx";
 import {useTranslation} from "react-i18next";
 import {Button, Container, Grid, TextField} from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,16 +9,13 @@ import {SubmitHandler, useForm, Controller} from "react-hook-form";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import dayjs from 'dayjs';
 import {useNavigate} from "react-router-dom"
-import i18n from "../../locales/i18n";
 import { ptBR } from "@mui/x-date-pickers";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import {CreateCourseResponse} from "../../core/models/CreateCourseResponse";
+import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import {useState} from "react";
 import * as React from 'react';
 import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
 import {JwtService} from "../../core/auth/JwtService.ts";
@@ -26,23 +25,8 @@ import {useApiCreateCourse} from "../../core/hooks/useApiCreateCourse";
 function CreateCourse() {
   const {t} = useTranslation();
 
-type UserResponse = {
-  name: string;
-  email: string;
-  role: string;
-};
-
-type CourseResponse = {
-  name: string;
-  slug: string;
-  startDate: Date;
-  endDate: Date;
-  professor: UserResponse;
-};
-
-
   const authConsumer = AuthConsumer();
-  const onSubmit: SubmitHandler<CourseResponse> = (data) => submitCreateCourse(data)
+  const onSubmit: SubmitHandler<CreateCourseResponse> = (data) => submitCreateCourse(data)
   const { register, handleSubmit, watch, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
   const navigate = useNavigate()
   const PROFESSOR_ID: string = authConsumer.id;
@@ -50,13 +34,8 @@ type CourseResponse = {
   const [open, setOpen] = React.useState(false);
   const { createCourse } = useApiCreateCourse();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const {isShowing, toggle} = useConfirmationDialog()
+  const [errorType, setErrorType] = useState('');
 
   async function submitCreateCourse(data: CourseResponse) {
     try {
@@ -68,23 +47,41 @@ type CourseResponse = {
         if (axios.isAxiosError(error)) {
           handleError(error)
         } else {
-            console.log('unexpected error: ', error);
-            return 'An unexpected error ocurred';
+          setErrorType('unexpected')
+          setOpen(true);
         }
     }
   }
 
-  const handleError = (error: any) => {
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || event === undefined) {
+        return;
+    }
+
+    setOpen(false);
+};
+
+  const handleError = (error: AxiosError) => {
     let responseStatus: number
-    responseStatus = error.response.data.status
-    if (responseStatus == 400) {
-        alert(i18n.t("createcourse.exception.badRequest"))
-    } else if (responseStatus === 409) {
-      alert(i18n.t("createcourse.exception.duplicate"))
-    } else if (responseStatus === 401) {
-      alert(i18n.t("createcourse.exception.unauthorized"))
-    } 
-  }
+    let problemDetail: ProblemDetail = { title: '', detail: '' , instance: '', status: 0, type: ''}
+    if (error.response) {
+        problemDetail = error.response.data as ProblemDetail
+        responseStatus = problemDetail.status
+        console.log(error.response.data)
+        if (responseStatus == 400) {
+            setErrorType('badRequest')
+            setOpen(true);
+        } else if (responseStatus == 409) {
+            if (error.response) problemDetail = error.response.data as ProblemDetail
+            if (problemDetail.title == "Course Already exists")
+                setErrorType('courselAlreadyExists')
+                setOpen(true);
+        }  
+    } else if (error.message == "Network Error") {
+        setErrorType('networkError')
+        setOpen(true);
+    }
+}
 
   return (
     <>
@@ -158,34 +155,15 @@ type CourseResponse = {
             </Grid>
 
             <Grid item xs={12} textAlign="right">
-              <Button data-testid="cancelButton" variant="outlined" color="error" onClick={handleClickOpen}>{t('createcourse.form.cancel')}</Button>
+              <Button data-testid="cancelButton" variant="outlined" color="error" onClick={toggle}>{t('createcourse.form.cancel')}</Button>
               <Button data-testid="submitButton" variant="outlined" type="submit">{t('createcourse.form.submit')}</Button>
+              <ConfirmationDialog isShowing={isShowing}
+              hide={toggle} title={t('createcourse.form.confimationdialog.title')} desc={t('createcourse.form.confimationdialog.description')}>   </ConfirmationDialog>
             </Grid>
           </Grid>
         </form>
+        <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType}/>
       </Container>
-
-        <Dialog
-        open={open}
-        onClose={handleClose}
-        >
-          <DialogTitle>
-            {t('createcourse.form.confimationdialog.title')}  
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              {t('createcourse.form.confimationdialog.description')}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => {navigate("/");}}> 
-              {t('createcourse.form.confimationdialog.leave')}
-            </Button>
-            <Button onClick={handleClose} autoFocus>
-              {t('createcourse.form.confimationdialog.continue')}
-            </Button>
-          </DialogActions>
-        </Dialog>
       </>
   )
 }

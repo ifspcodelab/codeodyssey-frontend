@@ -17,9 +17,10 @@
       }
     },
     "exception": {
-      "badRequest": "Solicitação inválida",
-      "duplicate": "Dado já existe no banco de dados",
-      "unauthorized": "Sem permissão para criar curso"
+      "slug": "Esse caminho já existe",
+      "badRequest": "Erro com a requisição",
+      "network": "Erro de conexão com o servidor",
+      "unexpected": "Um erro inesperado ocorreu"
     }
   },
   "privacypolicy": {
