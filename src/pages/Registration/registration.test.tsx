@@ -1,15 +1,38 @@
 import "@testing-library/jest-dom";
 import { render, fireEvent, waitFor } from "@testing-library/react";
-import userEvent from '@testing-library/user-event'
 import {describe, test, vi} from "vitest";
 import Registration from "./index";
 import {BrowserRouter, Router} from "react-router-dom";
-import {schema} from "./index"
+import {schema} from "./schema";
 import { createMemoryHistory } from 'history';
+import {setupServer} from "msw/node";
+import {rest} from "msw";
 
-const mockCreateUser = vi.fn((name: string, email: string, password: string, navigate) => {
-    return Promise.resolve({ name, email, password, navigate })
-})
+export const restHandlers = [
+    rest.post('http://localhost:3000/users', (req, res, ctx) => {
+        console.log(req) // for build purposes
+        return res(
+            ctx.status(201),
+            ctx.json(
+                {
+                    id: "9693be41-0eb2-44e8-8514-1379707c92b6",
+                    name: "John Doe",
+                    email: "johndoe@email.com",
+                    role: "STUDENT",
+                    createdAt: "2023-07-26T13:20:31.230343Z"
+                }
+            )
+        )
+    }),
+]
+
+const server = setupServer(...restHandlers)
+
+beforeAll(() => void server.listen({ onUnhandledRequest: 'error' }))
+
+afterAll(() => void server.close())
+
+afterEach(() => server.resetHandlers())
 
 describe("Registration", () => {
 
@@ -24,15 +47,15 @@ describe("Registration", () => {
    })
 
     test("Should be able to see all the form fields", () => {
-        const { getByLabelText, getByText } = render(
+        const { getByLabelText } = render(
             <BrowserRouter>
                 <Registration/>
             </BrowserRouter>
         );
 
-        expect(getByText("Name")).toBeInTheDocument();
-        expect(getByText("Email")).toBeInTheDocument();
-        expect(getByText("Password")).toBeInTheDocument();
+        expect(getByLabelText("Name")).toBeInTheDocument();
+        expect(getByLabelText("Email")).toBeInTheDocument();
+        expect(getByLabelText("Password")).toBeInTheDocument();
         expect(getByLabelText("I have read and agree with the Terms of Use and Privacy Policy")).toBeInTheDocument();
     })
 
@@ -43,17 +66,17 @@ describe("Registration", () => {
             </BrowserRouter>
         );
 
-        expect(getByTestId("loginButton")).toBeInTheDocument();
+        expect(getByTestId("loginLink")).toBeInTheDocument();
     })
 
     test("Should be able to see the submit button text", () => {
-        const { getByTestId } = render(
+        const { getByRole } = render(
             <BrowserRouter>
                 <Registration/>
             </BrowserRouter>
         );
 
-        expect(getByTestId("submitButton")).toBeInTheDocument();
+        expect(getByRole("button", {name: "Register"})).toBeInTheDocument();
     })
 
     test("Should name be validated", async () => {
@@ -93,20 +116,24 @@ describe("Registration", () => {
             </BrowserRouter>
         );
 
-        fireEvent.click(getByTestId("submitButton"));
+        fireEvent.click(getByTestId("registerButton"));
     })
 
     test("Should send request with data after form submission", async () => {
-        const { getByRole, getByLabelText } = render(
-            <BrowserRouter>
-                <Registration createUser={mockCreateUser} />
-            </BrowserRouter>
+        const history = createMemoryHistory();
+
+        history.push = vi.fn();
+
+        const { getByTestId, getByLabelText } = render(
+            <Router location={history.location} navigator={history}>
+                <Registration />
+            </Router>
         );
 
-        const inputName = getByLabelText('Name');
-        const inputEmail = getByLabelText('Email');
-        const inputPassword = getByLabelText('Password');
-        const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy')
+        const inputName = getByLabelText('Name') as HTMLInputElement;
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy') as HTMLInputElement
 
         fireEvent.change(inputName, { target: { value: 'John Doe' } });
         fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
@@ -121,49 +148,141 @@ describe("Registration", () => {
         fireEvent.click(inputTerms)
 
         await waitFor(() => {
-            fireEvent.click(getByRole("button", {name: /submit/i}))
-            expect(mockCreateUser).toBeCalled()
+            fireEvent.click(getByTestId("registerButton"))
+            expect(history.push).toHaveBeenLastCalledWith( {
+                    "hash": "",
+                    "pathname": "/resend-email",
+                    "search": "",
+                },
+                {
+                     "data": "johndoe@email.com",
+                },
+                {
+                    "state": {
+                        "data": "johndoe@email.com",
+                    },
+                }
+            )
         })
     })
 
     test("Should send to login page after clicking the login button", async () => {
-        const history = createMemoryHistory();
-
-        history.push = vi.fn();
-
-        const { getByText, getByTestId } = render(
-            <Router location={history.location} navigator={history}>
+        const { getByRole } = render(
+            <BrowserRouter>
                 <Registration />
-            </Router>
+            </BrowserRouter>
         );
 
-        expect(getByText(/^Registration$/i)).toBeInTheDocument()
+        const registrationHeading = getByRole("heading", {name: "Registration"})
+        const loginLink = getByRole("link", {name: "Already have an account? Go to login."})
 
-        await waitFor(() => {
-            userEvent.click(getByTestId("loginButton"))
-            expect(history.push).toHaveBeenLastCalledWith({
-                    "hash": "",
-                    "pathname": "/login",
-                    "search": "",
-                },
-                    undefined,
-                    {},
-            );
-        })
+        expect(registrationHeading).toBeInTheDocument()
+        expect(loginLink).toBeInTheDocument()
+        expect(loginLink).toHaveAttribute("href", "/login")
     })
 
-    test("Should show immutability message when hover email tooltip", () => {
-        const {getByTestId, getByTitle} = render(
+    test("Should show immutability message", () => {
+        const {getByText} = render(
             <BrowserRouter>
                 <Registration/>
             </BrowserRouter>
         )
 
-        const toolTip = getByTestId("immutabilityMessage")
-        const immutabilityMessage = getByTitle("the email is immutable")
+        const immutabilityMessage = getByText(/Won't be possible to change email/i)
 
-        fireEvent.mouseEnter(toolTip)
+        expect(immutabilityMessage).toBeInTheDocument()
+    })
 
-        expect(immutabilityMessage).toBeVisible()
+    test("Should show email error message on form submission", async () => {
+        server.use(
+            rest.post('http://localhost:3000/users', async (req, res, ctx) => {
+                console.log(req) // for build purposes
+                return res(
+                    ctx.status(409),
+                    ctx.json({
+                        "type": "about:blank",
+                        "title": "User Already exists",
+                        "status": 409,
+                        "detail": "Email already exists",
+                        "instance": "/api/v1/users"
+                    })
+                )
+            })
+        )
+
+        const {getByText, getByLabelText, getByTestId} = render(
+            <BrowserRouter>
+                <Registration/>
+            </BrowserRouter>
+        )
+
+        const inputName = getByLabelText('Name') as HTMLInputElement;
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy') as HTMLInputElement
+
+        fireEvent.change(inputName, { target: { value: 'John Doe' } });
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
+        fireEvent.change(inputTerms, { target: {value: true}})
+
+        fireEvent.click(inputTerms)
+
+        await waitFor(() => {
+            fireEvent.click(getByTestId("registerButton"))
+            expect(getByText("There was a problem with the email used")).toBeInTheDocument()
+        })
+    })
+
+    test("Should show network error message on form submission", async () => {
+        server.use(
+            rest.post('http://localhost:3000/users', async (req, res, ctx) => {
+                    console.log(req, ctx) // for build purposes
+                    return res.networkError('Failed to connect')
+                }
+            ))
+
+        const {getByText, getByLabelText, getByTestId} = render(
+            <BrowserRouter>
+                <Registration/>
+            </BrowserRouter>
+        )
+
+        const inputName = getByLabelText('Name') as HTMLInputElement;
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy') as HTMLInputElement
+
+        fireEvent.change(inputName, { target: { value: 'John Doe' } });
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
+        fireEvent.change(inputTerms, { target: {value: true}})
+
+        fireEvent.click(inputTerms)
+
+        await waitFor(() => {
+            fireEvent.click(getByTestId("registerButton"))
+            expect(getByText("Network error")).toBeInTheDocument()
+        })
+    })
+
+    test("Should check if terms and privacy links have their respective href and target values", () => {
+        const { getByRole } = render(
+            <BrowserRouter>
+                <Registration />
+            </BrowserRouter>
+        );
+
+        const registrationHeading = getByRole("heading", {name: "Registration"})
+        const termsLink = getByRole("link", {name: "Terms of Use"})
+        const privacyLink = getByRole("link", {name: "Privacy Policy"})
+
+        expect(registrationHeading).toBeInTheDocument()
+        expect(termsLink).toBeInTheDocument()
+        expect(termsLink).toHaveAttribute("href", "/terms-of-use")
+        expect(termsLink).toHaveAttribute("target", "_blank")
+        expect(privacyLink).toBeInTheDocument()
+        expect(privacyLink).toHaveAttribute("href", "/privacy-policy")
+        expect(privacyLink).toHaveAttribute("target", "_blank")
     })
 });

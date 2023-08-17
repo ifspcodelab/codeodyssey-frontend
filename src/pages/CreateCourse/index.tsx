@@ -42,7 +42,7 @@ type CourseResponse = {
   const { register, handleSubmit, watch, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
   const navigate = useNavigate()
   const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
-  const PROFESSOR_ID: string = import.meta.env.VITE_PROFESSOR_ID as string;
+  // const PROFESSOR_ID: string = import.meta.env.VITE_PROFESSOR_ID as string;
   const STUDENT_ID: string = import.meta.env.VITE_STUDENT_ID as string;
   const [open, setOpen] = React.useState(false);
 
@@ -78,7 +78,7 @@ type CourseResponse = {
     }
   }
 
-  const handleError = (error) => {
+  const handleError = (error: any) => {
     let responseStatus: number
     responseStatus = error.response.data.status
     if (responseStatus == 400) {
@@ -94,7 +94,7 @@ type CourseResponse = {
     <>
       <Container maxWidth="md">
         <PageHeader title={t('createcourse.title')} text={t('createcourse.text')} />
-        <form onSubmit={handleSubmit(onSubmit) }>
+        <form onSubmit={handleSubmit(onSubmit as any)}>
           <Grid container spacing={1} rowSpacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -126,10 +126,10 @@ type CourseResponse = {
                 <Controller
                   name={"startDate"}
                   control={control}
-                  defaultValue={dayjs(new Date())}
+                  defaultValue={dayjs(new Date()) as any}
 
                   render={({ field: { onChange, value } }) => (
-                  <DatePicker label={t("createcourse.form.startDate")} disablePast  value={value ?? " "} onChange={onChange} 
+                  <DatePicker label={t("createcourse.form.startDate")} disablePast  value={value ?? " "} onChange={onChange as any}
                   slotProps={{
                     textField: {
                       helperText: errors.startDate && <span>{errors.startDate.message}</span> 
@@ -141,13 +141,13 @@ type CourseResponse = {
               </Grid>
 
               <Grid >
-              <LocalizationProvider dateAdapter={AdapterDayjs} localeText={ptBR}>
+              <LocalizationProvider dateAdapter={AdapterDayjs} localeText={ptBR as any}>
               <Controller
                   name={"endDate"}
                   control={control}
-                  defaultValue={null}
+                  defaultValue={undefined}
                   render={({ field: { onChange, value } }) => (
-                      <DatePicker label={t("createcourse.form.endDate")} data-testid="endDateField" value={value || null} onChange={onChange} minDate={watch().startDate}
+                      <DatePicker label={t("createcourse.form.endDate")} data-testid="endDateField" value={value || null}   onChange={onChange as any} minDate={watch().startDate}
                       slotProps={{
                         textField: {
                           helperText: errors.endDate && <span>{errors.endDate.message}</span> 

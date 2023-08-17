@@ -13,12 +13,13 @@ import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import './index.css'
 import ResendEmail from "./pages/ResendEmail";
-import {createUser} from "./core/services/UserService";
+import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App/>,
+        errorElement: <ErrorPage/>,
         children: [
             {
                 path: "",
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "registration",
-                element: <Registration createUser={createUser}/>
+                element: <Registration/>
             },
             {
                 path: "resend-email",
