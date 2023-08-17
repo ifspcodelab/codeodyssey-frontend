@@ -1,4 +1,14 @@
 {
+  "courses": {
+    "title": "Meus Cursos",
+    "text": "Cursos que estou participando",
+    "button": {
+      "invite": "Criar Convite",
+      "students": "Visualizar Alunos"
+    },
+    "intlDate": "{{date, datetime}}",
+    "until": "até",
+    "emptyList": "Você ainda não participa de nenhum curso",
   "createcourse": {
     "title": "Criar Curso",
     "text": "Crie um curso preenchendo o formulário abaixo",
@@ -135,4 +145,4 @@
     "array_max": "${path} deve ter no máximo ${max} item(ns)",
     "array_length": "${path} deve ter ${length} itens"
   }
-}
+}}

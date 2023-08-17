@@ -3,11 +3,13 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Home from "./pages/Home";
+import Courses from "./pages/Courses";
 import TermsOfUse from "./pages/TermsOfUse";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Contact from "./pages/Contact";
 import CreateCourse from "./pages/CreateCourse";
-import Courses from "./pages/Courses";
+import Invitation from "./pages/Invitation";
+import Students from "./pages/Students";
 import './locales/i18n.ts'
 import Login from './pages/Login/index.tsx';
 import Registration from "./pages/Registration";
@@ -52,6 +54,10 @@ const router = createBrowserRouter([
                 element: <Login/>
             },
             {
+                path: "courses",
+                element: <Courses/>
+            },
+            {
                 path: "terms-of-use",
                 element: <TermsOfUse/>
             },
@@ -62,6 +68,14 @@ const router = createBrowserRouter([
             {
                 path: "contact",
                 element: <Contact/>
+            },
+            {
+                path: "students",
+                element: <Students/>
+            },
+            {
+                path: "invitation",
+                element: <Invitation/>
             },
         ],
     },

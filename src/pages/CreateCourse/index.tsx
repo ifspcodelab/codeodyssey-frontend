@@ -37,7 +37,7 @@ function CreateCourse() {
   const {isShowing, toggle} = useConfirmationDialog()
   const [errorType, setErrorType] = useState('');
 
-  async function submitCreateCourse(data: CourseResponse) {
+  async function submitCreateCourse(data: CreateCourseResponse) {
     try {
       console.log("@ create course | rawAccessToken", rawAccessToken)
         await createCourse(data.name, data.slug, data.startDate.toISOString(),  data.endDate.toISOString(), PROFESSOR_ID, rawAccessToken);

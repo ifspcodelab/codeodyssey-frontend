@@ -1,4 +1,15 @@
 {
+  "courses": {
+    "title": "My Courses",
+    "text": "Courses that i'm participating",
+    "button": {
+      "invite": "Create Invite",
+      "students": "Visualize Students"
+    },
+    "intlDate": "{{date, datetime}}",
+    "until": "until",
+    "emptyList": "You do not participate in any course yet"
+  },
   "createcourse": {
     "title": "Create Course",
     "text": "Create a course by filling out the form below",
