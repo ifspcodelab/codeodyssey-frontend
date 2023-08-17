@@ -9,13 +9,13 @@ export const api = axios.create({
     }
 });
 
-// const interceptors = new Interceptors();
+const interceptors = new Interceptors();
 
-// api.interceptors.response.use(
-//     (response) => {
-//         return response;
-//     },
-//     async (error: AxiosError) => {
-//         return interceptors.onRejectedResponse(error)
-//     }
-// );
+api.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    async (error: AxiosError) => {
+        return interceptors.onRejectedResponse(error)
+    }
+);

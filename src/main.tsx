@@ -18,11 +18,13 @@ import ResendEmail from "./pages/ResendEmail";
 import {PrivateRoute} from "./core/auth/PrivateRoute.tsx";
 import {UserRole} from "./core/auth/JwtService.ts";
 import {AuthProvider} from "./core/auth/AuthContext.tsx";
+import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App/>,
+        errorElement: <ErrorPage/>,
         children: [
             {
                 path: "",

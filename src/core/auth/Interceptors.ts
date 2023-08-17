@@ -1,7 +1,8 @@
 import axios, {AxiosError} from "axios";
 import {RefreshTokenResponse} from "../models/RefreshTokenResponse.ts";
 import {JwtService} from "./JwtService.ts";
-import {api} from "../hooks/useApi.ts";
+import {api} from "../services/axios";
+
 
 export class Interceptors {
 

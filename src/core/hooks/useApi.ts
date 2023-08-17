@@ -1,29 +1,10 @@
 import axios, {AxiosError} from "axios";
 import i18n from "../../locales/i18n";
 import {CreateUserResponse} from "../models/CreateUserResponse";
-import {LoginResponse} from "../../pages/Login";
-import {Interceptors} from "../auth/Interceptors.ts";
 import {RefreshTokenResponse} from "../models/RefreshTokenResponse.ts";
+import {api} from "../services/axios";
+import {LoginResponse} from "../models/login";
 
-
-export const api = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL as string,
-    headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-    }
-});
-
-const interceptors = new Interceptors();
-
-api.interceptors.response.use(
-    (response) => {
-        return response;
-    },
-    async (error: AxiosError) => {
-        return interceptors.onRejectedResponse(error)
-    }
-);
 
 // TODO: verify why it is not working (anymore)
 // const bearerToken: string = new JwtService().getRawAccessToken() as string;

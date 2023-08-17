@@ -1,7 +1,6 @@
 import Container from "@mui/material/Container";
 import "./style.css";
 import Button from "@mui/material/Button";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import i18n from "../../locales/i18n";
@@ -13,34 +12,10 @@ import PageFooter from "../../components/PageFooter";
 import {useState} from "react";
 import {AccessToken, JwtService} from "../../core/auth/JwtService.ts";
 import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
-import {useApi} from "../../core/hooks/useApi.ts";
+import {schema} from "./schema";
+import {LoginRequest, LoginResponse} from "../../core/models/login";
+import {useApiLogin} from "../../core/hooks/useApiLogin";
 
-// TODO: refactor to move types, api call, error handling and such to its own files and directories
-
-export interface LoginRequest {
-  email: string,
-  password: string,
-}
-
-export interface LoginResponse {
-  accessToken: string,
-  refreshToken: string,
-}
-
-export const schema = yup
-  .object({
-    email: yup.string().required().email().max(350),
-    password: yup
-      .string()
-      .required()
-      .min(8)
-      .max(64)
-      .matches(/\d+/, i18n.t("login.form.validation.password.number"))
-      .matches(/[a-z]+/, i18n.t("login.form.validation.password.lowercase"))
-      .matches(/[A-Z]+/, i18n.t("login.form.validation.password.uppercase"))
-      .matches(/[\W_]+/, i18n.t("login.form.validation.password.special")),
-  })
-  .required();
 
 function Login() {
   const { t } = useTranslation();
@@ -53,7 +28,7 @@ function Login() {
 
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  const { login } = useApi();
+  const { login } = useApiLogin();
 
   const onSubmit = async (data: LoginRequest) => {
     await login(data.email, data.password)
