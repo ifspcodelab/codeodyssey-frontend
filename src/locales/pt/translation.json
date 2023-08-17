@@ -31,11 +31,11 @@
     "form": {
       "name": "Nome",
       "email": "Email",
-      "email_message": "o email é imutável",
+      "email_message": "Não será possível trocar de email",
       "password": "Senha",
-      "login": "Login",
-      "submit": "Submeter",
-      "termsCheckbox": "Eu li e concordo com os Termos de Uso e a Política de Privacidade",
+      "login": "Já tem conta? Ir para login.",
+      "submit": "Registrar",
+      "termsCheckbox": "Eu li e concordo com os <1>Termos de Uso</1> e a <3>Política de Privacidade</3>",
       "validation": {
         "termsCheckbox": "Você deve aceitar os termos e a política de privacidade",
         "password": {
@@ -49,7 +49,9 @@
     "footer": "Texto do footer do registro",
     "exception": {
       "email": "Houve um problema com o email usado",
-      "badRequest": "Requisição mal formada"
+      "badRequest": "Erro com a requisição",
+      "network": "Erro de conexão com o servidor",
+      "unexpected": "Um erro inesperado ocorreu"
     }
   },
   "login": {
@@ -87,6 +89,13 @@
       "submit": "Enviar"
     },
     "footer": "Texto do footer aqui"
+  },
+  "errorPage":{
+    "title": "Erro {{statusCode}}",
+    "subTitle": "Um erro inesperado ocorreu.",
+    "notFound": {
+      "message": "Página não encontrada."
+    }
   },
   "yup": {
     "invalid_field_length": "Esse campo deve ter pelo menos {{ min }} caracteres.",
