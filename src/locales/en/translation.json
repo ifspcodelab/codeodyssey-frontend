@@ -1,4 +1,4 @@
-{ 
+{
   "createcourse": {
   "title": "Create Course",
   "text": "Create a course by filling out the form below",
@@ -53,6 +53,27 @@
       "network": "Network error",
       "unexpected": "An unexpected error has occurred"
     }
+  },
+  "login": {
+    "title": "Login",
+    "text": "Sign in or Register",
+    "form": {
+      "email": "Email",
+      "password": "Password",
+      "login": "Login",
+      "submit": "Submit",
+      "validation": {
+        "password": {
+          "number": "Password must have at least one digit",
+          "lowercase": "Password must have at least one lowercase letter",
+          "uppercase": "Password must have at least one uppercase letter",
+          "special": "Password must have at least one special character"
+        }
+      }},
+    "login": "Log In!",
+    "register": "Register",
+    "loginError": "Something went wrong, please try again later",
+    "footer": "Login footer"
   },
   "resendEmail":{
     "title": "Resend email",

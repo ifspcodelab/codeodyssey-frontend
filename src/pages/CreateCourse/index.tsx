@@ -18,6 +18,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
+import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
+import {JwtService} from "../../core/auth/JwtService.ts";
+import {useApiCreateCourse} from "../../core/hooks/useApiCreateCourse";
 
 
 function CreateCourse() {
@@ -38,13 +41,14 @@ type CourseResponse = {
 };
 
 
-  const onSubmit: SubmitHandler<CourseResponse> = (data) => createCourse(data)
+  const authConsumer = AuthConsumer();
+  const onSubmit: SubmitHandler<CourseResponse> = (data) => submitCreateCourse(data)
   const { register, handleSubmit, watch, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
   const navigate = useNavigate()
-  const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
-  // const PROFESSOR_ID: string = import.meta.env.VITE_PROFESSOR_ID as string;
-  const STUDENT_ID: string = import.meta.env.VITE_STUDENT_ID as string;
+  const PROFESSOR_ID: string = authConsumer.id;
+  const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const [open, setOpen] = React.useState(false);
+  const { createCourse } = useApiCreateCourse();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -54,18 +58,10 @@ type CourseResponse = {
     setOpen(false);
   };
 
-  async function createCourse(data: CourseResponse) {
+  async function submitCreateCourse(data: CourseResponse) {
     try {
-        await axios.post<CourseResponse>(
-          BASE_URL + "/users/" + STUDENT_ID + "/courses",
-            { name: data.name, slug: data.slug, startDate: data.startDate.toISOString(),  endDate: data.endDate.toISOString() },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        );
+      console.log("@ create course | rawAccessToken", rawAccessToken)
+        await createCourse(data.name, data.slug, data.startDate.toISOString(),  data.endDate.toISOString(), PROFESSOR_ID, rawAccessToken);
         navigate('/courses')
     }
     catch(error) {
@@ -94,7 +90,7 @@ type CourseResponse = {
     <>
       <Container maxWidth="md">
         <PageHeader title={t('createcourse.title')} text={t('createcourse.text')} />
-        <form onSubmit={handleSubmit(onSubmit as any)}>
+        <form onSubmit={handleSubmit(onSubmit as any) }>
           <Grid container spacing={1} rowSpacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -147,7 +143,7 @@ type CourseResponse = {
                   control={control}
                   defaultValue={undefined}
                   render={({ field: { onChange, value } }) => (
-                      <DatePicker label={t("createcourse.form.endDate")} data-testid="endDateField" value={value || null}   onChange={onChange as any} minDate={watch().startDate}
+                      <DatePicker label={t("createcourse.form.endDate")} data-testid="endDateField" value={value || null} onChange={onChange as any} minDate={watch().startDate}
                       slotProps={{
                         textField: {
                           helperText: errors.endDate && <span>{errors.endDate.message}</span> 

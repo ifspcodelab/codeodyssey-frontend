@@ -9,10 +9,13 @@ import Contact from "./pages/Contact";
 import CreateCourse from "./pages/CreateCourse";
 import Courses from "./pages/Courses";
 import './locales/i18n.ts'
+import Login from './pages/Login/index.tsx';
 import Registration from "./pages/Registration";
-import Login from "./pages/Login";
 import './index.css'
 import ResendEmail from "./pages/ResendEmail";
+import {PrivateRoute} from "./core/auth/PrivateRoute.tsx";
+import {UserRole} from "./core/auth/JwtService.ts";
+import {AuthProvider} from "./core/auth/AuthContext.tsx";
 import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
@@ -27,11 +30,14 @@ const router = createBrowserRouter([
             },
             {
                 path: "create-course",
-                element: <CreateCourse/>
+                element:
+                    <PrivateRoute userRole={UserRole.PROFESSOR}>
+                        <CreateCourse/>
+                    </PrivateRoute>
             },
             {
                 path: "courses",
-                element: <Courses/> 
+                element: <Courses/>
             },
             {
                 path: "registration",
@@ -63,6 +69,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <RouterProvider router={router}/>
+        <AuthProvider>
+            <RouterProvider router={router}/>
+        </AuthProvider>
     </React.StrictMode>,
 )
