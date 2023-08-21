@@ -13,6 +13,7 @@ import {useApiGetCourses} from "../../core/hooks/useApiGetCourses.ts";
 import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
 import {JwtService} from "../../core/auth/JwtService.ts";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import Spinner from "../../components/Spinner";
 
 function Courses() {
   
@@ -27,6 +28,7 @@ function Courses() {
     const {getCoursesProfessor, getCoursesStudent} = useApiGetCourses()
     const [errorType, setErrorType] = useState('');
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
       void (async () => {
@@ -36,6 +38,7 @@ function Courses() {
             setCoursesProfessor(coursesProfessorResponse)
             const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
             setCoursesStudent(coursesStudentResponse)
+            setLoading(false)
           } catch (error) {
             if (axios.isAxiosError(error)) {
                 handleError(error)
@@ -46,6 +49,7 @@ function Courses() {
         } else if(USER_ROLE == "STUDENT") {
           const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
           setCoursesStudent(coursesStudentResponse)
+          setLoading(false)
         }
       })();
     }, []);
@@ -160,7 +164,7 @@ function Courses() {
             </Card>
             ))}</div>  
           </div> 
-        : <Typography>{t("courses.emptyList")}</Typography>}
+        : loading ? <Spinner/> : <Typography>{t("courses.emptyList")}</Typography>}
 
         <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType}/>
         </>)
