@@ -29,6 +29,7 @@ function Courses() {
     const [errorType, setErrorType] = useState('');
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const data = new Date()
 
     useEffect(() => {
       void (async () => {
@@ -95,12 +96,12 @@ function Courses() {
                           {course.professor.name}    
                       </Typography>
                       <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      {t("courses.intlDate", { date: new Date(course.startDate),
+                      {t("courses.intlDate", { date: course.startDate,
                   formatParams: {
                       date: { year: 'numeric', month: 'short', day: 'numeric'},
                     },
                   })} {t("courses.until")} {t("courses.intlDate", {
-                      date: new Date((course.endDate)),
+                      date: course.endDate,
                       formatParams: {
                         date: {
                           year: "numeric",
@@ -137,12 +138,12 @@ function Courses() {
                           {course.professor.name}    
                       </Typography>
                       <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      {t("courses.intlDate", { date: new Date(course.startDate),
+                      {t("courses.intlDate", { date: course.startDate,
                   formatParams: {
                       date: { year: 'numeric', month: 'short', day: 'numeric'},
                     },
                   })} {t("courses.until")} {t("courses.intlDate", {
-                      date: new Date((course.endDate)),
+                      date: course.endDate,
                       formatParams: {
                         date: {
                           year: "numeric",
@@ -165,7 +166,7 @@ function Courses() {
             ))}</div>  
           </div> 
         : loading ? <Spinner/> : <Typography>{t("courses.emptyList")}</Typography>}
-
+                      
         <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType}/>
         </>)
 }
