@@ -82,7 +82,7 @@ function Courses() {
         {coursesProfessor.length || coursesStudent.length ?      
           <div>
             <div>{coursesProfessor?.map((course: CourseResponse) => (
-              <Card variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>
+              <Card key={course.id} variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>
                   <CardContent>
                       <Typography variant="h5" component="div">
                           {course.name}
@@ -124,7 +124,7 @@ function Courses() {
             ))}</div> 
 
             <div>{coursesStudent?.map((course: CourseResponse) => (
-              <Card variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>
+              <Card key={course.id} variant="outlined" sx={{ minWidth: 275 ,display: "flex", mb: 1.5 , borderColor: "primary.main"}}>
                   <CardContent>
                       <Typography variant="h5" component="div">
                           {course.name}
