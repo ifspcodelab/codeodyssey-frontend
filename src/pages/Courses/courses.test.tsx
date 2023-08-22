@@ -87,15 +87,4 @@ describe("Courses", () => {
 
         expect(emptyListMessage).toBeInTheDocument();
       });
-
-      test('should render visualize students button for student', async () => {
-        const { findAllByText } = render(
-          <BrowserRouter>
-            <Courses />
-          </BrowserRouter>
-        );
-    
-        const studentsButtons = await findAllByText(/Visualize Students/i);
-        expect(studentsButtons).toHaveLength(2);
-      });
 });

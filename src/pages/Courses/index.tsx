@@ -154,14 +154,6 @@ function Courses() {
                     })}
                       </Typography>
                   </CardContent>
-
-                <CardActions sx={{ display: "flex", flexDirection: "column", alignItems: "center",justifyContent: "center",marginLeft: "auto", }}>
-                    <Button variant="contained" size="medium" sx={{ p: 1, m: 1,  width:200 }}
-                      onClick={() => {
-                        navigate('/students')
-                      }}
-                    >{t("courses.button.students")}</Button>
-                </CardActions>
             </Card>
             ))}</div>  
           </div> 
