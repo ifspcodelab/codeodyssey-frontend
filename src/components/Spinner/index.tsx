@@ -1,15 +1,12 @@
 import ClipLoader from 'react-spinners/ClipLoader';
 
 interface props {
-    width: string;
-    margin: string;
-    display: string;
     size: number;
 }
 
-function Spinner({width = '10px', margin = 'auto', display = 'block', size = 10 }: props) {
+function Spinner({ size }: props) {
     return (
-        <div style={{ width: width, margin: margin, display: display }}>
+        <div style={{ width: '10px', margin: 'auto', display: 'block' }}>
             <ClipLoader color="#52bfd9" size={size}/>
         </div>
     );
