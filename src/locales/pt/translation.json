@@ -1,4 +1,9 @@
 {
+  "confirmation": {
+    "title": "Confirmação",
+    "text": "Confirmação do email",
+    "footer": "Texto do footer aqui"
+  },
   "courses": {
     "title": "Meus Cursos",
     "text": "Cursos que estou participando",
