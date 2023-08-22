@@ -7,7 +7,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {Trans, useTranslation} from "react-i18next";
 import {CreateUserResponse} from "../../core/models/CreateUserResponse";
 import {schema} from "./schema";
-import {useApiUser} from "../../core/hooks/useApiUser";
+import {useApiRegistration} from "../../core/hooks/useApiRegistration";
 import {
     Button,
     Checkbox,
@@ -29,7 +29,7 @@ function Registration() {
     const {t} = useTranslation()
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
     const navigate = useNavigate()
-    const api = useApiUser()
+    const api = useApiRegistration()
     const [open, setOpen] = useState(false);
     const [errorType, setErrorType] = useState('');
     const [loading, setLoading] = useState(false);
