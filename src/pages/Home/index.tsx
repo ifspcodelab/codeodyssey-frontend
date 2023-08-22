@@ -1,4 +1,5 @@
 import {useNavigate} from "react-router-dom"
+import { useState } from "react";
 import {useTranslation} from "react-i18next";
 import {
     AppBar,
@@ -12,7 +13,12 @@ import {
 function Home() {
   const navigate = useNavigate()
   const { t } = useTranslation();
+  
+  const [value, setValue] = useState<string>('1');
 
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
     return (
         <>
             <AppBar sx={{ background: "#063970" }}>
@@ -23,20 +29,22 @@ function Home() {
                     CodeOdyssey
                 </Typography>
                 <Tabs sx={{ marginLeft: "auto" }}
+                 value={value}
+                 onChange={handleChange}
                 >
-                    <Tab sx={{color: "#fff"}} onClick={() => {
+                    <Tab  value="1" sx={{color: "#fff"}} onClick={() => {
                             navigate('/registration')
                             }}label={t("navbar.register")} />
-                    <Tab sx={{color: "#fff"}} onClick={() => {
+                    <Tab value="2" sx={{color: "#fff"}} onClick={() => {
                             navigate('/login')
                             }}label={t("navbar.login")} />
-                    <Tab sx={{color: "#fff"}} onClick={() => {
+                    <Tab value="3" sx={{color: "#fff"}} onClick={() => {
                             navigate('/courses')
                             }}label={t("navbar.courses")} />
-                    <Tab sx={{color: "#fff"}} onClick={() => {
+                    <Tab value="4" sx={{color: "#fff"}} onClick={() => {
                             navigate('/create-course')
                             }}label={t("navbar.createCourse")} />
-                    <Tab sx={{color: "#fff"}} onClick={() => {
+                    <Tab value="5" sx={{color: "#fff"}} onClick={() => {
                             navigate('/contact')
                             }}label={t("navbar.contact")} />
                 </Tabs>
