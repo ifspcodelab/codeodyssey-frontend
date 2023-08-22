@@ -1,4 +1,11 @@
 {
+  "navbar": {
+    "register": "Cadastrar",
+    "login": "Login",
+    "courses": "Meus cursos",
+    "createCourse": "Criar curso",
+    "contact": "Contato"
+  },
   "courses": {
     "title": "Meus Cursos",
     "text": "Cursos que estou participando",
@@ -8,7 +15,8 @@
     },
     "intlDate": "{{date, datetime}}",
     "until": "até",
-    "emptyList": "Você ainda não participa de nenhum curso",
+    "emptyList": "Você ainda não participa de nenhum curso"
+  },
   "createcourse": {
     "title": "Criar Curso",
     "text": "Crie um curso preenchendo o formulário abaixo",
@@ -145,4 +153,4 @@
     "array_max": "${path} deve ter no máximo ${max} item(ns)",
     "array_length": "${path} deve ter ${length} itens"
   }
-}}
+}

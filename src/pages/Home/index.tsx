@@ -1,4 +1,5 @@
 import {useNavigate} from "react-router-dom"
+import {useTranslation} from "react-i18next";
 import {
     AppBar,
     Tab,
@@ -10,6 +11,7 @@ import {
 
 function Home() {
   const navigate = useNavigate()
+  const { t } = useTranslation();
 
     return (
         <>
@@ -24,19 +26,19 @@ function Home() {
                 >
                     <Tab sx={{color: "#fff"}} onClick={() => {
                             navigate('/registration')
-                            }}label="Register" />
+                            }}label={t("navbar.register")} />
                     <Tab sx={{color: "#fff"}} onClick={() => {
                             navigate('/login')
-                            }}label="Login" />
+                            }}label={t("navbar.login")} />
                     <Tab sx={{color: "#fff"}} onClick={() => {
                             navigate('/courses')
-                            }}label="My Courses" />
+                            }}label={t("navbar.courses")} />
                     <Tab sx={{color: "#fff"}} onClick={() => {
                             navigate('/create-course')
-                            }}label="Create Course" />
+                            }}label={t("navbar.createCourse")} />
                     <Tab sx={{color: "#fff"}} onClick={() => {
                             navigate('/contact')
-                            }}label="Contact" />
+                            }}label={t("navbar.contact")} />
                 </Tabs>
                 </Toolbar>
             </AppBar>

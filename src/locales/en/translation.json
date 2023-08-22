@@ -1,4 +1,11 @@
 {
+  "navbar": {
+    "register": "Register",
+    "login": "Login",
+    "courses": "My courses",
+    "createCourse": "Create course",
+    "contact": "Contact"
+  },
   "courses": {
     "title": "My Courses",
     "text": "Courses that i'm participating",
