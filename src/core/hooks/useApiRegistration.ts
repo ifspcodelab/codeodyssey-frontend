@@ -14,5 +14,9 @@ export const useApiRegistration = () => ({
     register: async (name: string, email: string, password: string) => {
         const response = await api.post<CreateUserResponse>('/users', {name, email, password});
         return response.data;
+    },
+    confirmation: async (token: string) => {
+        const response = await api.patch<CreateUserResponse>(`/users/confirmation/${token}`);
+        return response.data;
     }
 })
