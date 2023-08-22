@@ -2,13 +2,15 @@ import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
 import {useParams} from "react-router-dom"
 import {Container, Typography} from "@mui/material";
-import {t} from "i18next";
 import {useEffect, useState} from "react";
 import {useApiRegistration} from "../../core/hooks/useApiRegistration";
 import {AxiosError} from "axios";
 import Spinner from "../../components/Spinner";
+import {useTranslation} from "react-i18next";
+import i18n from "../../locales/i18n";
 
 const Confirmation = () => {
+    const { t } = useTranslation();
     const { token } = useParams();
     const { confirmation } = useApiRegistration();
     const [confirmationError, setConfirmationError] = useState<string | null>(null);
@@ -38,30 +40,30 @@ const Confirmation = () => {
             problemDetail = error.response.data as ProblemDetail
             responseStatus = problemDetail.status
             if (responseStatus == 400) {
-                setConfirmationError('badRequest')
+                setConfirmationError(i18n.t('confirmation.error.badRequest'))
             } else if (responseStatus == 409) {
                 if (error.response) problemDetail = error.response.data as ProblemDetail
                 if (problemDetail.title == "Validation" && problemDetail.detail == "User is already validated")
-                    setConfirmationError('exists')
+                setConfirmationError(i18n.t('confirmation.error.exists'))
             } else if (responseStatus == 404) {
                 if (error.response) problemDetail = error.response.data as ProblemDetail
                 if (problemDetail.title == "Token problem" && problemDetail.detail == "No user associated with this token")
-                    setConfirmationError('notFound')
+                    setConfirmationError(i18n.t('confirmation.error.notFound'))
             }
         } else if (error.message == "Network Error") {
-            setConfirmationError('network')
+            setConfirmationError(i18n.t('confirmation.error.network'))
         }
     }
 
     return (
         <Container maxWidth="md">
-            <PageHeader title={t('confirmation.title')} text={t('confirmation.text')}/>
+            <PageHeader title={t("confirmation.title")} text={t("confirmation.text")}/>
             { loading ? <Spinner size={40}/> :
                 <Typography variant="h4" component="div">
-                    { email && <p>{t('confirmation.success', {email: email})}</p> }
-                    { confirmationError && <p>{t('confirmation.error.' + confirmationError)}</p> }
+                    { email && <p>{t("confirmation.success", {email: email})}</p> }
+                    { confirmationError && <p>{confirmationError}</p> }
                 </Typography> }
-            <PageFooter text={t('confirmation.footer')}/>
+            <PageFooter text={t("confirmation.footer")}/>
         </Container>
     );
 };
