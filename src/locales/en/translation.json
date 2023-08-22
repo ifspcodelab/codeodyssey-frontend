@@ -2,7 +2,14 @@
   "confirmation": {
     "title": "Confirmation",
     "text": "Email's confirmation",
-    "footer": "Confirmation footer"
+    "footer": "Confirmation footer",
+    "success": "The email \"{{email}}\" was confirmed successfully",
+    "error": {
+      "badRequest": "Request error",
+      "network": "Network error",
+      "notFound": "User not found",
+      "exists": "Email already confirmed"
+    }
   },
   "courses": {
     "title": "My Courses",

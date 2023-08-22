@@ -2,7 +2,14 @@
   "confirmation": {
     "title": "Confirmação",
     "text": "Confirmação do email",
-    "footer": "Texto do footer aqui"
+    "footer": "Texto do footer aqui",
+    "success": "O email \"{{email}}\" foi confirmado com sucesso",
+    "error": {
+      "badRequest": "Solicitação mal formada",
+      "network": "Houve um problema de conexão",
+      "notFound": "Usuário não encontrado",
+      "exists": "O email já foi confirmado"
+    }
   },
   "courses": {
     "title": "Meus Cursos",
