@@ -14,6 +14,7 @@ import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
 import {JwtService} from "../../core/auth/JwtService.ts";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import Spinner from "../../components/Spinner";
+import i18n from '../../locales/i18n.ts'
 
 function Courses() {
   
@@ -29,7 +30,6 @@ function Courses() {
     const [errorType, setErrorType] = useState('');
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
-    const data = new Date()
 
     useEffect(() => {
       void (async () => {
@@ -96,20 +96,7 @@ function Courses() {
                           {course.professor.name}    
                       </Typography>
                       <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      {t("courses.intlDate", { date: course.startDate,
-                  formatParams: {
-                      date: { year: 'numeric', month: 'short', day: 'numeric'},
-                    },
-                  })} {t("courses.until")} {t("courses.intlDate", {
-                      date: course.endDate,
-                      formatParams: {
-                        date: {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric"
-                        }
-                      }
-                    })}
+                      {new Date(course.startDate).toLocaleDateString(i18n.language, {timeZone: "Europe/London"})} {t("courses.until")} {new Date(course.endDate).toLocaleDateString(i18n.language, {timeZone: "Europe/London"})}
                       </Typography>
                   </CardContent>
 
@@ -138,20 +125,7 @@ function Courses() {
                           {course.professor.name}    
                       </Typography>
                       <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      {t("courses.intlDate", { date: course.startDate,
-                  formatParams: {
-                      date: { year: 'numeric', month: 'short', day: 'numeric'},
-                    },
-                  })} {t("courses.until")} {t("courses.intlDate", {
-                      date: course.endDate,
-                      formatParams: {
-                        date: {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric"
-                        }
-                      }
-                    })}
+                      {new Date(course.startDate).toLocaleDateString(i18n.language, {timeZone: "Europe/London"})} {t("courses.until")} {new Date(course.endDate).toLocaleDateString(i18n.language, {timeZone: "Europe/London"})}
                       </Typography>
                   </CardContent>
             </Card>
