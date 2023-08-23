@@ -16,7 +16,7 @@ import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import Spinner from "../../components/Spinner";
 import i18n from '../../locales/i18n.ts'
 import { useLocation } from 'react-router-dom';
-
+import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 
 function Courses() {
 
@@ -30,7 +30,8 @@ function Courses() {
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { getCoursesProfessor, getCoursesStudent } = useApiGetCourses()
   const [errorType, setErrorType] = useState('');
-  const [open, setOpen] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(true);
+  const [openError, setOpenError] = useState(false);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -61,15 +62,29 @@ function Courses() {
     // eslint-disable-next-line
   }, [USER_ID, USER_ROLE, rawAccessToken]);
 
+  useEffect(() => {
+    if (success) {
+      const newURL = window.location.pathname;
+      window.history.replaceState({}, document.title, newURL);
+    }
+  }, [success]);
 
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+
+  const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
       return;
     }
 
-    setOpen(false);
+    setOpenSuccess(false);
   };
 
+  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || event === undefined) {
+      return;
+    }
+
+    setOpenError(false);
+  };
 
   const handleError = (error: AxiosError) => {
     let responseStatus: number
@@ -79,18 +94,18 @@ function Courses() {
       responseStatus = problemDetail.status
       if (responseStatus == 400) {
         setErrorType('badRequest')
-        setOpen(true);
+        setOpenError(true);
       }
     } else if (error.message == "Network Error") {
       setErrorType('networkError')
-      setOpen(true);
+      setOpenError(true);
     }
   }
 
   return (
     <>
       <PageHeader title={t('courses.title')} text={t('courses.text')} />
-      {success && <p>Curso criado com sucesso!</p>}
+      {success && <SuccessrSnackBar message="curso criado com sucesso" open={openSuccess} handleClose={handleCloseSuccess} />}
       {
         (Array.isArray(coursesProfessor) && coursesProfessor.length) || (Array.isArray(coursesStudent) && coursesStudent.length) ? (
           <div>
@@ -144,13 +159,13 @@ function Courses() {
             </div>
           </div>
         ) : loading ? (
-          <Spinner  size={150}/>
+          <Spinner size={150} />
         ) : (
           <Typography>{t("courses.emptyList")}</Typography>
         )
       }
 
-      <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType} />
+      <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>)
 }
 
