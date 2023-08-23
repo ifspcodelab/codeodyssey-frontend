@@ -105,7 +105,7 @@ function Courses() {
   return (
     <>
       <PageHeader title={t('courses.title')} text={t('courses.text')} />
-      {success && <SuccessrSnackBar message="curso criado com sucesso" open={openSuccess} handleClose={handleCloseSuccess} />}
+      {success && <SuccessrSnackBar message={t('createcourse.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
       {
         (Array.isArray(coursesProfessor) && coursesProfessor.length) || (Array.isArray(coursesStudent) && coursesStudent.length) ? (
           <div>

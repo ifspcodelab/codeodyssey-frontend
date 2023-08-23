@@ -20,6 +20,7 @@
   "createcourse": {
     "title": "Create Course",
     "text": "Create a course by filling out the form below",
+    "successMessage": "Course created successfully!",
     "form": {
       "name": "Name",
       "slug": "Slug",

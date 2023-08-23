@@ -20,6 +20,7 @@
   "createcourse": {
     "title": "Criar Curso",
     "text": "Crie um curso preenchendo o formulário abaixo",
+    "successMessage": "Curso criado com sucesso!",
     "form": {
       "name": "Nome",
       "slug": "Caminho",
