@@ -138,7 +138,7 @@ function Courses() {
             </div>
           </div>
         ) : loading ? (
-          <Spinner />
+          <Spinner  size={150}/>
         ) : (
           <Typography>{t("courses.emptyList")}</Typography>
         )
