@@ -42,13 +42,17 @@ const Confirmation = () => {
             if (responseStatus == 400) {
                 setConfirmationError(i18n.t('confirmation.error.badRequest'))
             } else if (responseStatus == 409) {
-                if (error.response) problemDetail = error.response.data as ProblemDetail
-                if (problemDetail.title == "Validation" && problemDetail.detail == "User is already validated")
-                setConfirmationError(i18n.t('confirmation.error.exists'))
+                problemDetail = error.response.data as ProblemDetail
+                if (problemDetail.title == "Validation" && problemDetail.detail == "User is already validated") {
+                    setConfirmationError(i18n.t('confirmation.error.exists'))
+                }
             } else if (responseStatus == 404) {
-                if (error.response) problemDetail = error.response.data as ProblemDetail
-                if (problemDetail.title == "Token problem" && problemDetail.detail == "No user associated with this token")
+               problemDetail = error.response.data as ProblemDetail
+                if (problemDetail.title == "Token problem" && problemDetail.detail == "No user associated with this token") {
                     setConfirmationError(i18n.t('confirmation.error.notFound'))
+                } else if (problemDetail.title == "Token problem" && problemDetail.detail == "Token Expired") {
+                    setConfirmationError(i18n.t('confirmation.error.expired'))
+                }
             }
         } else if (error.message == "Network Error") {
             setConfirmationError(i18n.t('confirmation.error.network'))

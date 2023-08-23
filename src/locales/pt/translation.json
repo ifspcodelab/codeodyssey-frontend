@@ -5,10 +5,11 @@
     "footer": "Texto do footer aqui",
     "success": "O email \"{{email}}\" foi confirmado com sucesso",
     "error": {
-      "badRequest": "Solicitação mal formada",
-      "network": "Houve um problema de conexão",
-      "notFound": "Usuário não encontrado",
-      "exists": "O email já foi confirmado"
+      "badRequest": "Houve um problema com a requisição",
+      "network": "Houve um problema com a conexão",
+      "notFound": "Usuário não encontrado com esse token",
+      "exists": "O email já foi confirmado",
+      "expired": "O token de confirmação expirou"
     }
   },
   "courses": {
