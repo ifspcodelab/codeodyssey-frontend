@@ -41,7 +41,7 @@ function CreateCourse() {
     try {
       console.log("@ create course | rawAccessToken", rawAccessToken)
         await createCourse(data.name, data.slug, data.startDate.toISOString(),  data.endDate.toISOString(), PROFESSOR_ID, rawAccessToken);
-        navigate('/courses')
+        navigate('/courses?success=true')
     }
     catch(error) {
         if (axios.isAxiosError(error)) {

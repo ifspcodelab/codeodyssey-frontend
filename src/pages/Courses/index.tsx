@@ -15,6 +15,8 @@ import { JwtService } from "../../core/auth/JwtService.ts";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import Spinner from "../../components/Spinner";
 import i18n from '../../locales/i18n.ts'
+import { useLocation } from 'react-router-dom';
+
 
 function Courses() {
 
@@ -30,6 +32,9 @@ function Courses() {
   const [errorType, setErrorType] = useState('');
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const success = queryParams.get('success');
 
   useEffect(() => {
     void (async () => {
@@ -85,6 +90,7 @@ function Courses() {
   return (
     <>
       <PageHeader title={t('courses.title')} text={t('courses.text')} />
+      {success && <p>Curso criado com sucesso!</p>}
       {
         (Array.isArray(coursesProfessor) && coursesProfessor.length) || (Array.isArray(coursesStudent) && coursesStudent.length) ? (
           <div>
