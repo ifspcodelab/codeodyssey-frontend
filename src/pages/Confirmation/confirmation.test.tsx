@@ -57,6 +57,7 @@ describe("Confirmation", () => {
     test("Should show email already confirmed message", async () => {
 server.use(
             rest.patch('http://localhost:3000/users/confirmation/undefined', (req, res, ctx) => {
+                console.log(req) // for build purposes
                 return res(
                     ctx.status(409),
                     ctx.json(
@@ -80,6 +81,7 @@ server.use(
     test("Should show user not found message", async () => {
 server.use(
             rest.patch('http://localhost:3000/users/confirmation/undefined', (req, res, ctx) => {
+                console.log(req) // for build purposes
                 return res(
                     ctx.status(404),
                     ctx.json(
@@ -103,6 +105,7 @@ server.use(
     test("Should show token expired message", async () => {
 server.use(
             rest.patch('http://localhost:3000/users/confirmation/undefined', (req, res, ctx) => {
+                console.log(req) // for build purposes
                 return res(
                     ctx.status(404),
                     ctx.json(
@@ -121,5 +124,18 @@ server.use(
         const { findByText } = renderConfirmation();
 
         expect(await findByText("The confirmation token is expired")).toBeInTheDocument();
+    });
+
+    test("Should show network error message", async () => {
+server.use(
+            rest.patch('http://localhost:3000/users/confirmation/undefined', (req, res, ctx) => {
+                console.log(req, ctx) // for build purposes
+                return res.networkError('Failed to connect');
+            }),
+        );
+
+        const { findByText } = renderConfirmation();
+
+        expect(await findByText("There was a connection error")).toBeInTheDocument();
     });
 });
