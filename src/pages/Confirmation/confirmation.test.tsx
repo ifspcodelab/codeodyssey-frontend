@@ -53,4 +53,27 @@ describe("Confirmation", () => {
 
         expect(await findByText("The email \"john@doe.com\" was confirmed successfully")).toBeInTheDocument();
     });
+
+    test("Should show email already confirmed message", async () => {
+server.use(
+            rest.patch('http://localhost:3000/users/confirmation/undefined', (req, res, ctx) => {
+                return res(
+                    ctx.status(409),
+                    ctx.json(
+                        {
+                            "type": "about:blank",
+                            "title": "Validation",
+                            "status": 409,
+                            "detail": "User is already validated",
+                            "instance": "/api/v1/users/confirmation/acb046e9-5127-4260-ad36-c8e3544699ed"
+                        }
+                    )
+                )
+            }),
+        );
+
+        const { findByText } = renderConfirmation();
+
+        expect(await findByText("Email already confirmed")).toBeInTheDocument();
+    });
 });
