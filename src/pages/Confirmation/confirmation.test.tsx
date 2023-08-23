@@ -47,4 +47,10 @@ describe("Confirmation", () => {
         expect(getByRole("heading", { name: "Confirmation" })).toBeInTheDocument();
         expect(getByRole("heading", { name: "Email's confirmation" })).toBeInTheDocument();
     })
+
+    test("Should show confirmation message", async () => {
+        const { findByText } = renderConfirmation();
+
+        expect(await findByText("The email \"john@doe.com\" was confirmed successfully")).toBeInTheDocument();
+    });
 });
