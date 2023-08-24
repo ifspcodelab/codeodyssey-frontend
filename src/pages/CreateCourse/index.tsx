@@ -11,6 +11,7 @@ import axios, {AxiosError} from "axios";
 import dayjs from 'dayjs';
 import {useNavigate} from "react-router-dom"
 import {CreateCourseResponse} from "../../core/models/CreateCourseResponse";
+import {CustomDate} from "../../core/models/CustomDate";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import {useState} from "react";
 import * as React from 'react';
@@ -60,6 +61,8 @@ function CreateCourse() {
     setOpen(false);
 };
 
+  const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
+
   const handleError = (error: AxiosError) => {
     let responseStatus: number
     let problemDetail: ProblemDetail = { title: '', detail: '' , instance: '', status: 0, type: ''}
@@ -86,7 +89,7 @@ function CreateCourse() {
     <>
       <Container maxWidth="md">
         <PageHeader title={t('createcourse.title')} text={t('createcourse.text')} />
-        <form onSubmit={handleSubmit(onSubmit as any) }>
+        <form onSubmit={handleSubmit(onSubmit) }>
           <Grid container spacing={1} rowSpacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -118,10 +121,10 @@ function CreateCourse() {
                 <Controller
                   name={"startDate"}
                   control={control}
-                  defaultValue={dayjs(new Date()) as any}
+                  defaultValue={convertedDate}
 
                   render={({ field: { onChange, value } }) => (
-                  <DatePicker label={t("createcourse.form.startDate")} disablePast  value={value ?? " "} onChange={onChange as any}
+                  <DatePicker label={t("createcourse.form.startDate")}  disablePast  value={value ?? " "} onChange={onChange as any} 
                   slotProps={{
                     textField: {
                       helperText: errors.startDate && <span>{errors.startDate.message}</span> 
