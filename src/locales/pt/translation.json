@@ -28,6 +28,10 @@
       "endDate": "Data final",
       "submit": "Criar",
       "cancel": "Cancelar",
+      "validation": {
+        "special": "O caminho não pode conter caracteres especiais",
+        "endDate": "A data final não pode ser anterior à data de início"
+      },
       "confimationdialog": {
         "title": "Tem certeza que deseja sair?",
         "description": "as alterações não serão salvas",

@@ -28,6 +28,10 @@
       "endDate": "End Date",
       "submit": "Create",
       "cancel": "Cancel",
+      "validation": {
+        "special": "slug cannot contain special characters",
+        "endDate": "The end date cannot be earlier than start date"
+      },
       "confimationdialog": {
         "title": "Are you sure you want to quit?",
         "description": "changes will not be saved",
