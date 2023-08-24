@@ -146,7 +146,7 @@ function Registration() {
                             </Grid>
                             <Grid item xs={12}>
                                 <div id="registration-menu">
-                                    <Button data-testid="registerButton" disabled={disableSubmitButton} type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>{loading && <Spinner/>}
+                                    <Button data-testid="registerButton" disabled={disableSubmitButton} type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>{loading && <Spinner size={10}/>}
                                     <Link data-testid="loginLink" href="/login" rel="noopener noreferrer" underline="hover">
                                         {t('registration.form.login')}
                                     </Link>

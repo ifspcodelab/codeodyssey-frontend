@@ -1,6 +1,4 @@
 import PageHeader from "../../components/PageHeader";
-import ConfirmationDialog from "../../components/ConfirmationDialog/index.tsx";
-import useConfirmationDialog from "../../core/hooks/useConfirmationDialog.tsx";
 import {useTranslation} from "react-i18next";
 import {Button, Container, Grid, TextField} from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -35,7 +33,6 @@ function CreateCourse() {
   const [open, setOpen] = React.useState(false);
   const { createCourse } = useApiCreateCourse();
 
-  const {isShowing, toggle} = useConfirmationDialog()
   const [errorType, setErrorType] = useState('');
 
 
