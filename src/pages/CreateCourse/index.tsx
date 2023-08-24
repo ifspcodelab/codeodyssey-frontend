@@ -12,7 +12,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import axios, {AxiosError} from "axios";
 import dayjs from 'dayjs';
 import {useNavigate} from "react-router-dom"
-import { ptBR } from "@mui/x-date-pickers";
 import {CreateCourseResponse} from "../../core/models/CreateCourseResponse";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import {useState} from "react";
@@ -20,7 +19,9 @@ import * as React from 'react';
 import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
 import {JwtService} from "../../core/auth/JwtService.ts";
 import {useApiCreateCourse} from "../../core/hooks/useApiCreateCourse";
-
+import 'dayjs/locale/pt-br'
+import 'dayjs/locale/en'
+import i18n from '../../locales/i18n.ts'
 
 function CreateCourse() {
   const {t} = useTranslation();
@@ -36,6 +37,7 @@ function CreateCourse() {
 
   const {isShowing, toggle} = useConfirmationDialog()
   const [errorType, setErrorType] = useState('');
+
 
   async function submitCreateCourse(data: CreateCourseResponse) {
     try {
@@ -115,7 +117,7 @@ function CreateCourse() {
 
             <Grid item xs={12} textAlign="right" display="flex" alignItems="spaceBetween">
               <Grid item xs={4}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
                 <Controller
                   name={"startDate"}
                   control={control}
@@ -134,7 +136,7 @@ function CreateCourse() {
               </Grid>
 
               <Grid >
-              <LocalizationProvider dateAdapter={AdapterDayjs} localeText={ptBR as any}>
+              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
               <Controller
                   name={"endDate"}
                   control={control}
