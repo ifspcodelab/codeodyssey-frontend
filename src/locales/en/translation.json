@@ -102,7 +102,10 @@
   },
   "resendEmail":{
     "title": "Resend email",
-    "text": "The system has sent a confirmation email to {{email}}. Check your email."
+    "text": "In case you didn't receive the email, you can resend it by clicking the link below",
+    "emailMessage": "The system has sent a confirmation email to {{email}}. Check your email.",
+    "resendMessage": "Click <1>here</1> to resend the email.",
+    "footer": "Resend email footer"
   },
   "contact": {
     "title": "Contact",

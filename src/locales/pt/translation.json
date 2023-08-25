@@ -101,7 +101,10 @@
   },
   "resendEmail":{
     "title": "Reenviar o email",
-    "text": "O sistema mandou um email de confirmação para {{email}}. Verifique seu email."
+    "text": "Caso você não tenha recebido o email de confirmação, clique no link abaixo para reenviar o email.",
+    "emailMessage": "O sistema mandou um email de confirmação para {{email}}. Verifique seu email.",
+    "linkMessage": "Eu li e concordo com os <1>Termos de Uso</1> e a <3>Política de Privacidade</3>",
+    "footer": "Footer do reenvio de email"
   },
   "contact": {
     "title": "Entre em Contato",
