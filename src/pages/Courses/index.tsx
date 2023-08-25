@@ -17,6 +17,7 @@ import Spinner from "../../components/Spinner";
 import i18n from '../../locales/i18n.ts'
 import { useLocation } from 'react-router-dom';
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
+import './style.css'
 
 function Courses() {
 
@@ -111,7 +112,7 @@ function Courses() {
           <div>
             <div>
               {Array.isArray(coursesProfessor) && coursesProfessor.map((course: CourseResponse) => (
-                <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main" }}>
+                <Card key={course.id} variant="outlined" className="cardContainer">
                   <CardContent>
                     <Typography variant="h5" component="div">
                       {course.name}
@@ -124,7 +125,7 @@ function Courses() {
                     </Typography>
                   </CardContent>
 
-                  <CardActions sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginLeft: "auto", }}>
+                  <CardActions className="cardActions">
                     <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
                       onClick={() => {
                         navigate('/invitation')
