@@ -108,7 +108,7 @@
     "successMessage": "The email was resent successfully.",
     "exception": {
       "notFound": "No user found with given email",
-      "resendEmailDelay": "You can resend the email only after one minute have passed"
+      "resendEmailDelay": "You can resend the email only after one minute has passed"
     },
     "footer": "Resend email footer"
   },

@@ -30,7 +30,7 @@ function ResendEmail() {
             .then(() => {
                 setLoading(false);
                 setResendSuccess(true);
-            }).catch((error) => {
+            }).catch((error: AxiosError) => {
                 setLoading(false);
                 handleError(error);
             })
@@ -44,13 +44,10 @@ function ResendEmail() {
             responseStatus = problemDetail.status;
             if (responseStatus === 404) {
                 setErrorType('notFound');
-                setOpen(true);
             } else if (responseStatus === 422) {
-                let problemDetail = error.response?.data as ProblemDetail;
-                if (problemDetail.title == "Time to resend not passed" && problemDetail.detail.startsWith("One minute to resend email to"))
-                    setErrorType('resendEmailDelay')
-                setOpen(true);
+                setErrorType('resendEmailDelay');
             }
+            setOpen(true);
         } else if (error.message == "Network Error") {
             setErrorType('networkError');
             setOpen(true);
