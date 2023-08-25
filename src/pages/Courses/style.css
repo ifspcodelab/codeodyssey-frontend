@@ -2,7 +2,6 @@
   display: flex;
   margin-bottom: 1.5rem;
   min-width: 275px;
-  border: 30px solid red;
 }
 
 .cardActions {
@@ -13,4 +12,10 @@
   justify-content: center;
 }
 
+.cardActions > button {
+  background-color: #65849A;
+}
 
+.cardActions > button:hover  {
+  background-color: #6A8FAB;
+}
