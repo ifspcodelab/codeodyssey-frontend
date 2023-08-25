@@ -18,5 +18,9 @@ export const useApiRegistration = () => ({
     confirmation: async (token: string | undefined) => {
         const response = await api.patch<CreateUserResponse>(`/users/confirmation/${token}`);
         return response.data;
+    },
+    resendConfirmationEmail: async (email: string) => {
+        const response = await api.post<CreateUserResponse>('/users/resend-email', {email});
+        return response.data;
     }
 })
