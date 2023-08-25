@@ -5,6 +5,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import './style.css'
 
 
 
@@ -13,27 +14,27 @@ function Navbar() {
 
   return (
     <AppBar position="static">
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Toolbar className="container">
         <Typography variant="h4">
           CodeOdyssey
         </Typography>
-          <div>
-            <Link to="/">
+          <div className="linkList">
+            <Link className="link" to="/">
               Home
             </Link>
-            <Link to="/registration" >
+            <Link className="link" to="/registration" >
               {t("navbar.register")}
             </Link>
-            <Link to="/login" >
+            <Link className="link" to="/login" >
               {t("navbar.login")}
             </Link>
-            <Link to="/courses">
+            <Link className="link" to="/courses">
               {t("navbar.courses")}
             </Link>
-            <Link to="/create-course">
+            <Link className="link" to="/create-course">
               {t("navbar.createCourse")}
             </Link>
-            <Link to="/contact">
+            <Link className="link" to="/contact">
               {t("navbar.contact")}
             </Link>
           </div>
