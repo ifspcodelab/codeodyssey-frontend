@@ -105,6 +105,11 @@
     "text": "In case you didn't receive the email, you can resend it by clicking the link below",
     "emailMessage": "The system has sent a confirmation email to {{email}}. Check your email.",
     "resendMessage": "Click <1>here</1> to resend the email.",
+    "successMessage": "The email was resent successfully.",
+    "exception": {
+      "notFound": "No user found with given email",
+      "resendEmailDelay": "You can resend the email only after one minute have passed"
+    },
     "footer": "Resend email footer"
   },
   "contact": {
