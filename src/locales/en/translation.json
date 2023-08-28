@@ -102,7 +102,7 @@
   },
   "resendEmail":{
     "title": "Resend email",
-    "text": "In case you didn't receive the email, you can resend it by clicking the link below",
+    "text": "In case you didn't receive the email, you can resend it by clicking the link below after one minute has passed.",
     "emailMessage": "The system has sent a confirmation email to {{email}}. Check your email.",
     "resendMessage": "Click <1>here</1> to resend the email.",
     "successMessage": "The email was resent successfully.",
@@ -126,8 +126,9 @@
   "errorPage":{
     "title": "Error {{statusCode}}",
     "subTitle": "An unexpected error has occurred.",
-    "notFound": {
-    "message": "Page not found."
+    "message": {
+    "notFound": "Page not found.",
+    "badRequest": "Bad request."
     }
   },
   "yup": {

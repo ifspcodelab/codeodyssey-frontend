@@ -101,7 +101,7 @@
   },
   "resendEmail":{
     "title": "Reenviar o email",
-    "text": "Caso você não tenha recebido o email de confirmação, clique no link abaixo para reenviar o email.",
+    "text": "Caso você não tenha recebido o email de confirmação, clique no link abaixo para reenviar o email após um minuto.",
     "emailMessage": "O sistema mandou um email de confirmação para {{email}}. Verifique seu email.",
     "resendMessage": "Clique <1>aqui</1> para reenviar o email de confirmação.",
     "successMessage": "O email foi reenviado com sucesso.",
@@ -125,8 +125,9 @@
   "errorPage":{
     "title": "Erro {{statusCode}}",
     "subTitle": "Um erro inesperado ocorreu.",
-    "notFound": {
-      "message": "Página não encontrada."
+    "message": {
+      "notFound": "Página não encontrada.",
+      "badRequest": "Erro com a requisição."
     }
   },
   "yup": {
