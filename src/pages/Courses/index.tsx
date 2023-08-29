@@ -40,6 +40,22 @@ function Courses() {
 
   useEffect(() => {
     void (async () => {
+      if (USER_ROLE.includes('STUDENT')) {
+        try {
+          const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
+          setCoursesStudent(coursesStudentResponse)
+          setLoading(false)
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            handleError(error)
+          } else {
+            setErrorType('unexpected')
+          }
+        }
+      
+      } 
+
+
       if(USER_ROLE.includes('PROFESSOR')) {
         try {
           const coursesProfessorResponse = await getCoursesProfessor(USER_ID, rawAccessToken);
@@ -54,11 +70,7 @@ function Courses() {
         }
       } 
       
-      if (USER_ROLE.includes('STUDENT')) {
-        const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
-        setCoursesStudent(coursesStudentResponse)
-        setLoading(false)
-      }
+      
     })();
     // eslint-disable-next-line
   }, [USER_ID, USER_ROLE, rawAccessToken]);
