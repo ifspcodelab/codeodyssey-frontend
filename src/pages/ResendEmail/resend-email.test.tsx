@@ -78,4 +78,34 @@ describe("Resend Email", () => {
             expect(getByText("The email was resent successfully.")).toBeInTheDocument();
         });
     });
+
+    test("Should show error message when user clicks on the resend button and one minute has not passed", async () => {
+        server.use(
+            rest.post('http://localhost:3000/users/resend-email', (req, res, ctx) => {
+                console.log(req, ctx) // for build purposes
+                return res(
+                    ctx.status(422),
+                    ctx.json(
+                        {
+                            "type": "about:blank",
+                            "title": "Time to resend not passed",
+                            "status": 422,
+                            "detail": "One minute to resend email to johndoe@email.com has not been passed yet",
+                            "instance": "/api/v1/users/resend-email"
+                        }
+                    )
+                )
+            })
+        )
+
+        const {getByRole, getByText} = renderResendEmail();
+
+        const resendButton = getByRole("button", { name: "here"});
+
+        fireEvent.click(resendButton);
+
+        await waitFor(() => {
+            expect(getByText("You can resend the email only after one minute has passed")).toBeInTheDocument();
+        });
+    });
 });
