@@ -108,4 +108,34 @@ describe("Resend Email", () => {
             expect(getByText("You can resend the email only after one minute has passed")).toBeInTheDocument();
         });
     });
+
+    test("Should show error message when user clicks on the resend button and the email does not exist", async () => {
+        server.use(
+            rest.post('http://localhost:3000/users/resend-email', (req, res, ctx) => {
+                console.log(req, ctx) // for build purposes
+                return res(
+                    ctx.status(404),
+                    ctx.json(
+                        {
+                            "type": "about:blank",
+                            "title": "Email not found",
+                            "status": 404,
+                            "detail": "Email not found with address johndoe@email.com",
+                            "instance": "/api/v1/users/resend-email"
+                        }
+                    )
+                )
+            })
+        );
+
+        const {getByRole, getByText} = renderResendEmail();
+
+        const resendButton = getByRole("button", { name: "here"});
+
+        fireEvent.click(resendButton);
+
+        await waitFor(() => {
+            expect(getByText("No user found with given email")).toBeInTheDocument();
+        });
+    });
 });
