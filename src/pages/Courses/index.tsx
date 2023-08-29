@@ -27,7 +27,7 @@ function Courses() {
   const [coursesProfessor, setCoursesProfessor] = useState<CourseResponse[] | ProblemDetail>([]);
   const navigate = useNavigate()
   const USER_ID: string = authConsumer.id;
-  const USER_ROLE: string = authConsumer.role;
+  const USER_ROLE: string = authConsumer.roles;
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { getCoursesProfessor, getCoursesStudent } = useApiGetCourses()
   const [errorType, setErrorType] = useState('');
@@ -40,12 +40,10 @@ function Courses() {
 
   useEffect(() => {
     void (async () => {
-      if (USER_ROLE == "PROFESSOR") {
+      if(USER_ROLE.includes('PROFESSOR')) {
         try {
           const coursesProfessorResponse = await getCoursesProfessor(USER_ID, rawAccessToken);
           setCoursesProfessor(coursesProfessorResponse)
-          const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
-          setCoursesStudent(coursesStudentResponse)
           setLoading(false)
         } catch (error) {
           if (axios.isAxiosError(error)) {
@@ -54,7 +52,9 @@ function Courses() {
             setErrorType('unexpected')
           }
         }
-      } else if (USER_ROLE == "STUDENT") {
+      } 
+      
+      if (USER_ROLE.includes('STUDENT')) {
         const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
         setCoursesStudent(coursesStudentResponse)
         setLoading(false)

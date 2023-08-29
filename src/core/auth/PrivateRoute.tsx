@@ -9,19 +9,20 @@ interface PrivateRouteProps {
 }
 
 export function PrivateRoute({ children, userRole }: PrivateRouteProps) {
-    const { authenticated, role } = AuthConsumer();
+    const { authenticated, roles } = AuthConsumer();
     const currentLocation = useLocation();
 
     console.log("hello there @ private route");
     console.log("authenticated: ", authenticated);
-    console.log("role: ", role);
+    console.log("role: ", roles);
+    console.log(userRole)   
     console.log("currentLocation: ", currentLocation);
 
     if (!authenticated) {
         return <Navigate to={"/login"} />;
     }
 
-    if (role !== userRole) {
+    if (!roles.includes(userRole)) {
         // TODO: navigate the user to the previous url, since they are authenticated
         return <Navigate to={"/"} />; 
     }

@@ -48,8 +48,9 @@ function Login() {
     authConsumer.setAuthenticated(true);
     authConsumer.setId(decodedAccessToken.sub);
     authConsumer.setEmail(decodedAccessToken.email);
-    authConsumer.setRole(decodedAccessToken.role);
+    authConsumer.setRole(decodedAccessToken.roles);
     console.log(authConsumer)
+    console.log(decodedAccessToken.roles)
     return navigate("/");
   };
 
