@@ -58,7 +58,7 @@ describe("Login", () => {
         expect(getByRole("textbox", { name: "Email"})).toBeInTheDocument();
         expect(getByLabelText("Password")).toBeInTheDocument();
         expect(getByRole("button", { name: "Login"})).toBeInTheDocument();
-        expect(getByRole("button", { name: "Register"})).toBeInTheDocument();
+        expect(getByRole("link", { name: "Register"})).toBeInTheDocument();
     })
 
     test("Should send required email error message", async () => {
@@ -189,31 +189,11 @@ describe("Login", () => {
     })
 
     test("Should send to registration page after clicking the register button", async () => {
-        const history = createMemoryHistory();
-        history.push = vi.fn();
+        const { getByRole } = renderLogin();
 
-        const { getByRole } = render(
-            <Router location={history.location} navigator={history}>
-                <Login />
-            </Router>
-        );
+        const registrationLink = getByRole("link", {name: "Register"});
 
-        const loginHeading = getByRole("heading", {name: "Login"});
-        const registrationButton = getByRole("button", {name: "Register"});
-
-        expect(loginHeading).toBeInTheDocument();
-
-        await waitFor(() => {
-            void userEvent.click(registrationButton)
-            expect(history.push).toHaveBeenLastCalledWith({
-                    "hash": "",
-                    "pathname": "/registration",
-                    "search": "",
-                },
-                undefined,
-                {},
-            );
-        });
+        expect(registrationLink).toHaveAttribute("href", "/registration")
     });
 
     test("Should send to home page after clicking the login button", async () => {
