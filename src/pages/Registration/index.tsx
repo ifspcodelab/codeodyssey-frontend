@@ -20,7 +20,7 @@ import {
     Typography,
 } from "@mui/material";
 import axios, {AxiosError} from "axios";
-import {useState} from "react";
+import React, {useState} from "react";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import Spinner from "../../components/Spinner";
 
@@ -39,7 +39,7 @@ function Registration() {
         try {
             setDisableSubmitButton(true)
             setLoading(true)
-            const response = await api.register(data.name, data.email, data.password)
+            const response = await api.register(data.name.trim(), data.email.trim(), data.password)
             if (response.name != "AxiosError") {
                 setDisableSubmitButton(false)
                 setLoading(false)
@@ -86,6 +86,11 @@ function Registration() {
         }
     }
 
+    const handleNameInput = (event: React.FormEvent<HTMLInputElement>): void => {
+        event.target.value = event.target.value
+            .replace(/[\d!@#$%¨&*()_=+\\{}?:;.,|-]/ig, '')
+    }
+
     return (
         <>
             <Container maxWidth="md">
@@ -103,6 +108,7 @@ function Registration() {
                                     helperText={errors.name && <span>{errors.name.message}</span> }
                                     inputProps={{ "data-testid": "nameField" }}
                                     aria-labelledby="name"
+                                    onChange={handleNameInput}
                                 />
                             </Grid>
                             <Grid item xs={12}>
