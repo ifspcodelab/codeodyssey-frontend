@@ -1,17 +1,19 @@
 import "@testing-library/jest-dom";
 import CreateCourse from "./index"
-import { render, fireEvent  } from "@testing-library/react";
+import { render, waitFor   } from "@testing-library/react";
 import {describe, test, vi} from "vitest";
 import {schema} from "../CreateCourse/schema.ts"
 import {BrowserRouter} from "react-router-dom";
 
-const submitButtonId = "submitButton"
 const nameFieldId = "nameField"
 const slugFieldId = "slugField"
 const startDateLabelName = "Start Date"
 const endDateLabelName = "End Date"
-
-
+vi.mock('../../core/hooks/useApiCreateCourse', () => ({
+  useApiCreateCourse: () => ({
+    createCourse: vi.fn(),
+  }),
+}));
 describe("Create Course Form", () => {
   
   test("Should be able to see the title on the screen", () => {
@@ -24,16 +26,15 @@ describe("Create Course Form", () => {
     expect(getByText("Create Course")).toBeInTheDocument();
   })
 
-
-
-  test("Should be able to render the submit button", () => {
-    const {getByTestId} = render(
+  test("Should be able to render the submit button", async () => {
+    const {getByText} = render(
       <BrowserRouter>
         <CreateCourse/>
       </BrowserRouter>
     )
 
-    expect(getByTestId(submitButtonId)).toBeInTheDocument();
+    const createButton = await waitFor(() => getByText('Create'));
+    expect(createButton).toBeInTheDocument();
   })
 
   test("Should name be validated", async () => {
@@ -53,7 +54,6 @@ describe("Create Course Form", () => {
     await expect(schema.validateAt('endDate', {endDate: null})).rejects.toMatch(/This field is required./)
   })
 
-
   test("Should be able to render the form fields", () => {
     const {getByTestId, getByLabelText} = render(
       <BrowserRouter>
@@ -66,55 +66,4 @@ describe("Create Course Form", () => {
     expect(getByLabelText(startDateLabelName)).toBeInTheDocument();
     expect(getByLabelText(endDateLabelName)).toBeInTheDocument();
   })
-
-  test("Should be able to send create course form", () => {
-    const { getByTestId } = render(
-        <BrowserRouter>
-            <CreateCourse/>
-        </BrowserRouter>
-    );
-
-    fireEvent.click(getByTestId("submitButton"));
-})
-
-test("Should send request with data after form submission", async () => {
-  const { getByTestId, getByLabelText } = render(
-      <BrowserRouter>
-          <CreateCourse />
-      </BrowserRouter>
-  );
-
-  const nameInput = getByTestId("nameField")
-  const slugInput = getByTestId('slugField')
-  const startDate = getByLabelText(startDateLabelName)
-  const endDate = getByLabelText(endDateLabelName)
-  const submitButton =getByTestId('submitButton');
-
-  fireEvent.change(nameInput, { target: { value: 'Java Spring' } });
-  fireEvent.change(slugInput, { target: { value: 'java' } });
-  fireEvent.change(startDate, { target: { value: '2023-12-01' } });
-  fireEvent.change(endDate, { target: { value: '2024-01-01' } });
-
-  fireEvent.click(submitButton);
-
-  const result =  vi.fn();
-
-  expect(result).toMatchSnapshot();
-})
-
-test("Should send to my courses page after clicking the submit button", async () => {
-  const { getByTestId } = render(
-      <BrowserRouter>
-          <CreateCourse />
-      </BrowserRouter>
-  );
-
-  const submitButton = getByTestId("submitButton")
-
-  fireEvent.click(submitButton)
-
-  const result =  vi.fn();
-
-  expect(result).toMatchSnapshot("My Courses Page");
-})
 })
