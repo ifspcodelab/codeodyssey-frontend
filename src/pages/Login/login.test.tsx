@@ -240,8 +240,12 @@ describe("Login", () => {
                     "pathname": "/",
                     "search": "",
                 },
-                undefined,
-                {},
+                {
+                    "data": true
+                },
+                {
+                    "state": {"data": true}
+                },
             );
         });
     });
