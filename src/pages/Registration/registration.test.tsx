@@ -34,24 +34,24 @@ afterAll(() => void server.close())
 
 afterEach(() => server.resetHandlers())
 
+function renderRegistration() {
+    return render(
+        <BrowserRouter>
+            <Registration/>
+        </BrowserRouter>
+    );
+}
+
 describe("Registration", () => {
 
    test("Should be able to see the Page Header title on the screen", () => {
-       const { getByText } = render(
-           <BrowserRouter>
-               <Registration/>
-           </BrowserRouter>
-       );
+       const { getByText } = renderRegistration();
 
        expect(getByText("Registration")).toBeInTheDocument();
    })
 
     test("Should be able to see all the form fields", () => {
-        const { getByLabelText } = render(
-            <BrowserRouter>
-                <Registration/>
-            </BrowserRouter>
-        );
+        const { getByLabelText } = renderRegistration();
 
         expect(getByLabelText("Name")).toBeInTheDocument();
         expect(getByLabelText("Email")).toBeInTheDocument();
@@ -60,21 +60,13 @@ describe("Registration", () => {
     })
 
     test("Should be able to see the login button text", () => {
-        const { getByTestId } = render(
-            <BrowserRouter>
-                <Registration/>
-            </BrowserRouter>
-        );
+        const { getByTestId } = renderRegistration();
 
         expect(getByTestId("loginLink")).toBeInTheDocument();
     })
 
     test("Should be able to see the submit button text", () => {
-        const { getByRole } = render(
-            <BrowserRouter>
-                <Registration/>
-            </BrowserRouter>
-        );
+        const { getByRole } = renderRegistration();
 
         expect(getByRole("button", {name: "Register"})).toBeInTheDocument();
     })
@@ -110,11 +102,7 @@ describe("Registration", () => {
     })
 
     test("Should be able to send registration request", () => {
-        const { getByTestId } = render(
-            <BrowserRouter>
-                <Registration/>
-            </BrowserRouter>
-        );
+        const { getByTestId } = renderRegistration();
 
         fireEvent.click(getByTestId("registerButton"));
     })
@@ -166,12 +154,8 @@ describe("Registration", () => {
         })
     })
 
-    test("Should send to login page after clicking the login button", async () => {
-        const { getByRole } = render(
-            <BrowserRouter>
-                <Registration />
-            </BrowserRouter>
-        );
+    test("Should send to login page after clicking the login button", () => {
+        const { getByRole } = renderRegistration();
 
         const loginLink = getByRole("link", {name: "Login."})
 
@@ -180,11 +164,7 @@ describe("Registration", () => {
     })
 
     test("Should show immutability message", () => {
-        const {getByText} = render(
-            <BrowserRouter>
-                <Registration/>
-            </BrowserRouter>
-        )
+        const {getByText} = renderRegistration();
 
         const immutabilityMessage = getByText(/Won't be possible to change email/i)
 
@@ -208,11 +188,7 @@ describe("Registration", () => {
             })
         )
 
-        const {getByText, getByLabelText, getByTestId} = render(
-            <BrowserRouter>
-                <Registration/>
-            </BrowserRouter>
-        )
+        const {getByText, getByLabelText, getByTestId} = renderRegistration();
 
         const inputName = getByLabelText('Name') as HTMLInputElement;
         const inputEmail = getByLabelText('Email') as HTMLInputElement;
@@ -234,17 +210,13 @@ describe("Registration", () => {
 
     test("Should show network error message on form submission", async () => {
         server.use(
-            rest.post('http://localhost:3000/users', async (req, res, ctx) => {
+            rest.post('http://localhost:3000/users',  (req, res, ctx) => {
                     console.log(req, ctx) // for build purposes
                     return res.networkError('Failed to connect')
                 }
             ))
 
-        const {getByText, getByLabelText, getByTestId} = render(
-            <BrowserRouter>
-                <Registration/>
-            </BrowserRouter>
-        )
+        const {getByText, getByLabelText, getByTestId} = renderRegistration();
 
         const inputName = getByLabelText('Name') as HTMLInputElement;
         const inputEmail = getByLabelText('Email') as HTMLInputElement;
@@ -265,11 +237,7 @@ describe("Registration", () => {
     })
 
     test("Should check if terms and privacy links have their respective href and target values", () => {
-        const { getByRole } = render(
-            <BrowserRouter>
-                <Registration />
-            </BrowserRouter>
-        );
+        const { getByRole } = renderRegistration();
 
         const registrationHeading = getByRole("heading", {name: "Registration"})
         const termsLink = getByRole("link", {name: "Terms of Use"})
