@@ -66,7 +66,7 @@
       "email": "Email",
       "email_message": "Won't be possible to change email",
       "password": "Password",
-      "login": "Already have an account? Go to login.",
+      "login": "Already have an account? <1>Login</>.",
       "submit": "Register",
       "termsCheckbox": "I have read and agree with the <1>Terms of Use</1> and <3>Privacy Policy</3>",
       "validation": {

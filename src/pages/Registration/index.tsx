@@ -136,9 +136,9 @@ function Registration() {
                                     <FormControlLabel {...register("terms")} control={<Checkbox  />} label={
                                         <Trans i18nKey="registration.form.termsCheckbox">
                                             I have read and agree with the
-                                            <Link href="/terms-of-use" target="_blank" rel="noopener noreferrer">Terms of Use</Link>
+                                            <Link href="/terms-of-use" target="_blank">Terms of Use</Link>
                                             and
-                                            <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link>
+                                            <Link href="/privacy-policy" target="_blank">Privacy Policy</Link>
                                         </Trans>
                                     } />
                                     <Typography color="error">{errors.terms?.message}</Typography>
@@ -148,9 +148,14 @@ function Registration() {
                                 <div id="registration-menu">
                                     <Button data-testid="registerButton" disabled={disableSubmitButton} type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>
                                     {loading && <Spinner size={10}/>}
-                                    <Link data-testid="loginLink" href="/login" rel="noopener noreferrer" underline="hover">
-                                        {t('registration.form.login')}
-                                    </Link>
+                                    <div>
+                                        <Trans i18nKey="registration.form.login">
+                                            Already have an account?
+                                            <Link data-testid="loginLink" href="/login">
+                                                Login
+                                            </Link>
+                                        </Trans>
+                                    </div>
                                 </div>
                             </Grid>
                         </Grid>
