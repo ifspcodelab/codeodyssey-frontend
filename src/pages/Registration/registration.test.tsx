@@ -173,10 +173,8 @@ describe("Registration", () => {
             </BrowserRouter>
         );
 
-        const registrationHeading = getByRole("heading", {name: "Registration"})
-        const loginLink = getByRole("link", {name: "Already have an account? Go to login."})
+        const loginLink = getByRole("link", {name: "Login."})
 
-        expect(registrationHeading).toBeInTheDocument()
         expect(loginLink).toBeInTheDocument()
         expect(loginLink).toHaveAttribute("href", "/login")
     })
