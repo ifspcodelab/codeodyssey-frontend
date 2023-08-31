@@ -54,7 +54,7 @@
       "network": "Network error",
       "unexpected": "An unexpected error has occurred"
     }
-},
+  },
   "privacypolicy": {
     "title": "Privacy Policy"
   },
@@ -104,7 +104,7 @@
         }
       }},
     "login": "Log In!",
-    "register": "Register",
+    "register": "New to Code Odyssey? <1>Register</1>",
     "loginError": "Something went wrong, please try again later",
     "footer": "Login footer"
   },

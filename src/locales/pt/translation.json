@@ -29,7 +29,8 @@
     },
     "intlDate": "{{date, datetime}}",
     "until": "até",
-    "emptyList": "Você ainda não participa de nenhum curso",
+    "emptyList": "Você ainda não participa de nenhum curso"
+  },
   "createcourse": {
     "title": "Criar Curso",
     "text": "Crie um curso preenchendo o formulário abaixo",
@@ -103,7 +104,7 @@
         }
       }},
     "login": "Faça login!",
-    "register": "Registrar",
+    "register": "Novo no Code Odyssey? <1>Registre-se</1>.",
     "loginError": "Houve um erro, por favor tente novamente",
     "footer": "Login footer"
   },
@@ -175,4 +176,4 @@
     "array_max": "${path} deve ter no máximo ${max} item(ns)",
     "array_length": "${path} deve ter ${length} itens"
   }
-}}
+}
