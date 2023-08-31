@@ -1,4 +1,12 @@
 {
+  "navbar": {
+    "register": "Register",
+    "login": "Login",
+    "logout": "Logout",
+    "courses": "My courses",
+    "createCourse": "Create course",
+    "contact": "Contact"
+  },
   "confirmation": {
     "title": "Confirmation",
     "text": "Email's confirmation",

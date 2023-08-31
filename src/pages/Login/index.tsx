@@ -50,7 +50,7 @@ function Login() {
     authConsumer.setEmail(decodedAccessToken.email);
     authConsumer.setRole(decodedAccessToken.role);
     console.log(authConsumer)
-    return navigate("/");
+    return navigate("/", {state: {data: true}});
   };
 
   const handleLoginError = (error: AxiosError<ProblemDetail>): void => {

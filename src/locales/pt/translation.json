@@ -1,4 +1,12 @@
 {
+  "navbar": {
+    "register": "Cadastrar",
+    "login": "Login",
+    "logout": "Sair",
+    "courses": "Meus cursos",
+    "createCourse": "Criar curso",
+    "contact": "Contato"
+  },
   "confirmation": {
     "title": "Confirmação",
     "text": "Confirmação do email",
