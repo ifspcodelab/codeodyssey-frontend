@@ -7,7 +7,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {Trans, useTranslation} from "react-i18next";
 import {CreateUserResponse} from "../../core/models/CreateUserResponse";
 import {schema} from "./schema";
-import {useApiUser} from "../../core/hooks/useApiUser";
+import {useApiRegistration} from "../../core/hooks/useApiRegistration";
 import {
     Button,
     Checkbox,
@@ -20,26 +20,32 @@ import {
     Typography,
 } from "@mui/material";
 import axios, {AxiosError} from "axios";
-import {useState} from "react";
+import React, {useState} from "react";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import Spinner from "../../components/Spinner";
+import SwipeableTextMobileStepper from "../../components/SwipeableTextMobileStepper";
 
 
 function Registration() {
     const {t} = useTranslation()
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
     const navigate = useNavigate()
-    const api = useApiUser()
+    const api = useApiRegistration()
     const [open, setOpen] = useState(false);
     const [errorType, setErrorType] = useState('');
     const [loading, setLoading] = useState(false);
     const [disableSubmitButton, setDisableSubmitButton] = useState(false);
+    const [dialog, setDialog] = useState(false);
+
+    const toggleDialog = () => {
+        setDialog(!dialog);
+    };
 
     const onSubmit = async (data: CreateUserResponse) => {
         try {
             setDisableSubmitButton(true)
             setLoading(true)
-            const response = await api.register(data.name, data.email, data.password)
+            const response = await api.register(data.name.trim(), data.email.trim(), data.password)
             if (response.name != "AxiosError") {
                 setDisableSubmitButton(false)
                 setLoading(false)
@@ -86,6 +92,11 @@ function Registration() {
         }
     }
 
+    const handleNameInput = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        event.target.value = event.target.value
+            .replace(/[\d!@#$%¨&*()_=+\\{}?:;.,|-]/ig, '')
+    }
+
     return (
         <>
             <Container maxWidth="md">
@@ -103,6 +114,7 @@ function Registration() {
                                     helperText={errors.name && <span>{errors.name.message}</span> }
                                     inputProps={{ "data-testid": "nameField" }}
                                     aria-labelledby="name"
+                                    onChange={(e) => handleNameInput(e)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -136,9 +148,9 @@ function Registration() {
                                     <FormControlLabel {...register("terms")} control={<Checkbox  />} label={
                                         <Trans i18nKey="registration.form.termsCheckbox">
                                             I have read and agree with the
-                                            <Link href="/terms-of-use" target="_blank" rel="noopener noreferrer">Terms of Use</Link>
+                                            <Link href="/terms-of-use" target="_blank">Terms of Use</Link>
                                             and
-                                            <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link>
+                                            <Link href="/privacy-policy" target="_blank">Privacy Policy</Link>
                                         </Trans>
                                     } />
                                     <Typography color="error">{errors.terms?.message}</Typography>
@@ -146,10 +158,16 @@ function Registration() {
                             </Grid>
                             <Grid item xs={12}>
                                 <div id="registration-menu">
-                                    <Button data-testid="registerButton" disabled={disableSubmitButton} type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>{loading && <Spinner/>}
-                                    <Link data-testid="loginLink" href="/login" rel="noopener noreferrer" underline="hover">
-                                        {t('registration.form.login')}
-                                    </Link>
+                                    <Button data-testid="registerButton" disabled={disableSubmitButton} type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>
+                                    {loading && <Spinner size={10}/>}
+                                    <div>
+                                        <Trans i18nKey="registration.form.login">
+                                            Already have an account?
+                                            <Link data-testid="loginLink" href="/login">
+                                                Login
+                                            </Link>
+                                        </Trans>
+                                    </div>
                                 </div>
                             </Grid>
                         </Grid>
@@ -157,6 +175,14 @@ function Registration() {
                     <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType}/>
                     <PageFooter text={t('registration.footer')}/>
                 </div>
+                <Button size='small' id="tutorialButton" variant="contained" onClick={toggleDialog}>
+                    {!dialog ? t('registration.tutorial.open') : t('registration.tutorial.close')}
+                </Button>
+                {dialog && (
+                    <div id="swipeable">
+                        <SwipeableTextMobileStepper />
+                    </div>
+                    )}
             </Container>
         </>
     );
