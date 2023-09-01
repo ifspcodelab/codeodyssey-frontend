@@ -7,9 +7,10 @@ import {schema} from "./schema";
 import { createMemoryHistory } from 'history';
 import {setupServer} from "msw/node";
 import {rest} from "msw";
+import userEvent from "@testing-library/user-event";
 
 export const restHandlers = [
-    rest.post('http://localhost:3000/users', (req, res, ctx) => {
+    rest.post('http://localhost:3000/users', async (req, res, ctx) => {
         console.log(req) // for build purposes
         return res(
             ctx.status(201),
@@ -136,7 +137,7 @@ describe("Registration", () => {
         fireEvent.click(inputTerms)
 
         await waitFor(() => {
-            fireEvent.click(getByTestId("registerButton"))
+            void userEvent.click(getByTestId("registerButton"))
             expect(history.push).toHaveBeenLastCalledWith( {
                     "hash": "",
                     "pathname": "/resend-email",
@@ -203,7 +204,7 @@ describe("Registration", () => {
         fireEvent.click(inputTerms)
 
         await waitFor(() => {
-            fireEvent.click(getByTestId("registerButton"))
+            void userEvent.click(getByTestId("registerButton"));
             expect(getByText("There was a problem with the email used")).toBeInTheDocument()
         })
     })
@@ -231,7 +232,7 @@ describe("Registration", () => {
         fireEvent.click(inputTerms)
 
         await waitFor(() => {
-            fireEvent.click(getByTestId("registerButton"))
+            void userEvent.click(getByTestId("registerButton"))
             expect(getByText("Network error")).toBeInTheDocument()
         })
     })
