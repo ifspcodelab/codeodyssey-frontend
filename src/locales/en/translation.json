@@ -2,9 +2,23 @@
   "navbar": {
     "register": "Register",
     "login": "Login",
+    "logout": "Logout",
     "courses": "My courses",
     "createCourse": "Create course",
     "contact": "Contact"
+  },
+  "confirmation": {
+    "title": "Confirmation",
+    "text": "Email's confirmation",
+    "footer": "Confirmation footer",
+    "success": "The email \"{{email}}\" was confirmed successfully",
+    "error": {
+      "badRequest": "There was a problem with the request",
+      "network": "There was a connection error",
+      "notFound": "No user found with given token",
+      "exists": "The email has already been confirmed",
+      "expired": "The confirmation token is expired"
+    }
   },
   "courses": {
     "title": "My Courses",
@@ -45,7 +59,7 @@
       "network": "Network error",
       "unexpected": "An unexpected error has occurred"
     }
-},
+  },
   "privacypolicy": {
     "title": "Privacy Policy"
   },
@@ -57,7 +71,7 @@
       "email": "Email",
       "email_message": "Won't be possible to change email",
       "password": "Password",
-      "login": "Already have an account? Go to login.",
+      "login": "Already have an account? <1>Login</>.",
       "submit": "Register",
       "termsCheckbox": "I have read and agree with the <1>Terms of Use</1> and <3>Privacy Policy</3>",
       "validation": {
@@ -76,6 +90,14 @@
       "badRequest": "Request error",
       "network": "Network error",
       "unexpected": "An unexpected error has occurred"
+    },
+    "tutorial": {
+      "open": "How to register?",
+      "close": "Close",
+      "step1": "Fill out the form",
+      "step2": "Click on the \"Register\" button",
+      "step3": "Confirm your email",
+      "step4": "You're good to go and login!"
     }
   },
   "login": {
@@ -95,13 +117,21 @@
         }
       }},
     "login": "Log In!",
-    "register": "Register",
+    "register": "New to Code Odyssey? <1>Register</1>",
     "loginError": "Something went wrong, please try again later",
     "footer": "Login footer"
   },
   "resendEmail":{
     "title": "Resend email",
-    "text": "The system has sent a confirmation email to {{email}}. Check your email."
+    "text": "In case you didn't receive the email, you can resend it by clicking the link below after one minute has passed.",
+    "emailMessage": "The system has sent a confirmation email to {{email}}. Check your email.",
+    "resendMessage": "Click <1>here</1> to resend the email.",
+    "successMessage": "The email was resent successfully.",
+    "exception": {
+      "notFound": "No user found with given email",
+      "resendEmailDelay": "You can resend the email only after one minute has passed"
+    },
+    "footer": "Resend email footer"
   },
   "contact": {
     "title": "Contact",
@@ -117,8 +147,9 @@
   "errorPage":{
     "title": "Error {{statusCode}}",
     "subTitle": "An unexpected error has occurred.",
-    "notFound": {
-    "message": "Page not found."
+    "message": {
+    "notFound": "Page not found.",
+    "badRequest": "Bad request."
     }
   },
   "yup": {

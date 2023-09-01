@@ -13,3 +13,21 @@
 #registration-menu * {
     margin: 10px auto;
 }
+
+.formContainer {
+    height: 100%;
+}
+
+#tutorialButton {
+    position: absolute;
+    top: 89%;
+    right: 0;
+}
+
+#swipeable {
+    position: absolute;
+    top: 40%;
+    right: 5%;
+    border: 1px solid #ccc;
+    z-index: 1;
+}

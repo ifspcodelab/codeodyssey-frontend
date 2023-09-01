@@ -6,11 +6,27 @@ import {
 import { Link } from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import './style.css'
-
+import {useEffect, useState} from "react";
+import {JwtService} from "../../core/auth/JwtService";
 
 
 function Navbar() {
   const { t } = useTranslation();
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
+
+  useEffect(() => {
+    const jwtService = new JwtService();
+    const token = jwtService.getAccessToken();
+    if (token) {
+      setAuthenticated(true)
+    }
+  }, []);
+
+  const handleLogout = () => {
+    const jwtService = new JwtService();
+    jwtService.removeTokens();
+    setAuthenticated(false)
+  }
 
   return (
     <AppBar position="static">
@@ -25,9 +41,15 @@ function Navbar() {
             <Link className="link" to="/registration" >
               {t("navbar.register")}
             </Link>
-            <Link className="link" to="/login" >
-              {t("navbar.login")}
-            </Link>
+            {!authenticated ?
+              <Link className="link" to="/login" >
+                {t("navbar.login")}
+              </Link>
+                :
+                <Link className="link" onClick={handleLogout} to="/">
+                  {t("navbar.logout")}
+                </Link>
+            }
             <Link className="link" to="/courses">
               {t("navbar.courses")}
             </Link>

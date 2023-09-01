@@ -10,9 +10,17 @@ const api = axios.create({
     }
 });
 
-export const useApiUser = () => ({
+export const useApiRegistration = () => ({
     register: async (name: string, email: string, password: string) => {
         const response = await api.post<CreateUserResponse>('/users', {name, email, password});
+        return response.data;
+    },
+    confirmation: async (token: string | undefined) => {
+        const response = await api.patch<CreateUserResponse>(`/users/confirmation/${token}`);
+        return response.data;
+    },
+    resendConfirmationEmail: async (email: string) => {
+        const response = await api.post<CreateUserResponse>('/users/resend-email', {email});
         return response.data;
     }
 })

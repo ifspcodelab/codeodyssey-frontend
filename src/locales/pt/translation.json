@@ -2,9 +2,23 @@
   "navbar": {
     "register": "Cadastrar",
     "login": "Login",
+    "logout": "Sair",
     "courses": "Meus cursos",
     "createCourse": "Criar curso",
     "contact": "Contato"
+  },
+  "confirmation": {
+    "title": "Confirmação",
+    "text": "Confirmação do email",
+    "footer": "Texto do footer aqui",
+    "success": "O email \"{{email}}\" foi confirmado com sucesso",
+    "error": {
+      "badRequest": "Houve um problema com a requisição",
+      "network": "Houve um problema com a conexão",
+      "notFound": "Usuário não encontrado com esse token",
+      "exists": "O email já foi confirmado",
+      "expired": "O token de confirmação expirou"
+    }
   },
   "courses": {
     "title": "Meus Cursos",
@@ -57,8 +71,8 @@
       "email": "Email",
       "email_message": "Não será possível trocar de email",
       "password": "Senha",
-      "login": "Já tem conta? Ir para login.",
-      "submit": "Registrar",
+      "login": "Já está cadastrado? <1>Ir para Login</1>.",
+      "submit": "Cadastrar",
       "termsCheckbox": "Eu li e concordo com os <1>Termos de Uso</1> e a <3>Política de Privacidade</3>",
       "validation": {
         "termsCheckbox": "Você deve aceitar os termos e a política de privacidade",
@@ -76,6 +90,14 @@
       "badRequest": "Erro com a requisição",
       "network": "Erro de conexão com o servidor",
       "unexpected": "Um erro inesperado ocorreu"
+    },
+    "tutorial": {
+      "open": "Como cadastrar?",
+      "close": "Fechar",
+      "step1": "Preencha o formulário",
+      "step2": "Clique no botão \"Cadastrar\"",
+      "step3": "Confirme seu email",
+      "step4": "Pronto! Agora você pode fazer login"
     }
   },
   "login": {
@@ -95,13 +117,21 @@
         }
       }},
     "login": "Faça login!",
-    "register": "Registrar",
+    "register": "Novo no Code Odyssey? <1>Registre-se</1>.",
     "loginError": "Houve um erro, por favor tente novamente",
     "footer": "Login footer"
   },
   "resendEmail":{
     "title": "Reenviar o email",
-    "text": "O sistema mandou um email de confirmação para {{email}}. Verifique seu email."
+    "text": "Caso você não tenha recebido o email de confirmação, clique no link abaixo para reenviar o email após um minuto.",
+    "emailMessage": "O sistema mandou um email de confirmação para {{email}}. Verifique seu email.",
+    "resendMessage": "Clique <1>aqui</1> para reenviar o email de confirmação.",
+    "successMessage": "O email foi reenviado com sucesso.",
+    "exception": {
+      "notFound": "Usuário não encontrado",
+      "resendEmailDelay": "Você pode reenviar o e-mail somente após um minuto"
+    },
+    "footer": "Footer do reenvio de email"
   },
   "contact": {
     "title": "Entre em Contato",
@@ -117,8 +147,9 @@
   "errorPage":{
     "title": "Erro {{statusCode}}",
     "subTitle": "Um erro inesperado ocorreu.",
-    "notFound": {
-      "message": "Página não encontrada."
+    "message": {
+      "notFound": "Página não encontrada.",
+      "badRequest": "Erro com a requisição."
     }
   },
   "yup": {
