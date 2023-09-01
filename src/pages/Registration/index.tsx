@@ -23,6 +23,7 @@ import axios, {AxiosError} from "axios";
 import React, {useState} from "react";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import Spinner from "../../components/Spinner";
+import SwipeableTextMobileStepper from "../../components/SwipeableTextMobileStepper";
 
 
 function Registration() {
@@ -34,6 +35,11 @@ function Registration() {
     const [errorType, setErrorType] = useState('');
     const [loading, setLoading] = useState(false);
     const [disableSubmitButton, setDisableSubmitButton] = useState(false);
+    const [dialog, setDialog] = useState(false);
+
+    const toggleDialog = () => {
+        setDialog(!dialog);
+    };
 
     const onSubmit = async (data: CreateUserResponse) => {
         try {
@@ -169,6 +175,14 @@ function Registration() {
                     <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType}/>
                     <PageFooter text={t('registration.footer')}/>
                 </div>
+                <Button size='small' id="tutorialButton" variant="contained" onClick={toggleDialog}>
+                    {!dialog ? t('registration.tutorial.open') : t('registration.tutorial.close')}
+                </Button>
+                {dialog && (
+                    <div id="swipeable">
+                        <SwipeableTextMobileStepper />
+                    </div>
+                    )}
             </Container>
         </>
     );

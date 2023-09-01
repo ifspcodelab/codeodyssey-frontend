@@ -67,7 +67,7 @@
       "email_message": "Não será possível trocar de email",
       "password": "Senha",
       "login": "Já está cadastrado? <1>Ir para Login</1>.",
-      "submit": "Registrar",
+      "submit": "Cadastrar",
       "termsCheckbox": "Eu li e concordo com os <1>Termos de Uso</1> e a <3>Política de Privacidade</3>",
       "validation": {
         "termsCheckbox": "Você deve aceitar os termos e a política de privacidade",
@@ -85,6 +85,14 @@
       "badRequest": "Erro com a requisição",
       "network": "Erro de conexão com o servidor",
       "unexpected": "Um erro inesperado ocorreu"
+    },
+    "tutorial": {
+      "open": "Como cadastrar?",
+      "close": "Fechar",
+      "step1": "Preencha o formulário",
+      "step2": "Clique no botão \"Cadastrar\"",
+      "step3": "Confirme seu email",
+      "step4": "Pronto! Agora você pode fazer login"
     }
   },
   "login": {

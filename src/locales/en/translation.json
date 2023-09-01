@@ -85,6 +85,14 @@
       "badRequest": "Request error",
       "network": "Network error",
       "unexpected": "An unexpected error has occurred"
+    },
+    "tutorial": {
+      "open": "How to register?",
+      "close": "Close",
+      "step1": "Fill out the form",
+      "step2": "Click on the \"Register\" button",
+      "step3": "Confirm your email",
+      "step4": "You're good to go and login!"
     }
   },
   "login": {
