@@ -23,7 +23,7 @@ export function PrivateRoute({ children, userRole }: PrivateRouteProps) {
 
     if (role !== userRole) {
         // TODO: navigate the user to the previous url, since they are authenticated
-        return <Navigate to={"/login"} />;
+        return <Navigate to={"/"} />;
     }
 
     return children;

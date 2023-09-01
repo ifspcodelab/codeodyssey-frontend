@@ -1,0 +1,21 @@
+.cardContainer {
+  display: flex;
+  margin-bottom: 1.5rem;
+  min-width: 275px;
+}
+
+.cardActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: auto;
+  justify-content: center;
+}
+
+.cardActions > button {
+  background-color: #65849A;
+}
+
+.cardActions > button:hover  {
+  background-color: #6A8FAB;
+}

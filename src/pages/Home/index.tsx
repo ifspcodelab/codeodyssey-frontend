@@ -1,6 +1,6 @@
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
-import {Link, useLocation} from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import {Key, useEffect} from "react";
 
 
@@ -20,16 +20,11 @@ function Home() {
     }, [location]);
 
     return (
-        <>
-            <PageHeader title={'Home'} text={"Application's home"}/>
-            <h1>Home Page</h1>
-            <nav>
-                <Link to={"/registration"}>Registration</Link>
-                <Link to={"/login"}>Login</Link>
-                <Link to={"/create-course"}>Create course</Link>
-            </nav>
-            <PageFooter text={"Home Footer"}/>
-        </>
+      <>
+        <PageHeader title={'Home'} text={"Application's home"}/>
+        <h1>Home Page</h1>
+        <PageFooter text={"Home Footer"}/>
+      </>
     );
 }
 

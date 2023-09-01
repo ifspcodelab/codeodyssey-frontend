@@ -1,5 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`Create Course Form > Should send request with data after form submission 1`] = `[MockFunction spy]`;
-
-exports[`Create Course Form > Should send to my courses page after clicking the submit button > My Courses Page 1`] = `[MockFunction spy]`;
