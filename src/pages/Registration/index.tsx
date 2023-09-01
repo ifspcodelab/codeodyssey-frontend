@@ -92,7 +92,7 @@ function Registration() {
         }
     }
 
-    const handleNameInput = (event: React.FormEvent<HTMLInputElement>): void => {
+    const handleNameInput = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         event.target.value = event.target.value
             .replace(/[\d!@#$%¨&*()_=+\\{}?:;.,|-]/ig, '')
     }
@@ -114,7 +114,7 @@ function Registration() {
                                     helperText={errors.name && <span>{errors.name.message}</span> }
                                     inputProps={{ "data-testid": "nameField" }}
                                     aria-labelledby="name"
-                                    onChange={handleNameInput}
+                                    onChange={(e) => handleNameInput(e)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
