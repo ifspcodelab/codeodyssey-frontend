@@ -35,7 +35,7 @@ const MockAuthProvider: React.FC<MockAuthProviderProps> = ({ children, role }) =
       setId: vi.fn(),
       email: 'test@example.com',
       setEmail: vi.fn(),
-      roles: role,
+      role: role,
       setRole: vi.fn(),
     }}
   >
