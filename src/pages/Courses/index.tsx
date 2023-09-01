@@ -27,7 +27,7 @@ function Courses() {
   const [coursesProfessor, setCoursesProfessor] = useState<CourseResponse[] | ProblemDetail>([]);
   const navigate = useNavigate()
   const USER_ID: string = authConsumer.id;
-  const USER_ROLE: string = authConsumer.roles;
+  const USER_ROLE: string = authConsumer.role;
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { getCoursesProfessor, getCoursesStudent } = useApiGetCourses()
   const [errorType, setErrorType] = useState('');
@@ -40,37 +40,25 @@ function Courses() {
 
   useEffect(() => {
     void (async () => {
-      if (USER_ROLE.includes('STUDENT')) {
+      if(USER_ROLE == "PROFESSOR") {
         try {
-          const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
-          setCoursesStudent(coursesStudentResponse)
+          const cursoProfessor = await getCoursesProfessor(USER_ID, rawAccessToken);
+          setCoursesProfessor(cursoProfessor)
+          const cursoAluno = await getCoursesStudent(USER_ID, rawAccessToken)
+          setCoursesStudent(cursoAluno)
           setLoading(false)
         } catch (error) {
           if (axios.isAxiosError(error)) {
-            handleError(error)
+              handleError(error)
           } else {
-            setErrorType('unexpected')
+              setErrorType('unexpected')
           }
-        }
-      
-      } 
-
-
-      if(USER_ROLE.includes('PROFESSOR')) {
-        try {
-          const coursesProfessorResponse = await getCoursesProfessor(USER_ID, rawAccessToken);
-          setCoursesProfessor(coursesProfessorResponse)
-          setLoading(false)
-        } catch (error) {
-          if (axios.isAxiosError(error)) {
-            handleError(error)
-          } else {
-            setErrorType('unexpected')
-          }
-        }
-      } 
-      
-      
+      }
+      } else if(USER_ROLE == "STUDENT") {
+        const cursoAluno = await getCoursesStudent(USER_ID, rawAccessToken)
+        setCoursesStudent(cursoAluno)
+        setLoading(false)
+      }
     })();
     // eslint-disable-next-line
   }, [USER_ID, USER_ROLE, rawAccessToken]);

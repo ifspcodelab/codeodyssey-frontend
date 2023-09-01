@@ -7,7 +7,7 @@ export enum UserRole {
 }
 
 export interface AccessToken {
-    roles: UserRole,
+    role: UserRole,
     name: string,
     email: string,
     sub: string,
