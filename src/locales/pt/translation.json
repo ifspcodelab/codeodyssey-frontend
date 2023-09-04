@@ -35,7 +35,9 @@
     "title": "Meus Alunos",
     "text": "Alunos do curso",
     "name": "Nome",
-    "email": "E-mail"
+    "email": "E-mail",
+    "emptyList": "Esse curso não possui alunos matriculados",
+    "emptyListQuestion": "Deseja convidar alunos?"
   },
   "createcourse": {
     "title": "Criar Curso",

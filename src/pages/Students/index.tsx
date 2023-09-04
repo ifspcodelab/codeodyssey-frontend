@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { StudentResponse } from "../../core/models/StudentResponse";
 import { useTranslation } from "react-i18next";
 import PageHeader from "../../components/PageHeader";
+import Spinner from "../../components/Spinner";
 
 function Students() {
   const [students, setStudents] = useState<StudentResponse[] | ProblemDetail>([]);
@@ -18,6 +19,9 @@ function Students() {
   const { slug } = useParams()
   const { t } = useTranslation();
   const USER_ID: string = authConsumer.id;
+  const [loading, setLoading] = useState(true);
+
+
   useEffect(() => {
     void (async () => {
       if (typeof slug === 'string') {
@@ -27,6 +31,7 @@ function Students() {
           setStudents(studentsResponse)
           console.log("id: ", slug)
           console.log("teste", studentsResponse)
+          setLoading(false)
         } catch (error) {
           console.log(error)
         }
@@ -43,18 +48,32 @@ function Students() {
     <>
       <PageHeader title={t('students.title')} text={t('students.text')} />
       <div>
-        {Array.isArray(students) && students.map((student: StudentResponse) => (
-          <Card key={student.id} variant="outlined" className="cardContainer">
-            <CardContent>
-              <Typography variant="h5" component="div">
-                {t('students.name')}: {student.name}
+        {
+          (Array.isArray(students) && students.length) ? (
+            students.map((student: StudentResponse) => (
+              <Card key={student.id} variant="outlined" className="cardContainer">
+                <CardContent>
+                  <Typography variant="h5" component="div">
+                    {t('students.name')}: {student.name}
+                  </Typography>
+                  <Typography variant="h5" component="div">
+                    {t('students.email')}: {student.email}
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))
+          ) : loading ? (
+            <Spinner size={150} />
+          ) : (
+            <>
+              <Typography>
+                {t("students.emptyList")}
+              </Typography><Typography>
+                {t("students.emptyListQuestion")}
               </Typography>
-              <Typography variant="h5" component="div">
-                {t('students.email')}: {student.email}
-              </Typography>
-            </CardContent>
-          </Card>
-        ))}
+            </>
+          )
+        }
       </div>
     </>
   );
