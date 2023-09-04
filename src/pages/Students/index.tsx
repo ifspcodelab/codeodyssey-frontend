@@ -23,7 +23,9 @@ function Students() {
   const USER_ID: string = authConsumer.id;
   useEffect(() => {
     void (async () => {
+      if(typeof slug === 'string') {
         try {
+          console.log(typeof slug)
           const cursoAluno = await getStudents(USER_ID, slug, rawAccessToken)
           setStudents(cursoAluno)
           console.log("id: ", slug)
@@ -31,6 +33,10 @@ function Students() {
         } catch (error) {
           console.log(error)
       }
+      } else {
+        console.log("error")
+      }
+        
     })();
     // eslint-disable-next-line
   }, [rawAccessToken]);
@@ -44,15 +50,12 @@ function Students() {
                 <Card key={student.id} variant="outlined" className="cardContainer">
                   <CardContent>
                     <Typography variant="h5" component="div">
-                      {student.name}
+                      Name: {student.name}
                     </Typography>
                     <Typography variant="h5" component="div">
-                      {student.email}
+                      Email: {student.email}
                     </Typography>
-                  
-                  </CardContent>
-
-               
+                  </CardContent>               
                 </Card>
               ))}
           </div>
