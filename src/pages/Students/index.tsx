@@ -2,7 +2,9 @@ import { useApiGetStudents } from "../../core/hooks/useApiGetStudents.ts";
 import { useEffect, useState } from "react";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useParams } from "react-router-dom";
@@ -10,6 +12,7 @@ import { StudentResponse } from "../../core/models/StudentResponse";
 import { useTranslation } from "react-i18next";
 import PageHeader from "../../components/PageHeader";
 import Spinner from "../../components/Spinner";
+import { useNavigate } from "react-router-dom"
 
 function Students() {
   const [students, setStudents] = useState<StudentResponse[] | ProblemDetail>([]);
@@ -20,6 +23,7 @@ function Students() {
   const { t } = useTranslation();
   const USER_ID: string = authConsumer.id;
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -71,6 +75,13 @@ function Students() {
               </Typography><Typography>
                 {t("students.emptyListQuestion")}
               </Typography>
+              <CardActions className="cardActions">
+                <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
+                  onClick={() => {
+                    navigate('/invitation')
+                  }}
+                >{t("courses.button.invite")}</Button>
+              </CardActions>
             </>
           )
         }
