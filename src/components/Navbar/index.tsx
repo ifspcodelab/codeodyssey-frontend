@@ -26,6 +26,7 @@ function Navbar() {
     const jwtService = new JwtService();
     jwtService.removeTokens();
     setAuthenticated(false)
+    window.location.reload();
   }
 
   return (
