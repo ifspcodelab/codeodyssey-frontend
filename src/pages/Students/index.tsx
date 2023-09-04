@@ -1,4 +1,3 @@
-
 import { useApiGetStudents} from "../../core/hooks/useApiGetStudents.ts";
 import { useEffect, useState } from "react";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
@@ -7,14 +6,10 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useParams } from "react-router-dom";
-interface Student {
-  id: string,
-  name: string,
-  email: string
-}
+import { StudentResponse } from "../../core/models/StudentResponse";
 
 function Students() {
-  const [students, setStudents] = useState<Student[] | ProblemDetail>([]);
+  const [students, setStudents] = useState<StudentResponse[] | ProblemDetail>([]);
   const { getStudents } = useApiGetStudents()
   const authConsumer = AuthConsumer();
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
@@ -46,7 +41,7 @@ function Students() {
       <>
           <h1>Students</h1>
           <div>
-          {Array.isArray(students) && students.map((student: Student) => (
+          {Array.isArray(students) && students.map((student: StudentResponse) => (
                 <Card key={student.id} variant="outlined" className="cardContainer">
                   <CardContent>
                     <Typography variant="h5" component="div">
