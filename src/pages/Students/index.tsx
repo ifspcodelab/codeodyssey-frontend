@@ -13,6 +13,8 @@ import { useTranslation } from "react-i18next";
 import PageHeader from "../../components/PageHeader";
 import Spinner from "../../components/Spinner";
 import { useNavigate } from "react-router-dom"
+import axios, { AxiosError } from "axios";
+import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 
 function Students() {
   const [students, setStudents] = useState<StudentResponse[] | ProblemDetail>([]);
@@ -24,29 +26,57 @@ function Students() {
   const USER_ID: string = authConsumer.id;
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate()
-
+  const [errorType, setErrorType] = useState('');
+  const [openError, setOpenError] = useState(false);
 
   useEffect(() => {
     void (async () => {
       if (typeof slug === 'string') {
         try {
-          console.log(typeof slug)
           const studentsResponse = await getStudents(USER_ID, slug, rawAccessToken)
           setStudents(studentsResponse)
-          console.log("id: ", slug)
-          console.log("teste", studentsResponse)
           setLoading(false)
         } catch (error) {
-          console.log(error)
+          if (axios.isAxiosError(error)) {
+            handleError(error)
+        } else {
+            setErrorType('unexpected')
+        }
         }
       } else {
-        console.log("error")
+        setErrorType('unexpected')
       }
 
     })();
     // eslint-disable-next-line
   }, [rawAccessToken]);
 
+  const handleError = (error: AxiosError) => {
+    let responseStatus: number
+    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
+    if (error.response) {
+      problemDetail = error.response.data as ProblemDetail
+      responseStatus = problemDetail.status
+      if (responseStatus == 400) {
+        setErrorType('badRequest')
+        setOpenError(true);
+      } else if (responseStatus == 409) {
+        setErrorType('slugNotFound')
+        setOpenError(true);
+      }
+    } else if (error.message == "Network Error") {
+      setErrorType('networkError')
+      setOpenError(true);
+    }
+  }
+
+  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || event === undefined) {
+      return;
+    }
+
+    setOpenError(false);
+  };
 
   return (
     <>
@@ -86,6 +116,8 @@ function Students() {
           )
         }
       </div>
+
+      <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>
   );
 }

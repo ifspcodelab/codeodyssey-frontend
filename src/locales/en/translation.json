@@ -37,7 +37,10 @@
     "name": "Name",
     "email": "E-mail",
     "emptyList": "This course has no students enrolled",
-    "emptyListQuestion": "Want to invite students?"
+    "emptyListQuestion": "Want to invite students?",
+    "exception": {
+      "notFound": "Course not found"
+    }
   },
   "createcourse": {
     "title": "Create Course",

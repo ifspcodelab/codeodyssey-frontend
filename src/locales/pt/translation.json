@@ -37,7 +37,10 @@
     "name": "Nome",
     "email": "E-mail",
     "emptyList": "Esse curso não possui alunos matriculados",
-    "emptyListQuestion": "Deseja convidar alunos?"
+    "emptyListQuestion": "Deseja convidar alunos?",
+    "exception": {
+      "notFound": "Curso não encontrado"
+    }
   },
   "createcourse": {
     "title": "Criar Curso",
