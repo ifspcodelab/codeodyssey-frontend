@@ -21,10 +21,10 @@ function Students() {
       if(typeof slug === 'string') {
         try {
           console.log(typeof slug)
-          const cursoAluno = await getStudents(USER_ID, slug, rawAccessToken)
-          setStudents(cursoAluno)
+          const studentsResponse = await getStudents(USER_ID, slug, rawAccessToken)
+          setStudents(studentsResponse)
           console.log("id: ", slug)
-          console.log("teste" , cursoAluno)
+          console.log("teste" , studentsResponse)
         } catch (error) {
           console.log(error)
       }

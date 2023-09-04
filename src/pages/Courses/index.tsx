@@ -42,10 +42,10 @@ function Courses() {
     void (async () => {
       if(USER_ROLE == "PROFESSOR") {
         try {
-          const cursoProfessor = await getCoursesProfessor(USER_ID, rawAccessToken);
-          setCoursesProfessor(cursoProfessor)
-          const cursoAluno = await getCoursesStudent(USER_ID, rawAccessToken)
-          setCoursesStudent(cursoAluno)
+          const coursesProfessorResponse   = await getCoursesProfessor(USER_ID, rawAccessToken);
+          setCoursesProfessor(coursesProfessorResponse  )
+          const coursesStudentResponse  = await getCoursesStudent(USER_ID, rawAccessToken)
+          setCoursesStudent(coursesStudentResponse )
           setLoading(false)
         } catch (error) {
           if (axios.isAxiosError(error)) {
@@ -55,8 +55,8 @@ function Courses() {
           }
       }
       } else if(USER_ROLE == "STUDENT") {
-        const cursoAluno = await getCoursesStudent(USER_ID, rawAccessToken)
-        setCoursesStudent(cursoAluno)
+        const coursesStudentResponse  = await getCoursesStudent(USER_ID, rawAccessToken)
+        setCoursesStudent(coursesStudentResponse )
         setLoading(false)
       }
     })();
