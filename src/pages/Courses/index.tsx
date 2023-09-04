@@ -133,7 +133,7 @@ function Courses() {
                     >{t("courses.button.invite")}</Button>
                     <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
                       onClick={() => {
-                        navigate('/students')
+                        navigate(course.slug + '/students')
                       }}
                     >{t("courses.button.students")}</Button>
                   </CardActions>
