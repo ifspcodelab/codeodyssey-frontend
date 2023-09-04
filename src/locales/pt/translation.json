@@ -31,6 +31,12 @@
     "until": "até",
     "emptyList": "Você ainda não participa de nenhum curso"
   },
+  "students": {
+    "title": "Meus Alunos",
+    "text": "Alunos do curso",
+    "name": "Nome",
+    "email": "E-mail"
+  },
   "createcourse": {
     "title": "Criar Curso",
     "text": "Crie um curso preenchendo o formulário abaixo",
