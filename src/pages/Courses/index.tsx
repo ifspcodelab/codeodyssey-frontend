@@ -46,8 +46,8 @@ function Courses() {
   const [openError, setOpenError] = useState(false);
   const [loading, setLoading] = useState(true);
   const { sendInvitation } = useApiSendInvitation();
-  const [inviteLink, setinviteLink] = useState(" ");
-
+  const [inviteLink, setInviteLink] = useState(" ");
+  const [courseId, setCourseId] = useState("")
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -75,10 +75,10 @@ function Courses() {
   async function submitCreateInvite(data: InviteForm) {
     try {
       console.log("@ create course | rawAccessToken", rawAccessToken)
-      const dataResponse = await sendInvitation(data.endDate.toISOString(), '3e47a4ae-35df-46e7-95fc-498a5af67cb1', rawAccessToken);
+      const dataResponse = await sendInvitation(data.endDate.toISOString(), courseId, rawAccessToken);
       console.log("response da request")
       console.log(dataResponse.link)
-      setinviteLink(dataResponse.link)
+      setInviteLink(dataResponse.link)
     }
     catch (error) {
       if (axios.isAxiosError(error)) {
@@ -180,7 +180,11 @@ function Courses() {
 
                   <CardActions className="cardActions">
                     <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-                      onClick={handleOpen}
+                      onClick={() => {
+                        setInviteLink(" ")
+                        setOpen(true)
+                        setCourseId(course.id)
+                      }}
                     >{t("courses.button.invite")}</Button>
                     <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
                       onClick={() => {
