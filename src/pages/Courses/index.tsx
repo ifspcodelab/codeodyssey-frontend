@@ -19,11 +19,11 @@ import i18n from '../../locales/i18n.ts'
 import { useLocation } from 'react-router-dom';
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 import './style.css'
-import {Grid} from "@mui/material";
+import { Grid } from "@mui/material";
 import Modal from '@mui/material/Modal';
 import { yupResolver } from "@hookform/resolvers/yup";
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {schema} from "./schema.ts";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { schema } from "./schema.ts";
 import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -46,6 +46,8 @@ function Courses() {
   const [openError, setOpenError] = useState(false);
   const [loading, setLoading] = useState(true);
   const { sendInvitation } = useApiSendInvitation();
+  const [inviteLink, setinviteLink] = useState(" ");
+
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -66,47 +68,48 @@ function Courses() {
   const handleClose = () => setOpen(false);
 
 
-const { register, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
+  const { register, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
 
-    const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
+  const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
 
-    async function submitCreateInvite(data: InviteForm) {
-      try {
-        console.log("@ create course | rawAccessToken", rawAccessToken)
-        const dataResponse = await sendInvitation(data.endDate.toISOString(), '3e47a4ae-35df-46e7-95fc-498a5af67cb1', rawAccessToken);
-        console.log("response da request")
-        console.log(dataResponse.link)
-      }
-      catch (error) {
-        if (axios.isAxiosError(error)) {
-          handleError(error)
-        } else {
-          setErrorType('unexpected')
-          setOpen(true);
-        }
+  async function submitCreateInvite(data: InviteForm) {
+    try {
+      console.log("@ create course | rawAccessToken", rawAccessToken)
+      const dataResponse = await sendInvitation(data.endDate.toISOString(), '3e47a4ae-35df-46e7-95fc-498a5af67cb1', rawAccessToken);
+      console.log("response da request")
+      console.log(dataResponse.link)
+      setinviteLink(dataResponse.link)
+    }
+    catch (error) {
+      if (axios.isAxiosError(error)) {
+        handleError(error)
+      } else {
+        setErrorType('unexpected')
+        setOpen(true);
       }
     }
-  
+  }
+
 
   useEffect(() => {
     void (async () => {
-      if(USER_ROLE == "PROFESSOR") {
+      if (USER_ROLE == "PROFESSOR") {
         try {
-          const coursesProfessorResponse   = await getCoursesProfessor(USER_ID, rawAccessToken);
-          setCoursesProfessor(coursesProfessorResponse  )
-          const coursesStudentResponse  = await getCoursesStudent(USER_ID, rawAccessToken)
-          setCoursesStudent(coursesStudentResponse )
+          const coursesProfessorResponse = await getCoursesProfessor(USER_ID, rawAccessToken);
+          setCoursesProfessor(coursesProfessorResponse)
+          const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
+          setCoursesStudent(coursesStudentResponse)
           setLoading(false)
         } catch (error) {
           if (axios.isAxiosError(error)) {
-              handleError(error)
+            handleError(error)
           } else {
-              setErrorType('unexpected')
+            setErrorType('unexpected')
           }
-      }
-      } else if(USER_ROLE == "STUDENT") {
-        const coursesStudentResponse  = await getCoursesStudent(USER_ID, rawAccessToken)
-        setCoursesStudent(coursesStudentResponse )
+        }
+      } else if (USER_ROLE == "STUDENT") {
+        const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
+        setCoursesStudent(coursesStudentResponse)
         setLoading(false)
       }
     })();
@@ -182,7 +185,7 @@ const { register, handleSubmit, control, formState: { errors } } = useForm({ res
                     <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
                       onClick={() => {
                         navigate(course.slug + '/students');
-                      } }
+                      }}
                     >{t("courses.button.students")}</Button>
                   </CardActions>
                 </Card><Modal
@@ -195,41 +198,45 @@ const { register, handleSubmit, control, formState: { errors } } = useForm({ res
                       <Typography id="modal-modal-title" variant="h6" component="h2">
                         Create invite
                       </Typography>
-                      <form onSubmit={handleSubmit(onSubmit) }>
-                <Grid container spacing={1} rowSpacing={2}>
+                      <form onSubmit={handleSubmit(onSubmit)}>
+                        <Grid container spacing={1} rowSpacing={2}>
 
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-        {/* <DatePicker label="Uncontrolled picker" defaultValue={dayjs('2022-04-17')} /> */}
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            {/* <DatePicker label="Uncontrolled picker" defaultValue={dayjs('2022-04-17')} /> */}
 
-        <Controller
-                    name={"endDate"}
-                    control={control}
-                    defaultValue={undefined}
-                    render={({ field: { ref, onChange, value, ...field } }) => (
+                            <Controller
+                              name={"endDate"}
+                              control={control}
+                              defaultValue={undefined}
+                              render={({ field: { ref, onChange, value, ...field } }) => (
 
-                      <DatePicker
-                        {...field}
-                        inputRef={ref}
-                        label={t("createcourse.form.endDate")} data-testid="endDateField"
-                        value={value ? value : null}
-                        onChange={onChange as never}
+                                <DatePicker
+                                  {...field}
+                                  inputRef={ref}
+                                  label={t("createcourse.form.endDate")} data-testid="endDateField"
+                                  value={value ? value : null}
+                                  onChange={onChange as never}
 
-                      />
-                    )}
-                  />
-       
-    </LocalizationProvider>
+                                />
+                              )}
+                            />
+
+                          </LocalizationProvider>
 
 
-                   
-                    <Grid item xs={12} textAlign="right">
-                        <Button variant="outlined" type="submit" onClick={() => {
-                        console.log("generate convite request")
-                      } }>gerar convite</Button>
-                    </Grid>
-                </Grid>
-            </form>
-                      
+
+                          <Grid item xs={12} textAlign="right">
+                            <Button variant="outlined" type="submit" onClick={() => {
+                              console.log("generate convite request")
+                            }}>gerar convite</Button>
+                          </Grid>
+
+                          <Grid item xs={12} textAlign="right">
+                            {inviteLink}
+                          </Grid>
+                        </Grid>
+                      </form>
+
                     </Box>
                   </Modal></>
               ))}
