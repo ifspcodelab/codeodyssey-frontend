@@ -6,7 +6,7 @@ import { AuthContext } from '../../core/auth/AuthContext.tsx';
 import { vi } from 'vitest';
 import { BrowserRouter, Router } from 'react-router-dom';
 import '@testing-library/jest-dom';
-import { UserRole } from '../../core/auth/JwtService.ts';
+import {UserRole} from "../../core/models/UserRole";
 import { createMemoryHistory } from "history";
 
 vi.mock('../../core/hooks/useApiGetCourses.ts');

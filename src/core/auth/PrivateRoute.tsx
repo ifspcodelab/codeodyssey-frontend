@@ -1,7 +1,7 @@
 import {JSX} from "react";
-import {UserRole} from "./JwtService.ts";
 import {AuthConsumer} from "./AuthContext.tsx";
 import {Navigate, useLocation} from "react-router-dom";
+import {UserRole} from "../models/UserRole";
 
 interface PrivateRouteProps {
     children: JSX.Element,

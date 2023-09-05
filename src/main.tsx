@@ -16,7 +16,7 @@ import Registration from "./pages/Registration";
 import './index.css'
 import ResendEmail from "./pages/ResendEmail";
 import {PrivateRoute} from "./core/auth/PrivateRoute.tsx";
-import {UserRole} from "./core/auth/JwtService.ts";
+import {UserRole} from "./core/models/UserRole";
 import {AuthProvider} from "./core/auth/AuthContext.tsx";
 import ErrorPage from "./pages/ErrorPage";
 import Confirmation from "./pages/Confirmation";

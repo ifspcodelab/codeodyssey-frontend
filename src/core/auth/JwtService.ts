@@ -1,20 +1,5 @@
 import jwtDecode from "jwt-decode";
-
-export enum UserRole {
-    ADMIN = "ADMIN",
-    STUDENT = "STUDENT",
-    PROFESSOR = "PROFESSOR",
-}
-
-export interface AccessToken {
-    role: UserRole,
-    name: string,
-    email: string,
-    sub: string,
-    iss: string,
-    iat: number,
-    exp: number,
-}
+import {AccessToken} from "../models/AccessToken";
 
 export class JwtService {
     setAccessToken(accessToken: string): void {
