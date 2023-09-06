@@ -30,7 +30,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useApiSendInvitation } from "../../core/hooks/useApiSendInvitation";
-
+import { useCopyToClipboard } from '../Courses/usehooks-ts.ts'
 function Courses() {
 
   const { t } = useTranslation();
@@ -66,14 +66,14 @@ function Courses() {
   };
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => { 
-    setOpen(false) 
+  const handleClose = () => {
+    setOpen(false)
     setErrorType('')
     reset({
       endDate: undefined,
     });
   };
-
+  const [value, copy] = useCopyToClipboard()
 
   const { reset, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
 
@@ -156,7 +156,7 @@ function Courses() {
         setOpenError(true);
       } else if (responseStatus == 409 && error.response.data.title === "Invitation Expiration date is in the past") {
         setErrorType('Invitation Expiration date is in the past')
-      } else if(responseStatus == 409 && error.response.data.title === "Invitation Expiration date is earlier than the course end date") {
+      } else if (responseStatus == 409 && error.response.data.title === "Invitation Expiration date is earlier than the course end date") {
         setErrorType('Invitation Expiration date is earlier than the course end date')
       }
     } else if (error.message == "Network Error") {
@@ -222,7 +222,7 @@ function Courses() {
                               name={"endDate"}
                               control={control}
                               defaultValue={courseExpirationDate}
-                              disablePast
+
                               render={({ field: { ref, onChange, value, ...field } }) => (
 
                                 <DatePicker
@@ -231,6 +231,7 @@ function Courses() {
                                   label={t("createcourse.form.endDate")} data-testid="endDateField"
                                   value={value ? value : null}
                                   onChange={onChange}
+                                  disablePast
                                   slotProps={{
                                     textField: {
                                       helperText: errors.endDate && <span>{errors.endDate.message}</span>
@@ -250,12 +251,28 @@ function Courses() {
                             }}>gerar convite</Button>
                           </Grid>
 
-                          <Grid item xs={12} textAlign="right">
-                            <a href="/">{inviteLink !== " " ? ("localhost:5173/" + inviteLink) : " "}</a>
-                          </Grid>
 
                           <Grid item xs={12} textAlign="right">
-                          {errorType}
+
+                            <a href="/">{inviteLink !== " " ?
+                              ("localhost:5173" + inviteLink)
+
+                              : " "}</a>
+                          </Grid>
+
+                          <div style={{ display: 'flex' }}>
+                            {inviteLink !== " " ?
+                              <Button onClick={(event) => {
+                                event?.preventDefault()
+                                copy("localhost:5173" + inviteLink)
+                              }}>Copiar</Button>
+                              : " "}
+
+
+                          </div>
+
+                          <Grid item xs={12} textAlign="right">
+                            {errorType}
                           </Grid>
                         </Grid>
                       </form>
