@@ -75,7 +75,7 @@ const router = createBrowserRouter([
                 element: <Students/>
             },
             {
-                path: "invitation",
+                path: "invitations/:idInvitation",
                 element: <Invitation/>
             },
             {

@@ -8,6 +8,7 @@ import {LoginResponse} from "../models/login";
 
 export const useApiLogin = () => ({
     login: async (email: string, password: string): Promise<LoginResponse | ProblemDetail> => {
+        delete api.defaults.headers['Authorization'];
         const response = await api.post<LoginResponse | ProblemDetail>('/login', {email, password});
 
         return response.data;
