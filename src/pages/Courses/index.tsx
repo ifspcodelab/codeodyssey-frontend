@@ -240,7 +240,7 @@ function Courses() {
                           </Grid>
 
                           <Grid item xs={12} textAlign="right">
-                            {inviteLink}
+                            <a href="">{inviteLink !== " " ? ("localhost:5173/" + inviteLink) : " "}</a>
                           </Grid>
                         </Grid>
                       </form>
