@@ -68,6 +68,7 @@ function Courses() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => { 
     setOpen(false) 
+    setErrorType('')
     reset({
       endDate: undefined,
     });
@@ -85,6 +86,7 @@ function Courses() {
     }
     catch (error) {
       if (axios.isAxiosError(error)) {
+        setErrorType('error')
         handleError(error)
       } else {
         setErrorType('unexpected')
@@ -152,6 +154,10 @@ function Courses() {
       if (responseStatus == 400) {
         setErrorType('badRequest')
         setOpenError(true);
+      } else if (responseStatus == 409 && error.response.data.title === "Invitation Expiration date is in the past") {
+        setErrorType('Invitation Expiration date is in the past')
+      } else if(responseStatus == 409 && error.response.data.title === "Invitation Expiration date is earlier than the course end date") {
+        setErrorType('Invitation Expiration date is earlier than the course end date')
       }
     } else if (error.message == "Network Error") {
       setErrorType('networkError')
@@ -210,12 +216,13 @@ function Courses() {
                         <Grid container spacing={1} rowSpacing={2}>
 
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            {/* <DatePicker label="Uncontrolled picker" defaultValue={dayjs('2022-04-17')} /> */}
+
 
                             <Controller
                               name={"endDate"}
                               control={control}
                               defaultValue={courseExpirationDate}
+                              disablePast
                               render={({ field: { ref, onChange, value, ...field } }) => (
 
                                 <DatePicker
@@ -224,7 +231,11 @@ function Courses() {
                                   label={t("createcourse.form.endDate")} data-testid="endDateField"
                                   value={value ? value : null}
                                   onChange={onChange}
-
+                                  slotProps={{
+                                    textField: {
+                                      helperText: errors.endDate && <span>{errors.endDate.message}</span>
+                                    },
+                                  }}
                                 />
                               )}
                             />
@@ -235,12 +246,16 @@ function Courses() {
 
                           <Grid item xs={12} textAlign="right">
                             <Button variant="outlined" type="submit" onClick={() => {
-                              console.log("generate convite request")
+                              setInviteLink(" ")
                             }}>gerar convite</Button>
                           </Grid>
 
                           <Grid item xs={12} textAlign="right">
-                            <a href="">{inviteLink !== " " ? ("localhost:5173/" + inviteLink) : " "}</a>
+                            <a href="/">{inviteLink !== " " ? ("localhost:5173/" + inviteLink) : " "}</a>
+                          </Grid>
+
+                          <Grid item xs={12} textAlign="right">
+                          {errorType}
                           </Grid>
                         </Grid>
                       </form>
