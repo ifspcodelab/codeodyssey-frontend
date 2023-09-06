@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import InviteForm from '../../core/models/InviteForm.ts'
+import dayjs from 'dayjs';
 import PageHeader from "../../components/PageHeader";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
@@ -48,7 +49,7 @@ function Courses() {
   const { sendInvitation } = useApiSendInvitation();
   const [inviteLink, setInviteLink] = useState(" ");
   const [courseId, setCourseId] = useState("")
-
+  const [courseExpirationDate, setCourseExpirationDate] = useState("")
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const success = queryParams.get('success');
@@ -65,19 +66,21 @@ function Courses() {
   };
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => { 
+    setOpen(false) 
+    reset({
+      endDate: undefined,
+    });
+  };
 
 
-  const { register, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
+  const { reset, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
 
   const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
 
   async function submitCreateInvite(data: InviteForm) {
     try {
-      console.log("@ create course | rawAccessToken", rawAccessToken)
       const dataResponse = await sendInvitation(data.endDate.toISOString(), courseId, rawAccessToken);
-      console.log("response da request")
-      console.log(dataResponse.link)
       setInviteLink(dataResponse.link)
     }
     catch (error) {
@@ -184,6 +187,7 @@ function Courses() {
                         setInviteLink(" ")
                         setOpen(true)
                         setCourseId(course.id)
+                        setCourseExpirationDate(dayjs(course.endDate))
                       }}
                     >{t("courses.button.invite")}</Button>
                     <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
@@ -211,7 +215,7 @@ function Courses() {
                             <Controller
                               name={"endDate"}
                               control={control}
-                              defaultValue={undefined}
+                              defaultValue={courseExpirationDate}
                               render={({ field: { ref, onChange, value, ...field } }) => (
 
                                 <DatePicker
@@ -219,7 +223,7 @@ function Courses() {
                                   inputRef={ref}
                                   label={t("createcourse.form.endDate")} data-testid="endDateField"
                                   value={value ? value : null}
-                                  onChange={onChange as never}
+                                  onChange={onChange}
 
                                 />
                               )}
