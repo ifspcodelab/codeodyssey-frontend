@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useEffect, useState } from "react";
-
 import Box from '@mui/material/Box';
 import { Button, Grid, Modal } from "@mui/material";
 import Typography from '@mui/material/Typography';
@@ -18,30 +17,15 @@ import { JwtService } from "../../core/auth/JwtService.ts";
 import dayjs from 'dayjs';
 import { useCopyToClipboard } from '../../pages/Courses/usehooks-ts.ts'
 import axios, { AxiosError } from 'axios';
-import ErrorSnackBar from "../ErrorSnackBar/ErrorSnackBar.tsx";
-
+import './style.css'
 
 interface ItemComponentProps {
   course: CourseResponse;
 }
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
-
-
 const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const { t } = useTranslation();
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
-
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -50,20 +34,13 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const [inviteLink, setInviteLink] = useState(" ");
   const [courseExpirationDate, setCourseExpirationDate] = useState("")
   const [errorType, setErrorType] = useState('');
-  const [openError, setOpenError] = useState(false);
-  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway' || event === undefined) {
-      return;
-    }
-
-    setOpenError(false);
-  };
-
+  const [value, copy] = useCopyToClipboard()
 
   const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
   useEffect(() => {
     setCourseExpirationDate(dayjs(course.endDate))
   }, []);
+
   async function submitCreateInvite(data: InviteForm) {
     try {
       const dataResponse = await sendInvitation(data.endDate.toISOString(), course.id, rawAccessToken);
@@ -77,7 +54,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
       }
     }
   }
-  const [value, copy] = useCopyToClipboard()
+
   const handleError = (error: AxiosError) => {
     let responseStatus: number
     let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
@@ -87,7 +64,6 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
       setInviteLink(" ")
       if (responseStatus == 400) {
         setErrorType('badRequest')
-        setOpenError(true);
       } else if (responseStatus == 409 && error.response.data.title === "Invitation Expiration date is in the past") {
         setErrorType('Invitation Expiration date is in the past')
       } else if (responseStatus == 409 && error.response.data.title === "Invitation Expiration date is earlier than the course end date") {
@@ -95,9 +71,9 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
       }
     } else if (error.message == "Network Error") {
       setErrorType('networkError')
-      setOpenError(true);
     }
   }
+
   return (
     <div>
       <Button onClick={handleOpen}>{t("courses.button.invite")}</Button>
@@ -106,14 +82,16 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        className="modal-container"
       >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+        <Box className="modal">
+          <Typography id="modal-modal-title" variant="h6" component="h2" className="modal-title">
             Create invite
           </Typography>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid item xs={12} textAlign="right">
+
+            <Grid item xs={12} textAlign="center" className="modal-form">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Controller
                   name={"endDate"}
@@ -124,11 +102,11 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
                     <DatePicker
                       {...field}
                       inputRef={ref}
-
                       label={t("createcourse.form.endDate")} data-testid="endDateField"
                       value={courseExpirationDate}
                       onChange={onChange}
                       disablePast
+                      className="modal-date-picker"
                       slotProps={{
                         textField: {
                           helperText: errors.endDate && <span>{errors.endDate.message}</span>
@@ -140,28 +118,25 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
 
               </LocalizationProvider>
 
-
-
-              <Button variant="outlined" type="submit">gerar convite</Button>
-
-              <Grid item xs={12} textAlign="right">
-                {inviteLink !== " " ?
-                  <>
-                    <a href="/">{`localhost:5173 ${inviteLink}`}</a>
-                    <Button onClick={(event) => {
-                      event?.preventDefault()
-                      copy("localhost:5173" + inviteLink)
-                    }}>Copiar</Button>
-                  </>
-                  : " "}
-                <Grid item xs={12} textAlign="right">
-                  {errorType}
-                </Grid>
-              </Grid>
+              <Button variant="outlined" type="submit" className="modal-button">gerar convite</Button>
             </Grid>
 
           </form>
 
+          <Grid item xs={12} textAlign="right">
+            {inviteLink !== " " ?
+              <>
+                <a className="modal-link" href="/">{`localhost:5173 ${inviteLink}`}</a>
+                <Button variant="outlined" onClick={(event) => {
+                  event?.preventDefault()
+                  copy("localhost:5173" + inviteLink)
+                }}>Copiar</Button>
+              </>
+              : " "}
+            <Grid item xs={12} textAlign="right">
+              {errorType}
+            </Grid>
+          </Grid>
         </Box>
       </Modal>
 
