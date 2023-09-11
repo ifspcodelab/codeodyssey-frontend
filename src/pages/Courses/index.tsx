@@ -4,8 +4,6 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import InviteForm from '../../core/models/InviteForm.ts'
-import dayjs from 'dayjs';
 import PageHeader from "../../components/PageHeader";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
@@ -20,18 +18,9 @@ import i18n from '../../locales/i18n.ts'
 import { useLocation } from 'react-router-dom';
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 import './style.css'
-import { Grid } from "@mui/material";
-import Modal from '@mui/material/Modal';
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { schema } from "./schema.ts";
-import Box from '@mui/material/Box';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useApiSendInvitation } from "../../core/hooks/useApiSendInvitation";
-import { useCopyToClipboard } from '../Courses/usehooks-ts.ts'
-function Courses() {
+import CreateInviteModal from '../../components/CreateInviteModal/index.tsx';
+
+const Courses: React.FC = () => {
 
   const { t } = useTranslation();
   const authConsumer = AuthConsumer();
@@ -46,55 +35,10 @@ function Courses() {
   const [openSuccess, setOpenSuccess] = useState(true);
   const [openError, setOpenError] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { sendInvitation } = useApiSendInvitation();
-  const [inviteLink, setInviteLink] = useState(" ");
-  const [courseId, setCourseId] = useState("")
-  const [courseExpirationDate, setCourseExpirationDate] = useState("")
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const success = queryParams.get('success');
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false)
-    setErrorType('')
-    reset({
-      endDate: undefined,
-    });
-  };
-  const [value, copy] = useCopyToClipboard()
-
-  const { reset, handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
-
-  const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
-
-  async function submitCreateInvite(data: InviteForm) {
-    try {
-      const dataResponse = await sendInvitation(data.endDate.toISOString(), courseId, rawAccessToken);
-      setInviteLink(dataResponse.link)
-    }
-    catch (error) {
-      if (axios.isAxiosError(error)) {
-        setErrorType('error')
-        handleError(error)
-      } else {
-        setErrorType('unexpected')
-        setOpen(true);
-      }
-    }
-  }
-
 
   useEffect(() => {
     void (async () => {
@@ -154,12 +98,7 @@ function Courses() {
       if (responseStatus == 400) {
         setErrorType('badRequest')
         setOpenError(true);
-      } else if (responseStatus == 409 && error.response.data.title === "Invitation Expiration date is in the past") {
-        setErrorType('Invitation Expiration date is in the past')
-      } else if (responseStatus == 409 && error.response.data.title === "Invitation Expiration date is earlier than the course end date") {
-        setErrorType('Invitation Expiration date is earlier than the course end date')
-      }
-    } else if (error.message == "Network Error") {
+      } } else if (error.message == "Network Error") {
       setErrorType('networkError')
       setOpenError(true);
     }
@@ -174,111 +113,35 @@ function Courses() {
           <div>
             <div>
               {Array.isArray(coursesProfessor) && coursesProfessor.map((course: CourseResponse) => (
-                <><Card key={course.id} variant="outlined" className="cardContainer">
-                  <CardContent>
-                    <Typography variant="h5" component="div">
-                      {course.name}
-                    </Typography>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                      {course.professor.name}
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      {new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t("courses.until")} {new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
-                    </Typography>
-                  </CardContent>
 
-                  <CardActions className="cardActions">
-                    <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-                      onClick={() => {
-                        setInviteLink(" ")
-                        setOpen(true)
-                        setCourseId(course.id)
-                        setCourseExpirationDate(dayjs(course.endDate))
-                      }}
-                    >{t("courses.button.invite")}</Button>
-                    <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-                      onClick={() => {
-                        navigate(course.slug + '/students');
-                      }}
-                    >{t("courses.button.students")}</Button>
-                  </CardActions>
-                </Card><Modal
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
-                      <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Create invite
+                <>
+
+                  <Card key={course.id} variant="outlined" className="cardContainer">
+                    <CardContent>
+                      <Typography variant="h5" component="div">
+                        {course.name}
                       </Typography>
-                      <form onSubmit={handleSubmit(onSubmit)}>
-                        <Grid container spacing={1} rowSpacing={2}>
+                      <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                        {course.professor.name}
+                      </Typography>
+                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                        {new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t("courses.until")} {new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
+                      </Typography>
+                    </CardContent>
 
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <CardActions className="cardActions">
+                      <CreateInviteModal course={course} />
 
+                      <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
+                        onClick={() => {
+                          navigate(course.slug + '/students');
+                        }}
+                      >{t("courses.button.students")}</Button>
+                    </CardActions>
 
-                            <Controller
-                              name={"endDate"}
-                              control={control}
-                              defaultValue={courseExpirationDate}
+                  </Card>
+                </>
 
-                              render={({ field: { ref, onChange, value, ...field } }) => (
-
-                                <DatePicker
-                                  {...field}
-                                  inputRef={ref}
-                                  label={t("createcourse.form.endDate")} data-testid="endDateField"
-                                  value={value ? value : null}
-                                  onChange={onChange}
-                                  disablePast
-                                  slotProps={{
-                                    textField: {
-                                      helperText: errors.endDate && <span>{errors.endDate.message}</span>
-                                    },
-                                  }}
-                                />
-                              )}
-                            />
-
-                          </LocalizationProvider>
-
-
-
-                          <Grid item xs={12} textAlign="right">
-                            <Button variant="outlined" type="submit" onClick={() => {
-                              setInviteLink(" ")
-                            }}>gerar convite</Button>
-                          </Grid>
-
-
-                          <Grid item xs={12} textAlign="right">
-
-                            <a href="/">{inviteLink !== " " ?
-                              ("localhost:5173" + inviteLink)
-
-                              : " "}</a>
-                          </Grid>
-
-                          <div style={{ display: 'flex' }}>
-                            {inviteLink !== " " ?
-                              <Button onClick={(event) => {
-                                event?.preventDefault()
-                                copy("localhost:5173" + inviteLink)
-                              }}>Copiar</Button>
-                              : " "}
-
-
-                          </div>
-
-                          <Grid item xs={12} textAlign="right">
-                            {errorType}
-                          </Grid>
-                        </Grid>
-                      </form>
-
-                    </Box>
-                  </Modal></>
               ))}
             </div>
 
