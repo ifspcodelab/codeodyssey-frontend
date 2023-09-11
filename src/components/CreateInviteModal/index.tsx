@@ -76,7 +76,10 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
 
   return (
     <div>
-      <Button onClick={handleOpen}>{t("courses.button.invite")}</Button>
+       <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
+            onClick={handleOpen}>{t("courses.button.invite")}
+      </Button>
+      
       <Modal
         open={open}
         onClose={handleClose}
