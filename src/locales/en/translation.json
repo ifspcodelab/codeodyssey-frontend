@@ -42,6 +42,19 @@
       "notFound": "Course not found"
     }
   },
+  "invite": {
+    "title": "Create invite",
+    "date": "Expiration date",
+    "button": {
+      "create": "Create invite",
+      "generate": "Generate invite",
+      "copy": "Copy"
+    },
+    "exception": {
+      "dateEarlier": "Invitation Expiration date is earlier than the course end date",
+      "datePast": "Invitation Expiration date is in the past"
+    }
+  },
   "createcourse": {
     "title": "Create Course",
     "text": "Create a course by filling out the form below",

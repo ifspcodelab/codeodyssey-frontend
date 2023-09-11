@@ -42,6 +42,19 @@
       "notFound": "Curso não encontrado"
     }
   },
+  "invite": {
+    "title": "Criar convite",
+    "date": "Data de expiração",
+    "button": {
+      "create": "Criar convite",
+      "generate": "Gerar convite",
+      "copy": "Copiar"
+    },
+    "exception": {
+      "dateEarlier": "A data de expiração do convite é anterior à data de término do curso",
+      "datePast": "A data de expiração do convite está no passado"
+    }
+  },
   "createcourse": {
     "title": "Criar Curso",
     "text": "Crie um curso preenchendo o formulário abaixo",

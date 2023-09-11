@@ -35,7 +35,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const [courseExpirationDate, setCourseExpirationDate] = useState("")
   const [errorType, setErrorType] = useState('');
   const [value, copy] = useCopyToClipboard()
-
+  
   const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
   useEffect(() => {
     setCourseExpirationDate(dayjs(course.endDate))
@@ -86,7 +86,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
       >
         <Box className="modal">
           <Typography id="modal-modal-title" variant="h6" component="h2" className="modal-title">
-            Create invite
+          {t("invite.title")}
           </Typography>
 
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -102,7 +102,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
                     <DatePicker
                       {...field}
                       inputRef={ref}
-                      label={t("createcourse.form.endDate")} data-testid="endDateField"
+                      label={t("invite.date")} data-testid="endDateField"
                       value={courseExpirationDate}
                       onChange={onChange}
                       disablePast
@@ -118,7 +118,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
 
               </LocalizationProvider>
 
-              <Button variant="outlined" type="submit" className="modal-button">gerar convite</Button>
+              <Button variant="outlined" type="submit" className="modal-button">{t("invite.button.generate")}</Button>
             </Grid>
 
           </form>
@@ -130,7 +130,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
                 <Button variant="outlined" onClick={(event) => {
                   event?.preventDefault()
                   copy("localhost:5173" + inviteLink)
-                }}>Copiar</Button>
+                }}>{t("invite.button.copy")}</Button>
               </>
               : " "}
             <Grid item xs={12} textAlign="right">
