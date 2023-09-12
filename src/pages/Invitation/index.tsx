@@ -40,14 +40,16 @@ function Invitation() {
     useEffect(() => {
         if (!requestSentRef.current) {
             setLoading(true);
-            acceptInvitation(idInvitation)
-                .then((enrollmentResponse: EnrollmentResponse) => {
-                    setInvitationText(t("invitation.accepted", {courseName: enrollmentResponse.invitation.course.name }));
+            if (idInvitation !== undefined) {
+                acceptInvitation(idInvitation)
+                    .then((enrollmentResponse: EnrollmentResponse) => {
+                        setInvitationText(t("invitation.accepted", { courseName: enrollmentResponse.invitation.course.name }));
+                        setLoading(false);
+                    }).catch((error: AxiosError) => {
+                    handleErrors(error);
                     setLoading(false);
-                }).catch((error: AxiosError) => {
-                handleErrors(error);
-                setLoading(false);
-            });
+                });
+            }
         }
         requestSentRef.current = true;
     }, [acceptInvitation, handleErrors, idInvitation, t])
