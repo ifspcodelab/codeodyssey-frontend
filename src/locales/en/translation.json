@@ -152,6 +152,20 @@
     "badRequest": "Bad request."
     }
   },
+  "invitation": {
+    "title": "Invitation",
+    "text": "Course's invitation",
+    "accepted": "Your invitation has been accepted for the course {{courseName}}.",
+    "errors": {
+      "invalid": "Invalid invitation",
+      "expired": "Invitation expired",
+      "notFound": "Invitation not found",
+      "alreadyAccepted": "You have already accepted this invitation",
+      "network": "Network error",
+      "unauthorized": "Please, login to accept the invitation"
+    },
+    "footer": "Invitation footer"
+  },
   "yup": {
     "invalid_field_length": "This field must have at least ${min} characters",
     "invalid_number_length": "This field should be bigger than ${min}.",
