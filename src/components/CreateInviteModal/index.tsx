@@ -18,6 +18,7 @@ import dayjs from 'dayjs';
 import { useCopyToClipboard } from '../../pages/Courses/usehooks-ts.ts'
 import axios, { AxiosError } from 'axios';
 import './style.css'
+import i18n from "../../locales/i18n";
 
 interface ItemComponentProps {
   course: CourseResponse;
@@ -28,14 +29,14 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => { setOpen(false) };
   const { handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
   const { sendInvitation } = useApiSendInvitation();
   const [inviteLink, setInviteLink] = useState(" ");
   const [courseExpirationDate, setCourseExpirationDate] = useState("")
   const [errorType, setErrorType] = useState('');
   const [value, copy] = useCopyToClipboard()
-  
+
   const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
   useEffect(() => {
     setCourseExpirationDate(dayjs(course.endDate))
@@ -44,7 +45,6 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   async function submitCreateInvite(data: InviteForm) {
     try {
       const dataResponse = await sendInvitation(data.endDate.toISOString(), course.id, rawAccessToken);
-      console.log(dataResponse.link)
       setInviteLink(dataResponse.link)
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -56,6 +56,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   }
 
   const handleError = (error: AxiosError) => {
+    let message: string
     let responseStatus: number
     let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
     if (error.response) {
@@ -63,11 +64,14 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
       responseStatus = problemDetail.status
       setInviteLink(" ")
       if (responseStatus == 400) {
-        setErrorType('badRequest')
-      } else if (responseStatus == 409 && error.response.data.title === "Invitation Expiration date is in the past") {
-        setErrorType('Invitation Expiration date is in the past')
-      } else if (responseStatus == 409 && error.response.data.title === "Invitation Expiration date is earlier than the course end date") {
-        setErrorType('Invitation Expiration date is earlier than the course end date')
+        message = i18n.t("registration.exception.badRequest")
+        setErrorType(message)
+      } else if (responseStatus == 409 && problemDetail.title === "Invitation Expiration date is in the past") {
+        message = i18n.t("invite.exception.datePast")
+        setErrorType(message)
+      } else if (responseStatus == 409 && problemDetail.title === "Invitation Expiration date is earlier than the course end date") {
+        message = i18n.t("invite.exception.dateEarlier")
+        setErrorType(message)
       }
     } else if (error.message == "Network Error") {
       setErrorType('networkError')
@@ -76,10 +80,10 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
 
   return (
     <div>
-       <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-            onClick={handleOpen}>{t("courses.button.invite")}
+      <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
+        onClick={handleOpen}>{t("courses.button.invite")}
       </Button>
-      
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -89,7 +93,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
       >
         <Box className="modal">
           <Typography id="modal-modal-title" variant="h6" component="h2" className="modal-title">
-          {t("invite.title")}
+            {t("invite.title")}
           </Typography>
 
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -100,7 +104,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
                   name={"endDate"}
                   control={control}
                   defaultValue={courseExpirationDate}
-                  render={({ field: { ref, onChange, value, ...field } }) => (
+                  render={({ field: { ref, onChange, ...field } }) => (
 
                     <DatePicker
                       {...field}
@@ -121,7 +125,10 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
 
               </LocalizationProvider>
 
-              <Button variant="outlined" type="submit" className="modal-button">{t("invite.button.generate")}</Button>
+              <Button variant="outlined" type="submit" className="modal-button"
+                onClick={() => {
+                  setErrorType("");
+                }}>{t("invite.button.generate")}</Button>
             </Grid>
 
           </form>
@@ -132,11 +139,11 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
                 <a className="modal-link" href="/">{`localhost:5173 ${inviteLink}`}</a>
                 <Button variant="outlined" onClick={(event) => {
                   event?.preventDefault()
-                  copy("localhost:5173" + inviteLink)
+                  void copy("localhost:5173" + inviteLink)
                 }}>{t("invite.button.copy")}</Button>
               </>
               : " "}
-            <Grid item xs={12} textAlign="right">
+            <Grid item xs={12} textAlign="right" color="red">
               {errorType}
             </Grid>
           </Grid>
