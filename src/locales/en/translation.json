@@ -50,6 +50,7 @@
       "generate": "Generate invite",
       "copy": "Copy"
     },
+    "copied": "Link copied",
     "exception": {
       "dateEarlier": "Invitation Expiration date is earlier than the course end date",
       "datePast": "Invitation Expiration date is in the past"

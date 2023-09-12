@@ -14,8 +14,8 @@ import { CourseResponse } from '../../core/models/CourseResponse.ts';
 import { InviteForm } from '../../core/models/InviteForm.ts'
 import { useApiSendInvitation } from "../../core/hooks/useApiSendInvitation.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
-import dayjs from 'dayjs';
-import { useCopyToClipboard } from '../../pages/Courses/usehooks-ts.ts'
+import dayjs, { Dayjs } from 'dayjs';
+import { useCopyToClipboard } from '../../core/hooks/useCopyToClipboard.ts'
 import axios, { AxiosError } from 'axios';
 import './style.css'
 import i18n from "../../locales/i18n";
@@ -33,7 +33,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const { handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
   const { sendInvitation } = useApiSendInvitation();
   const [inviteLink, setInviteLink] = useState(" ");
-  const [courseExpirationDate, setCourseExpirationDate] = useState("")
+  const [courseExpirationDate, setCourseExpirationDate] = useState<string | Dayjs>("")
   const [errorType, setErrorType] = useState('');
   const [value, copy] = useCopyToClipboard()
 
@@ -45,6 +45,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   async function submitCreateInvite(data: InviteForm) {
     try {
       const dataResponse = await sendInvitation(data.endDate.toISOString(), course.id, rawAccessToken);
+      console.log(typeof dataResponse)
       setInviteLink(dataResponse.link)
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -99,7 +100,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
           <form onSubmit={handleSubmit(onSubmit)}>
 
             <Grid item xs={12} textAlign="center" className="modal-form">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
                 <Controller
                   name={"endDate"}
                   control={control}
@@ -143,6 +144,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
                 }}>{t("invite.button.copy")}</Button>
               </>
               : " "}
+            <Grid>{value ? i18n.t("invite.copied") : ''}</Grid>
             <Grid item xs={12} textAlign="right" color="red">
               {errorType}
             </Grid>

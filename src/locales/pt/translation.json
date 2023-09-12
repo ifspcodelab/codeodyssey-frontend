@@ -50,6 +50,7 @@
       "generate": "Gerar convite",
       "copy": "Copiar"
     },
+    "copied": "Link copiado",
     "exception": {
       "dateEarlier": "A data de expiração do convite é anterior à data de término do curso",
       "datePast": "A data de expiração do convite está no passado"
