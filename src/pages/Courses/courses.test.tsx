@@ -211,5 +211,21 @@ describe("Visualize my courses", () => {
     expect(inviteButton).toBeInTheDocument();
   });
 
+  test('Should be able to open the modal when the button is clicked', async () => {
+    const { getByText, getByLabelText } = render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
+
+    const inviteButton = getByText('Create Invite');
+
+    fireEvent.click(inviteButton);
+
+    const modalTitle = getByText('Create invite');
+    const endDateLabelName = "Expiration date"
+
+    expect(modalTitle).toBeInTheDocument();
+    expect(getByLabelText(endDateLabelName)).toBeInTheDocument();
+  });
+
+
+
 
 })
