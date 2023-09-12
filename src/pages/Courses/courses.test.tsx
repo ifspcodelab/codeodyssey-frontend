@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, queryByText, render, waitFor } from '@testing-library/react';
 import Courses from '../Courses';
 import { useApiGetCourses } from '../../core/hooks/useApiGetCourses.ts';
 import { AuthContext } from '../../core/auth/AuthContext.tsx';
@@ -225,7 +225,21 @@ describe("Visualize my courses", () => {
     expect(getByLabelText(endDateLabelName)).toBeInTheDocument();
   });
 
+  test('Should be able to close the modal when the user clicks outside the modal', async () => {
+    const { getByText } = render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
 
+    const inviteButton = getByText('Create Invite');
+
+    fireEvent.click(inviteButton);
+
+    const modalTitle = getByText('Generate invite');
+
+    const modalBackdrop = document.querySelector('.MuiBackdrop-root');
+    fireEvent.click(modalBackdrop);
+
+    expect(modalTitle).not.toBeInTheDocument();
+
+  });
 
 
 })
