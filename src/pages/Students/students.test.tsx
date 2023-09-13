@@ -32,7 +32,7 @@ describe("Students Component", () => {
 
   test("Should be able to fetch students successfully", async () => {
     const USER_ID = "123";
-    const courseSlug = "math101";
+    const courseSlug = "react";
     const rawAccessToken = "your-raw-access-token";
     const mockStudents = [
       { id: 1, name: "Student 1", email: "student1@example.com" },
@@ -47,5 +47,27 @@ describe("Students Component", () => {
     const { data: studentsResponse } = await api.getStudents(USER_ID, courseSlug, rawAccessToken);
 
     expect(studentsResponse).toEqual(mockStudents);
+  });
+
+  test("Should be able to correctly render the number of students", async () => {
+    const USER_ID = "123";
+    const courseSlug = "react";
+    const rawAccessToken = "your-raw-access-token";
+    const mockStudents = [
+      { id: 1, name: "Student 1", email: "student1@example.com" },
+      { id: 2, name: "Student 2", email: "student2@example.com" },
+      { id: 3, name: "Student 3", email: "student3@example.com" },
+      { id: 4, name: "Student 4", email: "student4@example.com" },
+    ];
+
+    mockGetStudents.mockResolvedValue({ data: mockStudents });
+
+    mock.onGet(`/users/${USER_ID}/courses/${courseSlug}/students`).reply(200, mockStudents);
+
+    const api = useApiGetStudents();
+    const { data: studentsResponse } = await api.getStudents(USER_ID, courseSlug, rawAccessToken);
+
+    expect(studentsResponse).toHaveLength(mockStudents.length);
+
   });
 });
