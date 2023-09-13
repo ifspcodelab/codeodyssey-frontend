@@ -39,13 +39,12 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const baseUrl = import.meta.env.VITE_BASE_URL_WEB as string
   const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
   useEffect(() => {
-    setCourseExpirationDate(dayjs(course.endDate))
-  }, []);
+    setCourseExpirationDate(new Date(course.endDate))
+  }, [course.endDate]);
 
   async function submitCreateInvite(data: InviteForm) {
     try {
       const dataResponse = await sendInvitation(data.endDate.toISOString(), course.id, rawAccessToken);
-      console.log(typeof dataResponse)
       setInviteLink(dataResponse.link)
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -111,7 +110,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
                       {...field}
                       inputRef={ref}
                       label={t("invite.date")} data-testid="endDateField"
-                      value={courseExpirationDate}
+                      value={dayjs(courseExpirationDate)}
                       onChange={onChange}
                       disablePast
                       className="modal-date-picker"

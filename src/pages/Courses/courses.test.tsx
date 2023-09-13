@@ -174,8 +174,8 @@ describe("Visualize my courses", () => {
 
     fireEvent.click(inviteButton);
 
-    const modalTitle = getByText('Create invite');
     const endDateLabelName = "Expiration date"
+    const modalTitle = await waitFor(() => getByText('Create invite'));
 
     expect(modalTitle).toBeInTheDocument();
     expect(getByLabelText(endDateLabelName)).toBeInTheDocument();
@@ -184,14 +184,14 @@ describe("Visualize my courses", () => {
   test('Should be able to close the modal when the user clicks outside the modal', async () => {
     const { getByText } = render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
 
-    const inviteButton = getByText('Create Invite');
-
+    const inviteButton = await waitFor(() => getByText('Create Invite'));
     fireEvent.click(inviteButton);
 
-    const modalTitle = getByText('Generate invite');
+    const modalTitle = await waitFor(() => getByText('Generate invite'));
 
     const modalBackdrop = document.querySelector('.MuiBackdrop-root');
-    fireEvent.click(modalBackdrop);
+    if (modalBackdrop !== null)
+      fireEvent.click(modalBackdrop);
 
     expect(modalTitle).not.toBeInTheDocument();
 
