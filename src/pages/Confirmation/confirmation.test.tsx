@@ -55,7 +55,7 @@ describe("Confirmation", () => {
     });
 
     test("Should show email already confirmed message", async () => {
-server.use(
+        server.use(
             rest.patch('http://localhost:3000/users/confirmation/undefined', (req, res, ctx) => {
                 console.log(req) // for build purposes
                 return res(
@@ -79,7 +79,7 @@ server.use(
     });
 
     test("Should show user not found message", async () => {
-server.use(
+        server.use(
             rest.patch('http://localhost:3000/users/confirmation/undefined', (req, res, ctx) => {
                 console.log(req) // for build purposes
                 return res(
@@ -103,7 +103,7 @@ server.use(
     });
 
     test("Should show token expired message", async () => {
-server.use(
+        server.use(
             rest.patch('http://localhost:3000/users/confirmation/undefined', (req, res, ctx) => {
                 console.log(req) // for build purposes
                 return res(
@@ -127,7 +127,7 @@ server.use(
     });
 
     test("Should show network error message", async () => {
-server.use(
+        server.use(
             rest.patch('http://localhost:3000/users/confirmation/undefined', (req, res, ctx) => {
                 console.log(req, ctx) // for build purposes
                 return res.networkError('Failed to connect');
