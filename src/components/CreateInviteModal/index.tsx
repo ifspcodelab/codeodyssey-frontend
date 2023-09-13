@@ -14,7 +14,7 @@ import { CourseResponse } from '../../core/models/CourseResponse.ts';
 import { InviteForm } from '../../core/models/InviteForm.ts'
 import { useApiSendInvitation } from "../../core/hooks/useApiSendInvitation.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useCopyToClipboard } from '../../core/hooks/useCopyToClipboard.ts'
 import axios, { AxiosError } from 'axios';
 import './style.css'
@@ -33,7 +33,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const { handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
   const { sendInvitation } = useApiSendInvitation();
   const [inviteLink, setInviteLink] = useState(" ");
-  const [courseExpirationDate, setCourseExpirationDate] = useState<string | Dayjs>("")
+  const [courseExpirationDate, setCourseExpirationDate] = useState<Date | undefined>(undefined);
   const [errorType, setErrorType] = useState('');
   const [value, copy] = useCopyToClipboard()
   const baseUrl = import.meta.env.VITE_BASE_URL_WEB as string

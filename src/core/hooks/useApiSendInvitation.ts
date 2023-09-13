@@ -4,10 +4,10 @@ import {api} from "../services/axios";
 
 
 export const useApiSendInvitation = () => ({
-  sendInvitation : async (expirationDate: string, courseId: string, rawAccessToken: string ): Promise<InviteReponse | ProblemDetail> => {
+  sendInvitation : async (expirationDate: string, courseId: string, rawAccessToken: string ): Promise<InviteReponse> => {
     api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
 
-      const response = await api.post<InviteReponse | ProblemDetail>('/courses/' + courseId + '/invitations', {expirationDate});
+      const response = await api.post<InviteReponse>('/courses/' + courseId + '/invitations', {expirationDate});
 
       console.log(response.data)
       return response.data;
