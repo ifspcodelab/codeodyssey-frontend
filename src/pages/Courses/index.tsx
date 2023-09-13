@@ -98,7 +98,8 @@ const Courses: React.FC = () => {
       if (responseStatus == 400) {
         setErrorType('badRequest')
         setOpenError(true);
-      } } else if (error.message == "Network Error") {
+      }
+    } else if (error.message == "Network Error") {
       setErrorType('networkError')
       setOpenError(true);
     }
@@ -113,35 +114,29 @@ const Courses: React.FC = () => {
           <div>
             <div>
               {Array.isArray(coursesProfessor) && coursesProfessor.map((course: CourseResponse) => (
+                <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main" }}>
+                  <CardContent>
+                    <Typography variant="h5" component="div">
+                      {course.name}
+                    </Typography>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                      {course.professor.name}
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      {new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t("courses.until")} {new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
+                    </Typography>
+                  </CardContent>
 
-                <>
+                  <CardActions key={course.id} className="cardActions">
+                    <CreateInviteModal course={course} />
 
-                  <Card key={course.id} variant="outlined" className="cardContainer">
-                    <CardContent>
-                      <Typography variant="h5" component="div">
-                        {course.name}
-                      </Typography>
-                      <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                        {course.professor.name}
-                      </Typography>
-                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        {new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t("courses.until")} {new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
-                      </Typography>
-                    </CardContent>
-
-                    <CardActions className="cardActions">
-                      <CreateInviteModal course={course} />
-
-                      <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-                        onClick={() => {
-                          navigate(course.slug + '/students');
-                        }}
-                      >{t("courses.button.students")}</Button>
-                    </CardActions>
-
-                  </Card>
-                </>
-
+                    <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
+                      onClick={() => {
+                        navigate(course.slug + '/students');
+                      }}
+                    >{t("courses.button.students")}</Button>
+                  </CardActions>
+                </Card>
               ))}
             </div>
 
