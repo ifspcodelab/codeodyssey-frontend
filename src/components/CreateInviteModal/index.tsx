@@ -36,7 +36,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const [courseExpirationDate, setCourseExpirationDate] = useState<string | Dayjs>("")
   const [errorType, setErrorType] = useState('');
   const [value, copy] = useCopyToClipboard()
-
+  const baseUrl = import.meta.env.VITE_BASE_URL_WEB as string
   const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
   useEffect(() => {
     setCourseExpirationDate(dayjs(course.endDate))
@@ -137,10 +137,10 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
           <Grid item xs={12} textAlign="right">
             {inviteLink !== " " ?
               <>
-                <a className="modal-link" href="/">{`localhost:5173 ${inviteLink}`}</a>
+                <a className="modal-link" href="/">{`${baseUrl} ${inviteLink}`}</a>
                 <Button variant="outlined" onClick={(event) => {
                   event?.preventDefault()
-                  void copy("localhost:5173" + inviteLink)
+                  void copy(baseUrl + inviteLink)
                 }}>{t("invite.button.copy")}</Button>
               </>
               : " "}
