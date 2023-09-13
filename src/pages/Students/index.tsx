@@ -39,9 +39,9 @@ function Students() {
         } catch (error) {
           if (axios.isAxiosError(error)) {
             handleError(error)
-        } else {
+          } else {
             setErrorType('unexpected')
-        }
+          }
         }
       } else {
         setErrorType('unexpected')
