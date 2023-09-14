@@ -6,64 +6,54 @@ import {useTranslation} from "react-i18next";
 import PageFooter from "../../components/PageFooter";
 import {AxiosError} from "axios";
 import {EnrollmentResponse} from "../../core/models/invitations";
-import {Container, Typography} from "@mui/material";
+import {Container} from "@mui/material";
+import TextComponent from "./text-component";
 import Spinner from "../../components/Spinner";
 
 
 function Invitation() {
-    const { idInvitation } = useParams();
+    const { idInvitation: invitationId } = useParams();
     const { acceptInvitation } = useApiAcceptInvitation();
     const { t } = useTranslation();
-    const [invitationText, setInvitationText] = useState("");
     const requestSentRef = useRef(false);
     const [loading, setLoading] = useState(false);
+    const [messageType, setMessageType] = useState('');
+    const [courseName, setCourseName] = useState('');
 
     const handleErrors = useCallback((error: AxiosError) => {
         switch (error.response?.status) {
-            case 400:
-                setInvitationText(t("invitation.errors.invalid"));
-                break;
-            case 403:
-                setInvitationText(t("invitation.errors.unauthorized"));
-                break;
-            case 404:
-                setInvitationText(t("invitation.errors.notFound"));
-                break;
-            case 409:
-                setInvitationText(t("invitation.errors.alreadyAccepted"));
-                break;
-            default:
-                setInvitationText(t("invitation.errors.network"));
+            case 400: setMessageType('invalid'); break;
+            case 403: setMessageType('unauthorized'); break;
+            case 404: setMessageType('notFound'); break;
+            case 409: setMessageType('already'); break;
+            default: setMessageType('network');
         }
-    }, [t]);
+    }, []);
 
     useEffect(() => {
         if (!requestSentRef.current) {
             setLoading(true);
-            if (idInvitation !== undefined) {
-                acceptInvitation(idInvitation)
-                    .then((enrollmentResponse: EnrollmentResponse) => {
-                        setInvitationText(t("invitation.accepted", { courseName: enrollmentResponse.invitation.course.name }));
-                        setLoading(false);
-                    }).catch((error: AxiosError) => {
-                    handleErrors(error);
+            acceptInvitation(invitationId)
+                .then((enrollmentResponse: EnrollmentResponse) => {
+                    setMessageType('accepted');
+                    setCourseName(enrollmentResponse.invitation.course.name)
                     setLoading(false);
-                });
-            }
+                }).catch((error: AxiosError) => {
+                handleErrors(error);
+                setLoading(false);
+            });
         }
         requestSentRef.current = true;
-    }, [acceptInvitation, handleErrors, idInvitation, t])
+    }, [acceptInvitation, handleErrors, invitationId])
 
     return (
-    <Container maxWidth="sm">
-        <PageHeader title={t("invitation.title")} text={t("invitation.text")}/>
-        <Typography align="center" paragraph>
-            {invitationText}
-        </Typography>
-        {loading && <Spinner size={20}/>}
-        <PageFooter text={t("invitation.footer")}/>
-    </Container>
+        <Container maxWidth="sm">
+            <PageHeader title={t("invitation.title")} text={t("invitation.text")}/>
+            <TextComponent messageType={messageType} courseName={courseName} />
+            {loading && <Spinner size={20}/>}
+            <PageFooter text={t("invitation.footer")}/>
+        </Container>
     );
 }
 
-export default Invitation
+export default Invitation;

@@ -5,7 +5,7 @@ import {EnrollmentResponse} from "../models/invitations";
 const jwtService = new JwtService();
 
 export const useApiAcceptInvitation = () => ({
-    acceptInvitation: async (invitationId: string) => {
+    acceptInvitation: async (invitationId: string | undefined) => {
         const raw = jwtService.getRawAccessToken() as string;
         api.defaults.headers['Authorization'] = 'Bearer ' + raw;
         const response = await api.post< | ProblemDetail>(`/invitations/${invitationId}/enrollments`);
