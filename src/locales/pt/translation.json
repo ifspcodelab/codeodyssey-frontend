@@ -155,7 +155,7 @@
   "invitation": {
     "title": "Convite",
     "text": "Convite do curso",
-    "accepted": "Sua inscrição foi aceita no curso {{courseName}}.",
+    "accepted": "Sua inscrição foi aceita para {{courseName}}",
     "errors": {
       "invalid": "Requisição inválida",
       "expired": "Convite expirado",

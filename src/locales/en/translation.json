@@ -155,7 +155,7 @@
   "invitation": {
     "title": "Invitation",
     "text": "Course's invitation",
-    "accepted": "Your invitation has been accepted for the course {{courseName}}.",
+    "accepted": "Your invitation has been accepted for {{courseName}}",
     "errors": {
       "invalid": "Invalid invitation",
       "expired": "Invitation expired",
