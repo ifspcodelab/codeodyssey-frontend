@@ -33,7 +33,16 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
     setOpen(true);
     const invitationResponse = await getCourseInvitation(course.id, rawAccessToken)
     if (invitationResponse) {
-      setInviteLink(invitationResponse.link);
+
+      const expirationDate = new Date(invitationResponse.expirationDate);
+      const today = new Date();
+
+      if (expirationDate > today && invitationResponse.link !== null) {
+        setInviteLink(invitationResponse.link);
+      } else if (expirationDate < today) {
+        setInviteLink(" ")
+      }
+
     } else {
       setInviteLink(" ")
     }
