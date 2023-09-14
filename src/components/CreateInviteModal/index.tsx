@@ -151,7 +151,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
 
             <ul>
               {inviteLink.map((item, index) => (
-                <><a key={index} className="modal-link" href=""><li>{`${baseUrl} ${item.link}`}</li></a><Button variant="outlined" onClick={(event) => {
+                <><a key={index} className="modal-link" href={`${baseUrl}${item.link}`}><li>{`${baseUrl} ${item.link}`}</li></a><Button variant="outlined" onClick={(event) => {
                   event?.preventDefault();
                   void copy(baseUrl + item.link);
                 }}>{t("invite.button.copy")}</Button></>
