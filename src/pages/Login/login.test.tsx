@@ -8,8 +8,10 @@ import {createMemoryHistory} from "history";
 import {rest} from "msw";
 import {setupServer} from "msw/node";
 
+const MSW_URL = "http://localhost/login";
+
 export const restHandlers = [
-    rest.post('http://localhost:3000/login', (req, res, ctx) => {
+    rest.post(MSW_URL, (req, res, ctx) => {
         console.log(req) // for build purposes
         return res(
             ctx.status(200),
@@ -232,7 +234,7 @@ describe("Login", () => {
 
     test("Should show error message when login fails", async () => {
         server.use(
-            rest.post('http://localhost:3000/login', async (req, res, ctx) => {
+            rest.post(MSW_URL, async (req, res, ctx) => {
                 console.log(req) // for build purposes
                 return res(
                     ctx.status(403),
@@ -260,7 +262,7 @@ describe("Login", () => {
 
     test("Should show error message when given network error", async () => {
         server.use(
-            rest.post('http://localhost:3000/login', (req, res, ctx) => {
+            rest.post(MSW_URL, (req, res, ctx) => {
                     console.log(req, ctx) // for build purposes
                     return res.networkError('Failed to connect')
                 }
