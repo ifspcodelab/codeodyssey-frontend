@@ -108,7 +108,7 @@ function Students() {
               <CardActions className="cardActions">
                 <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
                   onClick={() => {
-                    navigate('/invitation')
+                    navigate('/courses')
                   }}
                 >{t("courses.button.invite")}</Button>
               </CardActions>
