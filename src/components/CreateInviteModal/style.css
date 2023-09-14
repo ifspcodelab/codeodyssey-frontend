@@ -1,7 +1,7 @@
 .modal-container {
   height: 100vh;
   width: 100%;
-  background: rgba(0,0,0,.5);
+  background: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
   left: 0;
@@ -14,7 +14,7 @@
 .modal {
   background-color: white;
   padding: 40px;
-  border: 10px solid #65849A;
+  border: 10px solid #65849a;
   box-shadow: 0 0 0 10px white;
   position: relative;
 }

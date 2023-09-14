@@ -1,8 +1,9 @@
 import { CourseResponse } from './CourseResponse';
 
-export interface InviteReponse {
+export interface InvitationResponse {
+  id: string,
   course: CourseResponse;
   expirationDate: string;
-  id: string;
-  link: string;
+  link: string | null,
+  createdAt: string,
 }

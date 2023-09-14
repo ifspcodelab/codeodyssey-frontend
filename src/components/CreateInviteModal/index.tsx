@@ -19,7 +19,7 @@ import { useCopyToClipboard } from '../../core/hooks/useCopyToClipboard.ts'
 import axios, { AxiosError } from 'axios';
 import './style.css'
 import i18n from "../../locales/i18n";
-import { useApiGetInvitations } from "../../core/hooks/useApiGetInvitations.ts";
+import { useApiGetInvitation } from "../../core/hooks/useApiGetInvitation.ts";
 
 interface ItemComponentProps {
   course: CourseResponse;
@@ -31,8 +31,12 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = async () => {
     setOpen(true);
-    const testInvitations = await getCourseInvitations(course.id, rawAccessToken)
-    setInviteLink(testInvitations);
+    const invitationResponse = await getCourseInvitation(course.id, rawAccessToken)
+    if (invitationResponse) {
+      setInviteLink(invitationResponse.link);
+    } else {
+      setInviteLink(" ")
+    }
   }
   const handleClose = () => {
     setErrorType("")
@@ -40,11 +44,11 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   };
   const { handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
   const { sendInvitation } = useApiSendInvitation();
-  const [inviteLink, setInviteLink] = useState([]);
+  const [inviteLink, setInviteLink] = useState(" ");
   const [courseExpirationDate, setCourseExpirationDate] = useState<Date | undefined>(undefined);
   const [errorType, setErrorType] = useState('');
   const [value, copy] = useCopyToClipboard()
-  const { getCourseInvitations } = useApiGetInvitations()
+  const { getCourseInvitation } = useApiGetInvitation()
 
   const baseUrl = import.meta.env.VITE_BASE_URL_WEB as string
   const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
@@ -57,9 +61,9 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   async function submitCreateInvite(data: InviteForm) {
     try {
       const dataResponse = await sendInvitation(data.endDate.toISOString(), course.id, rawAccessToken);
-      const newArray = [...inviteLink];
-      newArray.push(dataResponse);
-      setInviteLink(newArray);
+
+      if (dataResponse.link !== null)
+        setInviteLink(dataResponse.link);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         handleError(error)
@@ -76,7 +80,6 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
     if (error.response) {
       problemDetail = error.response.data as ProblemDetail
       responseStatus = problemDetail.status
-      setInviteLink([])
       if (responseStatus == 400) {
         message = i18n.t("registration.exception.badRequest")
         setErrorType(message)
@@ -149,14 +152,15 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
 
           <Grid item xs={12} textAlign="right">
 
-            <ul>
-              {inviteLink.map((item, index) => (
-                <><a key={index} className="modal-link" href={`${baseUrl}${item.link}`}><li>{`${baseUrl} ${item.link}`}</li></a><Button variant="outlined" onClick={(event) => {
-                  event?.preventDefault();
-                  void copy(baseUrl + item.link);
-                }}>{t("invite.button.copy")}</Button></>
-              ))}
-            </ul>
+            {inviteLink !== " " ?
+              <>
+                <a className="modal-link" href="/">{`${baseUrl} ${inviteLink}`}</a>
+                <Button variant="outlined" onClick={(event) => {
+                  event?.preventDefault()
+                  void copy(baseUrl + inviteLink)
+                }}>{t("invite.button.copy")}</Button>
+              </>
+              : " "}
             <Grid>{value ? i18n.t("invite.copied") : ''}</Grid>
             <Grid item xs={12} textAlign="right" color="red">
               {errorType}
