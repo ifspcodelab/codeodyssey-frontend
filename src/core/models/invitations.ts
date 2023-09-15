@@ -1,4 +1,5 @@
-import {UserRole} from "../auth/JwtService";
+import {UserRole} from "./UserRole";
+
 
 export interface EnrollmentResponse {
     id: string,

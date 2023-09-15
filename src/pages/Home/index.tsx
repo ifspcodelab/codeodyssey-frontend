@@ -23,7 +23,7 @@ function Home() {
     return (
         <Container maxWidth="sm">
             <PageHeader title={'Home'} text={"Application's home"}/>
-            <h1 align="center">Home Page</h1>
+            <h1 style={{alignItems: "center"}}>Home Page</h1>
             <PageFooter text={"Home Footer"}/>
         </Container>
     );
