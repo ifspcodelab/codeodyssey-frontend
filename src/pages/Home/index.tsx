@@ -2,6 +2,7 @@ import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
 import { useLocation} from "react-router-dom";
 import {Key, useEffect} from "react";
+import {Container} from "@mui/material";
 
 
 interface Location {
@@ -20,11 +21,11 @@ function Home() {
     }, [location]);
 
     return (
-      <>
-        <PageHeader title={'Home'} text={"Application's home"}/>
-        <h1>Home Page</h1>
-        <PageFooter text={"Home Footer"}/>
-      </>
+        <Container maxWidth="sm">
+            <PageHeader title={'Home'} text={"Application's home"}/>
+            <h1 align="center">Home Page</h1>
+            <PageFooter text={"Home Footer"}/>
+        </Container>
     );
 }
 

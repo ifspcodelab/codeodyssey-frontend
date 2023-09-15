@@ -17,12 +17,5 @@ export const useApiLogin = () => ({
         const response = await api.post<RefreshTokenResponse | ProblemDetail>('/refreshtoken', {refreshToken});
 
         return response.data;
-    },
-    createCourse: async (name: string, slug: string, startDate: string, endDate: string, professorId: string, rawAccessToken: string) => {
-        console.log("rawAccessToken: ", rawAccessToken);
-        api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
-        const response = await api.post< | ProblemDetail>('/users/' + professorId +'/courses', {name, slug, startDate, endDate});
-
-        return response.data;
     }
 });
