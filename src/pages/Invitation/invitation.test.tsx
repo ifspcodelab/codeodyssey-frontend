@@ -81,4 +81,23 @@ describe("Invitation", () => {
 
         await waitFor(() => expect(getByText("Your invitation has been accepted for Example Course")).toBeInTheDocument());
     });
+
+    test("Should return error message when invitation is invalid", async () => {
+        server.use(
+            rest.post(MSW_URL, async (req, res, ctx) => {
+                return res(
+                    ctx.status(400),
+                    ctx.json(
+                        {
+                            "detail": "Invalid invitation"
+                        }
+                    )
+                )
+            }),
+        );
+
+        const { getByText } = renderInvitation();
+
+        await waitFor(() => expect(getByText("Invalid invitation")).toBeInTheDocument());
+    });
 })
