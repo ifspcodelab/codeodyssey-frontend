@@ -85,6 +85,7 @@ describe("Invitation", () => {
     test("Should return error message when invitation is invalid", async () => {
         server.use(
             rest.post(MSW_URL, async (req, res, ctx) => {
+                console.log(req) // for build purposes
                 return res(
                     ctx.status(400),
                     ctx.json(
@@ -104,6 +105,7 @@ describe("Invitation", () => {
     test("Should return error message when invitation is already accepted", async () => {
         server.use(
             rest.post(MSW_URL, async (req, res, ctx) => {
+                console.log(req) // for build purposes
                 return res(
                     ctx.status(409),
                     ctx.json(
@@ -127,6 +129,7 @@ describe("Invitation", () => {
     test("Should return error message when user is not logged in", async () => {
         server.use(
             rest.post(MSW_URL, async (req, res, ctx) => {
+                console.log(req) // for build purposes
                 return res(
                     ctx.status(403),
                     ctx.json(
@@ -149,6 +152,7 @@ describe("Invitation", () => {
     test("Should return error message when invitation is not found", async () => {
         server.use(
             rest.post(MSW_URL, async (req, res, ctx) => {
+                console.log(req, ctx) // build
                 return res(
                     ctx.status(404),
                     ctx.json(
@@ -167,5 +171,18 @@ describe("Invitation", () => {
         const { getByText } = renderInvitation();
 
         await waitFor(() => expect(getByText("Invitation not found")).toBeInTheDocument());
+    });
+
+    test("Should return a message when there is connection error", async () => {
+        server.use(
+            rest.post(MSW_URL, (req, res, ctx) => {
+                console.log(req, ctx) // build error
+                return res.networkError('Failed to connect')
+            }),
+        );
+
+        const { getByText } = renderInvitation();
+
+        await waitFor(() => expect(getByText("Network error")).toBeInTheDocument());
     });
 })
