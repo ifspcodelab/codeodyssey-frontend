@@ -100,4 +100,27 @@ describe("Invitation", () => {
 
         await waitFor(() => expect(getByText("Invalid invitation")).toBeInTheDocument());
     });
+
+    test("Should return error message when invitation is already accepted", async () => {
+        server.use(
+            rest.post(MSW_URL, async (req, res, ctx) => {
+                return res(
+                    ctx.status(409),
+                    ctx.json(
+                        {
+                            "type": "about:blank",
+                            "title": "Student already enrolled",
+                            "status": 409,
+                            "detail": "Student with id=82f66168-1013-4dc1-a7bd-31da68a31dc9 is already enrolled on course id=50202211-b192-4d8a-92fa-48e09c6df67a.",
+                            "instance": "/api/v1/invitations/09246a18-cf5e-4b7d-960f-b5248ad51b16/enrollments"
+                        }
+                    )
+                )
+            }),
+        );
+
+        const { getByText } = renderInvitation();
+
+        await waitFor(() => expect(getByText("You have already accepted this invitation")).toBeInTheDocument());
+    });
 })
