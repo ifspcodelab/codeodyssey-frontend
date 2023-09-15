@@ -145,4 +145,27 @@ describe("Invitation", () => {
 
         await waitFor(() => expect(getByText("Please, login to accept the invitation")).toBeInTheDocument());
     });
+
+    test("Should return error message when invitation is not found", async () => {
+        server.use(
+            rest.post(MSW_URL, async (req, res, ctx) => {
+                return res(
+                    ctx.status(404),
+                    ctx.json(
+                        {
+                            "type": "about:blank",
+                            "title": "Invitation not found",
+                            "status": 404,
+                            "detail": "Invitation not found with id 09246a18-cf5e-4b7d-960f-b5248ad51b16",
+                            "instance": "/api/v1/invitations/09246a18-cf5e-4b7d-960f-b5248ad51b16/enrollments"
+                        }
+                    )
+                )
+            }),
+        );
+
+        const { getByText } = renderInvitation();
+
+        await waitFor(() => expect(getByText("Invitation not found")).toBeInTheDocument());
+    });
 })
