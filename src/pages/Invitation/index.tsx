@@ -26,6 +26,7 @@ function Invitation() {
             case 403: setMessageType('unauthorized'); break;
             case 404: setMessageType('notFound'); break;
             case 409: setMessageType('already'); break;
+            case 410: setMessageType('expired'); break;
             default: setMessageType('network');
         }
     }, []);
