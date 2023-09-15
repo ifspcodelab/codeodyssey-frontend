@@ -123,4 +123,26 @@ describe("Invitation", () => {
 
         await waitFor(() => expect(getByText("You have already accepted this invitation")).toBeInTheDocument());
     });
+
+    test("Should return error message when user is not logged in", async () => {
+        server.use(
+            rest.post(MSW_URL, async (req, res, ctx) => {
+                return res(
+                    ctx.status(403),
+                    ctx.json(
+                        {
+                            "instance": "/api/v1/invitations/09246a18-cf5e-4b7d-960f-b5248ad51b162/enrollments",
+                            "details": "access token expired",
+                            "type": "about:blank",
+                            "title": "AccessToken ACCESS_TOKEN_EXPIRED"
+                        }
+                    )
+                )
+            }),
+        );
+
+        const { getByText } = renderInvitation();
+
+        await waitFor(() => expect(getByText("Please, login to accept the invitation")).toBeInTheDocument());
+    });
 })
