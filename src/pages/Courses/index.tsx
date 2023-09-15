@@ -18,8 +18,9 @@ import i18n from '../../locales/i18n.ts'
 import { useLocation } from 'react-router-dom';
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 import './style.css'
+import CreateInviteModal from '../../components/CreateInviteModal/index.tsx';
 
-function Courses() {
+const Courses: React.FC = () => {
 
   const { t } = useTranslation();
   const authConsumer = AuthConsumer();
@@ -34,29 +35,30 @@ function Courses() {
   const [openSuccess, setOpenSuccess] = useState(true);
   const [openError, setOpenError] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const success = queryParams.get('success');
 
   useEffect(() => {
     void (async () => {
-      if(USER_ROLE == "PROFESSOR") {
+      if (USER_ROLE == "PROFESSOR") {
         try {
-          const cursoProfessor = await getCoursesProfessor(USER_ID, rawAccessToken);
-          setCoursesProfessor(cursoProfessor)
-          const cursoAluno = await getCoursesStudent(USER_ID, rawAccessToken)
-          setCoursesStudent(cursoAluno)
+          const coursesProfessorResponse = await getCoursesProfessor(USER_ID, rawAccessToken);
+          setCoursesProfessor(coursesProfessorResponse)
+          const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
+          setCoursesStudent(coursesStudentResponse)
           setLoading(false)
         } catch (error) {
           if (axios.isAxiosError(error)) {
-              handleError(error)
+            handleError(error)
           } else {
-              setErrorType('unexpected')
+            setErrorType('unexpected')
           }
-      }
-      } else if(USER_ROLE == "STUDENT") {
-        const cursoAluno = await getCoursesStudent(USER_ID, rawAccessToken)
-        setCoursesStudent(cursoAluno)
+        }
+      } else if (USER_ROLE == "STUDENT") {
+        const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
+        setCoursesStudent(coursesStudentResponse)
         setLoading(false)
       }
     })();
@@ -112,7 +114,7 @@ function Courses() {
           <div>
             <div>
               {Array.isArray(coursesProfessor) && coursesProfessor.map((course: CourseResponse) => (
-                <Card key={course.id} variant="outlined" className="cardContainer">
+                <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main" }}>
                   <CardContent>
                     <Typography variant="h5" component="div">
                       {course.name}
@@ -125,15 +127,12 @@ function Courses() {
                     </Typography>
                   </CardContent>
 
-                  <CardActions className="cardActions">
+                  <CardActions key={course.id} className="cardActions">
+                    <CreateInviteModal course={course} />
+
                     <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
                       onClick={() => {
-                        navigate('/invitation')
-                      }}
-                    >{t("courses.button.invite")}</Button>
-                    <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-                      onClick={() => {
-                        navigate('/students')
+                        navigate(course.slug + '/students');
                       }}
                     >{t("courses.button.students")}</Button>
                   </CardActions>

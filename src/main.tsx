@@ -71,7 +71,7 @@ const router = createBrowserRouter([
                 element: <Contact/>
             },
             {
-                path: "students",
+                path: "/courses/:slug/students",
                 element: <Students/>
             },
             {

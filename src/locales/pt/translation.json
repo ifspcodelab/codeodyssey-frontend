@@ -31,6 +31,31 @@
     "until": "até",
     "emptyList": "Você ainda não participa de nenhum curso"
   },
+  "students": {
+    "title": "Meus Alunos",
+    "text": "Alunos do curso",
+    "name": "Nome",
+    "email": "E-mail",
+    "emptyList": "Esse curso não possui alunos matriculados",
+    "emptyListQuestion": "Deseja convidar alunos?",
+    "exception": {
+      "notFound": "Curso não encontrado"
+    }
+  },
+  "invite": {
+    "title": "Criar convite",
+    "date": "Data de expiração",
+    "button": {
+      "create": "Criar convite",
+      "generate": "Gerar convite",
+      "copy": "Copiar"
+    },
+    "copied": "Link copiado",
+    "exception": {
+      "dateEarlier": "A data de expiração do convite é anterior à data de término do curso",
+      "datePast": "A data de expiração do convite está no passado"
+    }
+  },
   "createcourse": {
     "title": "Criar Curso",
     "text": "Crie um curso preenchendo o formulário abaixo",
