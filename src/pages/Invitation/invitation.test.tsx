@@ -185,4 +185,28 @@ describe("Invitation", () => {
 
         await waitFor(() => expect(getByText("Network error")).toBeInTheDocument());
     });
+
+    test("Should return a message when invitation is expired", async () => {
+        server.use(
+            rest.post(MSW_URL, async (req, res, ctx) => {
+                console.log(req) // build
+                return res(
+                    ctx.status(410),
+                    ctx.json(
+                        {
+                            "type": "about:blank",
+                            "title": "Invitation link expired",
+                            "status": 410,
+                            "detail": "Invitation with id=09246a18-cf5e-4b7d-960f-b5248ad51b16 is expired on course id=50202211-b192-4d8a-92fa-48e09c6df67a.",
+                            "instance": "/api/v1/invitations/09246a18-cf5e-4b7d-960f-b5248ad51b16/enrollments"
+                        }
+                    )
+                )
+            }),
+        );
+
+        const { getByText } = renderInvitation();
+
+        await waitFor(() => expect(getByText("Invitation expired")).toBeInTheDocument());
+    });
 })
