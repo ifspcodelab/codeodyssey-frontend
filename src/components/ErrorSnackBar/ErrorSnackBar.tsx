@@ -18,6 +18,7 @@ const ErrorSnackBar = (props: SnackBarProps) => {
         case 'networkError': { message = i18n.t("registration.exception.network"); break; }
         case 'unexpected': { message = i18n.t("registration.exception.unexpected"); break; }
         case 'notFound': { message = i18n.t("resendEmail.exception.notFound"); break; }
+        case 'slugNotFound': { message = i18n.t("students.exception.notFound"); break; }
         case 'resendEmailDelay': { message = i18n.t("resendEmail.exception.resendEmailDelay"); break; }
     }
 
