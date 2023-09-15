@@ -12,6 +12,7 @@ interface UseLocationType {
     }
 }
 
+const MSW_URL = "http://localhost/users/resend-email";
 const mockUseLocation = vi.fn().mockImplementation(() => {return { state: {data: "johndoe@email.com"}}})
 
 vi.mock("react-router-dom", async () => {
@@ -32,7 +33,7 @@ function renderResendEmail() {
 }
 
 export const restHandlers = [
-    rest.post('http://localhost:3000/users/resend-email', (req, res, ctx) => {
+    rest.post(MSW_URL, (req, res, ctx) => {
         console.log(req) // for build purposes
         return res(
             ctx.status(200),
@@ -81,7 +82,7 @@ describe("Resend Email", () => {
 
     test("Should show error message when user clicks on the resend button and one minute has not passed", async () => {
         server.use(
-            rest.post('http://localhost:3000/users/resend-email', (req, res, ctx) => {
+            rest.post(MSW_URL, (req, res, ctx) => {
                 console.log(req, ctx) // for build purposes
                 return res(
                     ctx.status(422),
@@ -111,7 +112,7 @@ describe("Resend Email", () => {
 
     test("Should show error message when user clicks on the resend button and the email does not exist", async () => {
         server.use(
-            rest.post('http://localhost:3000/users/resend-email', (req, res, ctx) => {
+            rest.post(MSW_URL, (req, res, ctx) => {
                 console.log(req, ctx) // for build purposes
                 return res(
                     ctx.status(404),

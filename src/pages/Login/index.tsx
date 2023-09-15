@@ -10,12 +10,13 @@ import { useNavigate } from "react-router-dom";
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
 import {useState} from "react";
-import {AccessToken, JwtService} from "../../core/auth/JwtService.ts";
+import {JwtService} from "../../core/auth/JwtService.ts";
 import {AuthConsumer} from "../../core/auth/AuthContext.tsx";
 import {schema} from "./schema";
 import {LoginRequest, LoginResponse} from "../../core/models/login";
 import {useApiLogin} from "../../core/hooks/useApiLogin";
 import {Grid, Link, TextField} from "@mui/material";
+import {AccessToken} from "../../core/models/AccessToken";
 
 
 function Login() {

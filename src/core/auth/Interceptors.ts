@@ -86,7 +86,7 @@ export class Interceptors {
                 }
 
                 console.log("error in postRefreshToken")
-                throw new Error();
+                throw new AxiosError("error in handleUnauthorized", '403', error.config, error.request, error.response);
             });
 
         if (refreshTokenResponse) {

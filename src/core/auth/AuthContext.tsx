@@ -1,5 +1,6 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
-import {JwtService, UserRole} from "./JwtService.ts";
+import {JwtService} from "./JwtService.ts";
+import {UserRole} from "../models/UserRole";
 
 // import {useNavigate} from "react-router-dom";
 

@@ -177,6 +177,20 @@
       "badRequest": "Erro com a requisição."
     }
   },
+  "invitation": {
+    "title": "Convite",
+    "text": "Convite do curso",
+    "accepted": "Sua inscrição foi aceita para {{courseName}}",
+    "errors": {
+      "invalid": "Requisição inválida",
+      "expired": "Convite expirado",
+      "notFound": "O convite não foi encontrado",
+      "alreadyAccepted": "O convite já foi aceito",
+      "network": "Problema de conexão com o servidor",
+      "unauthorized": "Por favor, faça login para aceitar o convite"
+    },
+    "footer": "Texto do footer"
+  },
   "yup": {
     "invalid_field_length": "Esse campo deve ter pelo menos {{ min }} caracteres.",
     "invalid_number_length": "Esse campo deve ser maior que {{ min }} caracteres.",
