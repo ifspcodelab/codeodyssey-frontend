@@ -13,19 +13,13 @@ import { useApiSendInvitation } from '../../core/hooks/useApiSendInvitation.ts';
 import { useApiGetInvitation } from '../../core/hooks/useApiGetInvitation.ts';
 
 vi.mock('../../core/hooks/useApiGetCourses.ts');
+vi.mock('../../core/hooks/useApiSendInvitation.ts');
+vi.mock('../../core/hooks/useApiGetInvitation.ts');
 
 const mockGetCoursesStudent = vi.fn();
 const mockGetCoursesProfessor = vi.fn();
-
-(useApiGetCourses as jest.Mock).mockReturnValue({
-  getCoursesStudent: mockGetCoursesStudent,
-  getCoursesProfessor: mockGetCoursesProfessor,
-});
-
-interface MockAuthProviderProps {
-  children: React.ReactNode;
-  role: UserRole;
-}
+const mockSendInvitations = vi.fn();
+const mockGetInvitations = vi.fn();
 
 vi.mock('../../core/auth/JwtService', () => ({
   JwtService: vi.fn().mockReturnValue({
@@ -40,17 +34,24 @@ vi.mock('@mui/x-date-pickers/DatePicker', () => {
     )),
   };
 });
-vi.mock('../../core/hooks/useApiSendInvitation.ts');
-vi.mock('../../core/hooks/useApiGetInvitation.ts');
-const mockSendInvitations = vi.fn();
+
+(useApiGetCourses as jest.Mock).mockReturnValue({
+  getCoursesStudent: mockGetCoursesStudent,
+  getCoursesProfessor: mockGetCoursesProfessor,
+});
+
 (useApiSendInvitation as jest.Mock).mockReturnValue({
   sendInvitation: mockSendInvitations,
 });
 
-const mockGetInvitations = vi.fn();
 (useApiGetInvitation as jest.Mock).mockReturnValue({
   getCourseInvitation: mockGetInvitations,
 });
+
+interface MockAuthProviderProps {
+  children: React.ReactNode;
+  role: UserRole;
+}
 
 const MockAuthProvider: React.FC<MockAuthProviderProps> = ({ children, role }) => (
   <AuthContext.Provider
@@ -71,13 +72,33 @@ const MockAuthProvider: React.FC<MockAuthProviderProps> = ({ children, role }) =
   </AuthContext.Provider>
 );
 
+function renderCreateInviteModal() {
+  return render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
+}
+
+function renderCoursesProfessor() {
+  return render(
+    <BrowserRouter>
+      <MockAuthProvider role={UserRole.PROFESSOR}>
+        <Courses />
+      </MockAuthProvider>
+    </BrowserRouter>
+  );
+}
+
+function renderCoursesStudent() {
+  return render(
+    <BrowserRouter>
+      <MockAuthProvider role={UserRole.STUDENT}>
+        <Courses />
+      </MockAuthProvider>
+    </BrowserRouter>
+  );
+}
+
 describe("Visualize my courses", () => {
   test("Should be able to see the Page Header title on the screen", () => {
-    const { getByText } = render(
-      <BrowserRouter>
-        <Courses />
-      </BrowserRouter>
-    );
+    const { getByText } = renderCoursesProfessor()
 
     expect(getByText("My Courses")).toBeInTheDocument();
   })
@@ -93,13 +114,7 @@ describe("Visualize my courses", () => {
 
     mockGetCoursesProfessor.mockResolvedValue([mockCourse]);
 
-    const { getByText } = render(
-      <BrowserRouter>
-        <MockAuthProvider role={UserRole.PROFESSOR}>
-          <Courses />
-        </MockAuthProvider>
-      </BrowserRouter>
-    );
+    const { getByText } = renderCoursesProfessor()
 
     const element = await waitFor(() => getByText('Java Spring Course'));
     expect(element).toBeInTheDocument();
@@ -125,13 +140,7 @@ describe("Visualize my courses", () => {
 
     mockGetCoursesStudent.mockResolvedValue([mockCourse]);
 
-    const { getByText } = render(
-      <BrowserRouter>
-        <MockAuthProvider role={UserRole.STUDENT}>
-          <Courses />
-        </MockAuthProvider>
-      </BrowserRouter>
-    );
+    const { getByText } = renderCoursesStudent()
 
     const courseName = await waitFor(() => getByText('React Course'));
     expect(courseName).toBeInTheDocument();
@@ -157,13 +166,7 @@ describe("Visualize my courses", () => {
 
     mockGetCoursesProfessor.mockResolvedValue([mockCourse]);
 
-    const { getByText } = render(
-      <BrowserRouter>
-        <MockAuthProvider role={UserRole.PROFESSOR}>
-          <Courses />
-        </MockAuthProvider>
-      </BrowserRouter>
-    );
+    const { getByText } = renderCoursesProfessor()
 
     const createInviteButton = await waitFor(() => getByText('Create Invite'));
     const visualizeStudentsButton = await waitFor(() => getByText('Visualize Students'));
@@ -174,20 +177,14 @@ describe("Visualize my courses", () => {
   test('Should be able to render empty list', async () => {
     mockGetCoursesStudent.mockResolvedValue([]);
 
-    const { getByText } = render(
-      <BrowserRouter>
-        <MockAuthProvider role={UserRole.STUDENT}>
-          <Courses />
-        </MockAuthProvider>
-      </BrowserRouter>
-    );
+    const { getByText } = renderCoursesStudent()
 
     const courseName = await waitFor(() => getByText('You do not participate in any course yet'));
     expect(courseName).toBeInTheDocument();
   });
 
   test('Should be able to render the modal button', () => {
-    const { getByText } = render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
+    const { getByText } = renderCreateInviteModal()
 
     const inviteButton = getByText('Create Invite');
 
@@ -195,7 +192,7 @@ describe("Visualize my courses", () => {
   });
 
   test('Should be able to close the modal when the user clicks outside the modal', async () => {
-    const { getByText } = render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
+    const { getByText } = renderCreateInviteModal()
 
     const inviteButton = await waitFor(() => getByText('Create Invite'));
     fireEvent.click(inviteButton);
@@ -211,9 +208,7 @@ describe("Visualize my courses", () => {
   });
 
   test('Should be able to generate a link when the button is clicked', async () => {
-    const { getByText, getByTestId } = render(
-      <CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />
-    );
+    const { getByText, getByTestId } = renderCreateInviteModal()
 
     const inviteButton = getByText('Create Invite');
     fireEvent.click(inviteButton);
@@ -231,7 +226,7 @@ describe("Visualize my courses", () => {
   });
 
   test('Should be able to open the modal when the button is clicked', async () => {
-    const { getByText, getByTestId } = render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
+    const { getByText, getByTestId } = renderCreateInviteModal()
 
     const inviteButton = getByText('Create Invite');
 
