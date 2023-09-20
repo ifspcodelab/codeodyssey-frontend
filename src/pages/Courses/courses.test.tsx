@@ -6,9 +6,11 @@ import { AuthContext } from '../../core/auth/AuthContext.tsx';
 import { vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
-import {UserRole} from "../../core/models/UserRole";
+import { UserRole } from "../../core/models/UserRole";
 import CreateInviteModal from '../../components/CreateInviteModal/index.tsx';
 import { test } from 'vitest';
+import { useApiSendInvitation } from '../../core/hooks/useApiSendInvitation.ts';
+import { useApiGetInvitation } from '../../core/hooks/useApiGetInvitation.ts';
 
 vi.mock('../../core/hooks/useApiGetCourses.ts');
 
@@ -24,6 +26,31 @@ interface MockAuthProviderProps {
   children: React.ReactNode;
   role: UserRole;
 }
+
+vi.mock('../../core/auth/JwtService', () => ({
+  JwtService: vi.fn().mockReturnValue({
+    getRawAccessToken: vi.fn().mockReturnValue('test-token'),
+  }),
+}));
+
+vi.mock('@mui/x-date-pickers/DatePicker', () => {
+  return {
+    DatePicker: vi.fn().mockImplementation(({ onChange }) => (
+      <input data-testid="datePicker" onChange={onChange} />
+    )),
+  };
+});
+vi.mock('../../core/hooks/useApiSendInvitation.ts');
+vi.mock('../../core/hooks/useApiGetInvitation.ts');
+const mockSendInvitations = vi.fn();
+(useApiSendInvitation as jest.Mock).mockReturnValue({
+  sendInvitation: mockSendInvitations,
+});
+
+const mockGetInvitations = vi.fn();
+(useApiGetInvitation as jest.Mock).mockReturnValue({
+  getCourseInvitation: mockGetInvitations,
+});
 
 const MockAuthProvider: React.FC<MockAuthProviderProps> = ({ children, role }) => (
   <AuthContext.Provider
@@ -167,35 +194,52 @@ describe("Visualize my courses", () => {
     expect(inviteButton).toBeInTheDocument();
   });
 
-  // test('Should be able to open the modal when the button is clicked', async () => {
-  //   const { getByText, getByLabelText } = render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
-  //
-  //   const inviteButton = getByText('Create Invite');
-  //
-  //   fireEvent.click(inviteButton);
-  //
-  //   const endDateLabelName = "Expiration date"
-  //   const modalTitle = await waitFor(() => getByText('Create invite'));
-  //
-  //   expect(modalTitle).toBeInTheDocument();
-  //   expect(getByLabelText(endDateLabelName)).toBeInTheDocument();
-  // });
+  test('Should be able to close the modal when the user clicks outside the modal', async () => {
+    const { getByText } = render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
 
-  // test('Should be able to close the modal when the user clicks outside the modal', async () => {
-  //   const { getByText } = render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
-  //
-  //   const inviteButton = await waitFor(() => getByText('Create Invite'));
-  //   fireEvent.click(inviteButton);
-  //
-  //   const modalTitle = await waitFor(() => getByText('Generate invite'));
-  //
-  //   const modalBackdrop = document.querySelector('.MuiBackdrop-root');
-  //   if (modalBackdrop !== null)
-  //     fireEvent.click(modalBackdrop);
-  //
-  //   expect(modalTitle).not.toBeInTheDocument();
-  //
-  // });
+    const inviteButton = await waitFor(() => getByText('Create Invite'));
+    fireEvent.click(inviteButton);
 
+    const modalTitle = await waitFor(() => getByText('Generate invite'));
 
+    const modalBackdrop = document.querySelector('.MuiBackdrop-root');
+    if (modalBackdrop !== null)
+      fireEvent.click(modalBackdrop);
+
+    expect(modalTitle).not.toBeInTheDocument();
+
+  });
+
+  test('Should be able to generate a link when the button is clicked', async () => {
+    const { getByText, getByTestId } = render(
+      <CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />
+    );
+
+    const inviteButton = getByText('Create Invite');
+    fireEvent.click(inviteButton);
+
+    const datePicker = getByTestId('datePicker');
+    fireEvent.change(datePicker, { target: { value: '2023-12-30' } });
+
+    const generateButton = getByText('Generate invite');
+    fireEvent.click(generateButton);
+
+    await waitFor(() => {
+      const inviteLink = getByText('unexpected');
+      expect(inviteLink).toBeInTheDocument();
+    });
+  });
+
+  test('Should be able to open the modal when the button is clicked', async () => {
+    const { getByText, getByTestId } = render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
+
+    const inviteButton = getByText('Create Invite');
+
+    fireEvent.click(inviteButton);
+
+    const modalTitle = await waitFor(() => getByText('Create invite'));
+    const datePicker = await waitFor(() => getByTestId("datePicker"));
+    expect(modalTitle).toBeInTheDocument();
+    expect(datePicker).toBeInTheDocument();
+  });
 })
