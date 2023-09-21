@@ -1,44 +1,44 @@
 import { useTranslation } from "react-i18next";
+import i18n from '../../locales/i18n.ts'
+import { useEffect, useState } from "react";
+import axios, { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom"
+import { useLocation } from 'react-router-dom';
+import './style.css'
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import PageHeader from "../../components/PageHeader";
-import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom"
-import { CourseResponse } from "../../core/models/CourseResponse";
-import { useApiGetCourses } from "../../core/hooks/useApiGetCourses.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
+import { CourseResponse } from "../../core/models/CourseResponse";
+import { useApiGetCourses } from "../../core/hooks/useApiGetCourses.ts";
+import PageHeader from "../../components/PageHeader";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import Spinner from "../../components/Spinner";
-import i18n from '../../locales/i18n.ts'
-import { useLocation } from 'react-router-dom';
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
-import './style.css'
 import CreateInviteModal from '../../components/CreateInviteModal/index.tsx';
 
 const Courses: React.FC = () => {
-
   const { t } = useTranslation();
-  const authConsumer = AuthConsumer();
-  const [coursesStudent, setCoursesStudent] = useState<CourseResponse[] | ProblemDetail>([]);
-  const [coursesProfessor, setCoursesProfessor] = useState<CourseResponse[] | ProblemDetail>([]);
   const navigate = useNavigate()
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const success = queryParams.get('success');
+
+  const authConsumer = AuthConsumer();
   const USER_ID: string = authConsumer.id;
   const USER_ROLE: string = authConsumer.role;
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { getCoursesProfessor, getCoursesStudent } = useApiGetCourses()
+
+  const [coursesStudent, setCoursesStudent] = useState<CourseResponse[] | ProblemDetail>([]);
+  const [coursesProfessor, setCoursesProfessor] = useState<CourseResponse[] | ProblemDetail>([]);
   const [errorType, setErrorType] = useState('');
   const [openSuccess, setOpenSuccess] = useState(true);
   const [openError, setOpenError] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const success = queryParams.get('success');
 
   useEffect(() => {
     void (async () => {
@@ -71,7 +71,6 @@ const Courses: React.FC = () => {
       window.history.replaceState({}, document.title, newURL);
     }
   }, [success]);
-
 
   const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
@@ -114,15 +113,15 @@ const Courses: React.FC = () => {
           <div>
             <div>
               {Array.isArray(coursesProfessor) && coursesProfessor.map((course: CourseResponse) => (
-                <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main" }}>
-                  <CardContent>
-                    <Typography variant="h5" component="div">
+                <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main", margin: 2 }}>
+                  <CardContent className="cardContent">
+                    <Typography variant="h6" component="div" className="title">
                       {course.name}
                     </Typography>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                      {course.professor.name}
+                    <Typography sx={{ fontSize: 14 }} gutterBottom>
+                      Professor: {course.professor.name}
                     </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    <Typography sx={{ mb: 1.5 }}>
                       {new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t("courses.until")} {new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
                     </Typography>
                   </CardContent>
