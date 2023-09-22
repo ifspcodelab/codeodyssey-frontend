@@ -4,13 +4,13 @@
   min-width: 275px;
 }
 
-.title {
+.studentName {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.cardContent {
+.cardContentStudents {
   max-width: 75%;
   display: flex;
   gap: 20px;

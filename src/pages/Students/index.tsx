@@ -82,29 +82,26 @@ function Students() {
   return (
     <>
       <PageHeader title={t('students.title')} text={t('students.text')} />
-      <div className="test">
+      <div>
         {
           (Array.isArray(students) && students.length) ? (
             students.map((student: StudentResponse) => (
-              <>
-                <Card key={student.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main", margin: 2 }}>
-                  <CardContent className="cardContent">
-                    <Avatar>
-                      {student.name.charAt(0)}
-                    </Avatar>
-                    <div>
-                      <Typography variant="h6" component="div" className="title">
-                        {student.name}
-                      </Typography>
-                      <Typography sx={{ fontSize: 14 }} gutterBottom>
-                        {student.email}
-                      </Typography>
-                    </div>
+              <Card key={student.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main", margin: 2 }}>
+                <CardContent className="cardContentStudents">
+                  <Avatar>
+                    {student.name.charAt(0)}
+                  </Avatar>
+                  <div>
+                    <Typography variant="h6" component="div" className="studentName">
+                      {student.name}
+                    </Typography>
+                    <Typography sx={{ fontSize: 14 }} gutterBottom>
+                      {student.email}
+                    </Typography>
+                  </div>
 
-                  </CardContent>
-                </Card>
-
-              </>
+                </CardContent>
+              </Card>
             ))
           ) : loading ? (
             <Spinner size={150} />
