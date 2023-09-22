@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { JwtService } from "../../core/auth/JwtService.ts";
@@ -15,7 +14,9 @@ import Spinner from "../../components/Spinner";
 import { useNavigate } from "react-router-dom"
 import axios, { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
-
+import './style.css'
+import Avatar from '@mui/material/Avatar';
+import { CardContent } from "@mui/material";
 function Students() {
   const [students, setStudents] = useState<StudentResponse[] | ProblemDetail>([]);
   const { getStudents } = useApiGetStudents()
@@ -81,20 +82,29 @@ function Students() {
   return (
     <>
       <PageHeader title={t('students.title')} text={t('students.text')} />
-      <div>
+      <div className="test">
         {
           (Array.isArray(students) && students.length) ? (
             students.map((student: StudentResponse) => (
-              <Card key={student.id} variant="outlined" className="cardContainer">
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    {t('students.name')}: {student.name}
-                  </Typography>
-                  <Typography variant="h5" component="div">
-                    {t('students.email')}: {student.email}
-                  </Typography>
-                </CardContent>
-              </Card>
+              <>
+                <Card key={student.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main", margin: 2 }}>
+                  <CardContent className="cardContent">
+                    <Avatar>
+                      {student.name.charAt(0)}
+                    </Avatar>
+                    <div>
+                      <Typography variant="h6" component="div" className="title">
+                        {student.name}
+                      </Typography>
+                      <Typography sx={{ fontSize: 14 }} gutterBottom>
+                        {student.email}
+                      </Typography>
+                    </div>
+
+                  </CardContent>
+                </Card>
+
+              </>
             ))
           ) : loading ? (
             <Spinner size={150} />
