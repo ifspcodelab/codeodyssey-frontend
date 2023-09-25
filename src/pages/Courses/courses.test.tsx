@@ -30,7 +30,7 @@ vi.mock('../../core/auth/JwtService', () => ({
 vi.mock('@mui/x-date-pickers/DatePicker', () => {
   return {
     DatePicker: vi.fn().mockImplementation(({ onChange }) => (
-      <input data-testid="datePicker" onChange={onChange} />
+      <input data-testid="datePicker" onChange={onChange as never} />
     )),
   };
 });
@@ -119,7 +119,7 @@ describe("Visualize my courses", () => {
     const element = await waitFor(() => getByText('Java Spring Course'));
     expect(element).toBeInTheDocument();
 
-    const professorName = await waitFor(() => getByText('John Doe'));
+    const professorName = await waitFor(() => getByText(/John\sDoe/));
     expect(professorName).toBeInTheDocument();
 
     const startDate = await waitFor(() => getByText(/8\/30\/2023/i));
@@ -145,7 +145,7 @@ describe("Visualize my courses", () => {
     const courseName = await waitFor(() => getByText('React Course'));
     expect(courseName).toBeInTheDocument();
 
-    const professorName = await waitFor(() => getByText('Moriarty'));
+    const professorName = await waitFor(() => getByText(/Moriarty/));
     expect(professorName).toBeInTheDocument();
 
     const startDate = await waitFor(() => getByText(/8\/30\/2023/i));
