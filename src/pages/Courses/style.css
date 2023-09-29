@@ -4,6 +4,16 @@
   min-width: 275px;
 }
 
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardContent {
+  max-width: 75%;
+}
+
 .cardActions {
   display: flex;
   flex-direction: column;
@@ -13,9 +23,9 @@
 }
 
 .cardActions > button {
-  background-color: #65849A;
+  background-color: #65849a;
 }
 
-.cardActions > button:hover  {
-  background-color: #6A8FAB;
+.cardActions > button:hover {
+  background-color: #6a8fab;
 }
