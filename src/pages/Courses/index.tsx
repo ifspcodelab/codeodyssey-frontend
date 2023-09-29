@@ -1,44 +1,38 @@
 import { useTranslation } from "react-i18next";
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import PageHeader from "../../components/PageHeader";
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom"
-import { CourseResponse } from "../../core/models/CourseResponse";
-import { useApiGetCourses } from "../../core/hooks/useApiGetCourses.ts";
+import { useLocation } from 'react-router-dom';
+import './style.css'
+import Typography from '@mui/material/Typography';
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
+import { CourseResponse } from "../../core/models/CourseResponse";
+import { useApiGetCourses } from "../../core/hooks/useApiGetCourses.ts";
+import PageHeader from "../../components/PageHeader";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import Spinner from "../../components/Spinner";
-import i18n from '../../locales/i18n.ts'
-import { useLocation } from 'react-router-dom';
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
-import './style.css'
-import CreateInviteModal from '../../components/CreateInviteModal/index.tsx';
+import CoursesList from './CoursesProfessor.tsx'
+import CoursesStudent from './CoursesStudent.tsx'
 
 const Courses: React.FC = () => {
-
   const { t } = useTranslation();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const success = queryParams.get('success');
+
   const authConsumer = AuthConsumer();
-  const [coursesStudent, setCoursesStudent] = useState<CourseResponse[] | ProblemDetail>([]);
-  const [coursesProfessor, setCoursesProfessor] = useState<CourseResponse[] | ProblemDetail>([]);
-  const navigate = useNavigate()
   const USER_ID: string = authConsumer.id;
   const USER_ROLE: string = authConsumer.role;
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { getCoursesProfessor, getCoursesStudent } = useApiGetCourses()
+
+  const [coursesStudent, setCoursesStudent] = useState<CourseResponse[] | ProblemDetail>([]);
+  const [coursesProfessor, setCoursesProfessor] = useState<CourseResponse[] | ProblemDetail>([]);
   const [errorType, setErrorType] = useState('');
   const [openSuccess, setOpenSuccess] = useState(true);
   const [openError, setOpenError] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const success = queryParams.get('success');
 
   useEffect(() => {
     void (async () => {
@@ -71,7 +65,6 @@ const Courses: React.FC = () => {
       window.history.replaceState({}, document.title, newURL);
     }
   }, [success]);
-
 
   const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
@@ -114,47 +107,13 @@ const Courses: React.FC = () => {
           <div>
             <div>
               {Array.isArray(coursesProfessor) && coursesProfessor.map((course: CourseResponse) => (
-                <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main" }}>
-                  <CardContent>
-                    <Typography variant="h5" component="div">
-                      {course.name}
-                    </Typography>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                      {course.professor.name}
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      {new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t("courses.until")} {new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
-                    </Typography>
-                  </CardContent>
-
-                  <CardActions key={course.id} className="cardActions">
-                    <CreateInviteModal course={course} />
-
-                    <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-                      onClick={() => {
-                        navigate(course.slug + '/students');
-                      }}
-                    >{t("courses.button.students")}</Button>
-                  </CardActions>
-                </Card>
+                <CoursesList key={course.id} course={course}></CoursesList>
               ))}
-            </div>
+            </div >
 
             <div>
               {Array.isArray(coursesStudent) && coursesStudent.map((course: CourseResponse) => (
-                <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main" }}>
-                  <CardContent>
-                    <Typography variant="h5" component="div">
-                      {course.name}
-                    </Typography>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                      {course.professor.name}
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      {new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t("courses.until")} {new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
-                    </Typography>
-                  </CardContent>
-                </Card>
+                <CoursesStudent key={course.id} course={course}></CoursesStudent>
               ))}
             </div>
           </div>
