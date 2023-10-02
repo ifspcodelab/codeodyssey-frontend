@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { CourseResponse } from '../../core/models/CourseResponse.ts';
 import './style.css'
 import i18n from "../../locales/i18n.ts";
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import CreateInviteModal from '../../components/CreateInviteModal/index.tsx';
 
 
@@ -25,7 +25,7 @@ const CoursesList: React.FC<ItemComponentProps> = ({ course }) => {
       <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main", margin: 2 }}>
         <CardContent className="cardContent">
           <Typography variant="h6" component="div" className="title">
-            {course.name}
+            <Link to={'react'}>{course.name}</Link>
           </Typography>
           <Typography sx={{ fontSize: 14 }} gutterBottom>
             Professor: {course.professor.name}

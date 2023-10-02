@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Course from "./pages/Course";
 import Home from "./pages/Home";
 import Courses from "./pages/Courses";
 import TermsOfUse from "./pages/TermsOfUse";
@@ -15,72 +16,76 @@ import Login from './pages/Login/index.tsx';
 import Registration from "./pages/Registration";
 import './index.css'
 import ResendEmail from "./pages/ResendEmail";
-import {PrivateRoute} from "./core/auth/PrivateRoute.tsx";
-import {UserRole} from "./core/models/UserRole";
-import {AuthProvider} from "./core/auth/AuthContext.tsx";
+import { PrivateRoute } from "./core/auth/PrivateRoute.tsx";
+import { UserRole } from "./core/models/UserRole";
+import { AuthProvider } from "./core/auth/AuthContext.tsx";
 import ErrorPage from "./pages/ErrorPage";
 import Confirmation from "./pages/Confirmation";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <App/>,
-        errorElement: <ErrorPage/>,
+        element: <App />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: "",
-                element: <Home/>
+                element: <Home />
             },
             {
                 path: "create-course",
                 element:
                     <PrivateRoute userRole={UserRole.PROFESSOR}>
-                        <CreateCourse/>
+                        <CreateCourse />
                     </PrivateRoute>
             },
             {
                 path: "courses",
-                element: <Courses/>
+                element: <Courses />
             },
             {
                 path: "registration",
-                element: <Registration/>
+                element: <Registration />
             },
             {
                 path: "resend-email",
-                element: <ResendEmail/>
+                element: <ResendEmail />
             },
             {
                 path: "login",
-                element: <Login/>
+                element: <Login />
+            },
+            {
+                path: "courses/:slug",
+                element: <Course />
             },
             {
                 path: "courses",
-                element: <Courses/>
+                element: <Courses />
             },
             {
                 path: "terms-of-use",
-                element: <TermsOfUse/>
+                element: <TermsOfUse />
             },
             {
                 path: "privacy-policy",
-                element: <PrivacyPolicy/>
+                element: <PrivacyPolicy />
             },
             {
                 path: "contact",
-                element: <Contact/>
+                element: <Contact />
             },
             {
                 path: "/courses/:slug/students",
-                element: <Students/>
+                element: <Students />
             },
             {
                 path: "invitations/:idInvitation",
-                element: <Invitation/>
+                element: <Invitation />
             },
             {
                 path: "confirmation/:token",
-                element: <Confirmation/>
+                element: <Confirmation />
             },
         ],
     },
@@ -89,7 +94,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <AuthProvider>
-            <RouterProvider router={router}/>
+            <RouterProvider router={router} />
         </AuthProvider>
     </React.StrictMode>,
 )
