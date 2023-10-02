@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { Button, Container, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import PageHeader from "../../components/PageHeader";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { schema } from "./schema.ts";
@@ -9,6 +9,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import i18n from '../../locales/i18n.ts'
 import 'dayjs/locale/pt-br'
 import 'dayjs/locale/en'
+import Textarea from '@mui/joy/Textarea';
+import { CustomDate } from "../../core/models/CustomDate";
+import dayjs from 'dayjs';
 
 
 interface ActivityForm {
@@ -28,97 +31,111 @@ function CreateActivity() {
   const handleChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value);
   };
+
+  const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
   return (
     // TO-DO: Send files (initial, tests and resolution)
     // TO-D0: Select and define evaluation criteria 
     <>
-      <PageHeader title="CreateActivity" text="CreateActivity" />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={1} rowSpacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              sx={{ width: "100%" }}
-              {...register("name")}
-              label="name"
-              variant="outlined"
-              error={!!errors.name}
-              helperText={errors.name && <span>{errors.name.message}</span>}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              sx={{ width: "100%" }}
-              {...register("description")}
-              label="description"
-              variant="outlined"
-              error={!!errors.description}
-            // helperText={errors.description && <span>{errors.description.message}</span>}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <InputLabel id="demo-simple-select-label">Language</InputLabel>
-            <Select
-              {...register("language")}
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={language}
-              label="Language"
-              onChange={handleChange}
-            >
-              <MenuItem value={"Java"}>Java</MenuItem>
-              <MenuItem value={"Javascript"}>Javascript</MenuItem>
-            </Select>
-          </Grid>
-
-          <Grid item xs={12} textAlign="right" display="flex" alignItems="spaceBetween">
-            <Grid item xs={4}>
-              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
-                <Controller
-                  name={"startDate"}
-                  control={control}
-
-                  render={({ field: { ref, onChange, ...field } }) => (
-
-                    <DatePicker
-                      {...field}
-                      inputRef={ref}
-                      label="createcourse.form.startDate" disablePast
-                      onChange={onChange as never}
-                    />
-                  )}
-
-                />
-              </LocalizationProvider>
+      <Container maxWidth="md">
+        <PageHeader title="CreateActivity" text="CreateActivity" />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={1} rowSpacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                sx={{ width: "100%" }}
+                {...register("name")}
+                label="name"
+                variant="outlined"
+                error={!!errors.name}
+                helperText={errors.name && <span>{errors.name.message}</span>}
+              />
             </Grid>
 
-            <Grid >
-              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
-                <Controller
-                  name={"endDate"}
-                  control={control}
-                  defaultValue={undefined}
-                  render={({ field: { ref, onChange, value, ...field } }) => (
-
-                    <DatePicker
-                      {...field}
-                      inputRef={ref}
-                      label="createcourse.form.endDate" data-testid="endDateField"
-                      value={value ? value : null}
-                      onChange={onChange as never}
-
-
-                    />
-                  )}
-                />
-              </LocalizationProvider>
+            <Grid item xs={12}>
+              <FormControl sx={{ width: "100%" }}>
+                <FormLabel>Description</FormLabel>
+                <Textarea placeholder="Placeholder"  {...register("description")} minRows={2} variant="outlined" error={!!errors.description} />
+              </FormControl>
             </Grid>
 
+            <Grid item xs={12}>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-simple-select-label">Language</InputLabel>
+                <Select
+                  {...register("language")}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={language}
+                  label="Language"
+                  onChange={handleChange}
+                >
+                  <MenuItem value={"Java"}>Java</MenuItem>
+                  <MenuItem value={"Javascript"}>Javascript</MenuItem>
+                </Select>
+              </FormControl>
+
+            </Grid>
+
+            <Grid item xs={12} textAlign="right" display="flex" alignItems="spaceBetween">
+              <Grid item xs={4}>
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
+                  <Controller
+                    name={"startDate"}
+                    control={control}
+                    defaultValue={convertedDate}
+                    render={({ field: { ref, onChange, value, ...field } }) => (
+
+                      <DatePicker
+                        {...field}
+                        inputRef={ref}
+                        label="startDate" disablePast value={value ?? " "}
+                        onChange={onChange as never}
+                        slotProps={{
+                          textField: {
+                            helperText: errors.startDate && <span>{errors.startDate.message}</span>
+                          },
+                        }}
+                      />
+                    )}
+
+                  />
+                </LocalizationProvider>
+              </Grid>
+
+              <Grid >
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
+                  <Controller
+                    name={"endDate"}
+                    control={control}
+                    defaultValue={undefined}
+                    render={({ field: { ref, onChange, value, ...field } }) => (
+
+                      <DatePicker
+                        {...field}
+                        inputRef={ref}
+                        label="endDate"
+                        value={value ? value : null}
+                        onChange={onChange as never}
+                        slotProps={{
+                          textField: {
+                            helperText: errors.endDate && <span>{errors.endDate.message}</span>
+                          },
+                        }}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              </Grid>
+
+            </Grid>
+            <Grid item xs={12} textAlign="right">
+              <Button variant="outlined" type="submit">create activity</Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} textAlign="right">
-            <Button variant="outlined" type="submit">create activity</Button>
-          </Grid>
-        </Grid>
-      </form>
+        </form>
+      </Container>
+
     </>
   );
 }
