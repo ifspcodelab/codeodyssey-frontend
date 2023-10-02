@@ -3,5 +3,4 @@ import Yup from "../../config/yup.ts";
 export const schema = Yup.object({
     name: Yup.string().required().min(5).max(50),
     email: Yup.string().required().email(),
-    message: Yup.string().required().min(10).max(100)
 }).required()

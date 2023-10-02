@@ -9,6 +9,7 @@ import TermsOfUse from "./pages/TermsOfUse";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Contact from "./pages/Contact";
 import CreateCourse from "./pages/CreateCourse";
+import CreateActivity from "./pages/CreateActivity";
 import Invitation from "./pages/Invitation";
 import Students from "./pages/Students";
 import './locales/i18n.ts'
@@ -37,6 +38,13 @@ const router = createBrowserRouter([
                 element:
                     <PrivateRoute userRole={UserRole.PROFESSOR}>
                         <CreateCourse />
+                    </PrivateRoute>
+            },
+            {
+                path: "/courses/:slug/create-activity",
+                element:
+                    <PrivateRoute userRole={UserRole.PROFESSOR}>
+                        <CreateActivity />
                     </PrivateRoute>
             },
             {
