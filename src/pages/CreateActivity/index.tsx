@@ -24,6 +24,9 @@ interface ActivityForm {
   language: string;
   startDate: Date;
   endDate: Date;
+  initialFile: File;
+  testFile: File;
+  resolutionFile: File;
 }
 
 
@@ -174,25 +177,39 @@ function CreateActivity() {
                 type="button"
                 onClick={() => {
                   append({
-                    name: "append",
+                    name: "",
                     evaluation: 0
                   });
                 }}
               >
                 Append
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  prepend({
-                    name: "prepend",
-                    evaluation: 0
-                  });
-                }}
-              >
-                prepend
-              </button>
             </Grid>
+            <Grid item xs={12}>
+              <label htmlFor="initial-file">Initial file</label>
+              <input
+                id="initial-file"
+                type="file"
+                {...register("initialFile")}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <label htmlFor="test-file">Test file</label>
+              <input
+                id="test-file"
+                {...register("testFile")}
+                type="file"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <label htmlFor="resolution-file">Resolution file</label>
+              <input
+                id="resolution-file"
+                {...register("resolutionFile")}
+                type="file"
+              />
+            </Grid>
+
             <Grid item xs={12} textAlign="right">
               <Button variant="outlined" type="submit">create activity</Button>
             </Grid>
