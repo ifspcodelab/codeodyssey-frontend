@@ -3,7 +3,7 @@ import { Button, Container, FormControl, FormLabel, Grid, InputLabel, MenuItem, 
 import PageHeader from "../../components/PageHeader";
 import { Controller, SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import { schema } from "./schema.ts";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import i18n from '../../locales/i18n.ts'
@@ -38,7 +38,7 @@ function CreateActivity() {
     }
   })
 
-  const { fields, append, prepend, remove } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     name: "criteria",
     control,
     rules: {
@@ -46,7 +46,17 @@ function CreateActivity() {
     }
   });
 
+  const [fileType, setFileType] = useState("");
   const [language, setLanguage] = React.useState('');
+
+  useEffect(() => {
+    if (language === "java") {
+      setFileType(".java")
+    } else if (language === "javascript") {
+      setFileType(".js")
+    }
+  }, [fileType, language]);
+
 
   const handleChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value);
@@ -54,8 +64,6 @@ function CreateActivity() {
 
   const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
   return (
-    // TO-DO: Send files (initial, tests and resolution)
-    // TO-D0: Select and define evaluation criteria 
     <>
       <Container maxWidth="md">
         <PageHeader title="CreateActivity" text="CreateActivity" />
@@ -91,8 +99,8 @@ function CreateActivity() {
                   label="Language"
                   onChange={handleChange}
                 >
-                  <MenuItem value={"Java"}>Java</MenuItem>
-                  <MenuItem value={"Javascript"}>Javascript</MenuItem>
+                  <MenuItem value={"java"}>Java</MenuItem>
+                  <MenuItem value={"javascript"}>Javascript</MenuItem>
                 </Select>
               </FormControl>
 
@@ -205,6 +213,7 @@ function CreateActivity() {
               <label htmlFor="resolution-file">Resolution file</label>
               <input
                 id="resolution-file"
+                accept={fileType}
                 {...register("resolutionFile")}
                 type="file"
               />
