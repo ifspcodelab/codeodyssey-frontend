@@ -17,16 +17,16 @@ import dayjs from 'dayjs';
 interface ActivityForm {
   criteria: {
     name: string;
-    evaluation: number;
+    weight: number;
   }[];
-  name: string;
+  title: string;
   description: string;
   language: string;
   startDate: Date;
   endDate: Date;
   initialFile: File;
   testFile: File;
-  resolutionFile: File;
+  solutionFile: File;
 }
 
 
@@ -34,7 +34,7 @@ function CreateActivity() {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => console.log(data)
   const { register, control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema), defaultValues: {
-      criteria: [{ name: "", amount: 0 }]
+      criteria: [{ name: "", weight: 0 }]
     }
   })
 
@@ -73,11 +73,11 @@ function CreateActivity() {
             <Grid item xs={12}>
               <TextField
                 sx={{ width: "100%" }}
-                {...register("name")}
-                label="name"
+                {...register("title")}
+                label="Title"
                 variant="outlined"
-                error={!!errors.name}
-                helperText={errors.name && <span>{errors.name.message}</span>}
+                error={!!errors.title}
+                helperText={errors.title && <span>{errors.title.message}</span>}
               />
             </Grid>
 
@@ -172,7 +172,7 @@ function CreateActivity() {
                       <span>evaluation</span>
                       <input
                         type="number"
-                        {...register(`criteria.${index}.evaluation`, { valueAsNumber: true })}
+                        {...register(`criteria.${index}.weight`, { valueAsNumber: true })}
                       />
                     </label>
                     <button type="button" onClick={() => remove(index)}>
@@ -186,7 +186,7 @@ function CreateActivity() {
                 onClick={() => {
                   append({
                     name: "",
-                    evaluation: 0
+                    weight: 0
                   });
                 }}
               >
@@ -197,6 +197,7 @@ function CreateActivity() {
               <label htmlFor="initial-file">Initial file</label>
               <input
                 id="initial-file"
+                accept={fileType}
                 type="file"
                 {...register("initialFile")}
               />
@@ -205,16 +206,17 @@ function CreateActivity() {
               <label htmlFor="test-file">Test file</label>
               <input
                 id="test-file"
+                accept={fileType}
                 {...register("testFile")}
                 type="file"
               />
             </Grid>
             <Grid item xs={12}>
-              <label htmlFor="resolution-file">Resolution file</label>
+              <label htmlFor="solution-file">Solution file</label>
               <input
-                id="resolution-file"
+                id="solution-file"
                 accept={fileType}
-                {...register("resolutionFile")}
+                {...register("solutionFile")}
                 type="file"
               />
             </Grid>
