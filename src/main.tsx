@@ -23,6 +23,7 @@ import { AuthProvider } from "./core/auth/AuthContext.tsx";
 import ErrorPage from "./pages/ErrorPage";
 import Confirmation from "./pages/Confirmation";
 import Activities from "./pages/Activities";
+import Activity from "./pages/Activity";
 
 const router = createBrowserRouter([
     {
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
             {
                 path: "/:idCourse/:slug/activities",
                 element: <Activities />
+            },
+            {
+                path: "/:idCourse/:slug/activities/:idActivity",
+                element: <Activity />
             },
             {
                 path: "terms-of-use",

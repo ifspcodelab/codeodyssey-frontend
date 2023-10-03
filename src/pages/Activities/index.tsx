@@ -7,6 +7,7 @@ import { Card, CardContent } from "@mui/material";
 import Typography from '@mui/material/Typography';
 import i18n from "../../locales/i18n";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 interface ActivityResponse {
   id: string,
@@ -40,7 +41,7 @@ function Activities() {
         <Card key={activity.id}>
           <CardContent className="cardContent">
             <Typography variant="h6" component="div" className="title">
-              {activity.name}
+              <Link to={activity.id}>{activity.name}</Link>
             </Typography>
             <Typography sx={{ fontSize: 14 }} gutterBottom>
               Description: {activity.description}
