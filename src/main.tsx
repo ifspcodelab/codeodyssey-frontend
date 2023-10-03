@@ -22,6 +22,7 @@ import { UserRole } from "./core/models/UserRole";
 import { AuthProvider } from "./core/auth/AuthContext.tsx";
 import ErrorPage from "./pages/ErrorPage";
 import Confirmation from "./pages/Confirmation";
+import Activities from "./pages/Activities";
 
 const router = createBrowserRouter([
     {
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
             {
                 path: "courses",
                 element: <Courses />
+            },
+            {
+                path: "/courses/:slug/activities",
+                element: <Activities />
             },
             {
                 path: "terms-of-use",

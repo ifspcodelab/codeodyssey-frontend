@@ -12,6 +12,11 @@ function Course() {
       <PageHeader title="Course" text="My Course" />
       <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
         onClick={() => {
+          navigate('activities');
+        }}
+      >Activities</Button>
+      <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
+        onClick={() => {
           navigate('create-activity');
         }}
       >Create Activity</Button>
