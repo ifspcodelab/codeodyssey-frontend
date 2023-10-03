@@ -42,7 +42,7 @@ const router = createBrowserRouter([
                     </PrivateRoute>
             },
             {
-                path: "/courses/:slug/create-activity",
+                path: "/:idCourse/:slug/create-activity",
                 element:
                     <PrivateRoute userRole={UserRole.PROFESSOR}>
                         <CreateActivity />
@@ -65,7 +65,7 @@ const router = createBrowserRouter([
                 element: <Login />
             },
             {
-                path: "courses/:slug",
+                path: "/:idCourse/:slug",
                 element: <Course />
             },
             {
@@ -73,7 +73,7 @@ const router = createBrowserRouter([
                 element: <Courses />
             },
             {
-                path: "/courses/:slug/activities",
+                path: "/:idCourse/:slug/activities",
                 element: <Activities />
             },
             {
@@ -89,7 +89,7 @@ const router = createBrowserRouter([
                 element: <Contact />
             },
             {
-                path: "/courses/:slug/students",
+                path: "/:idCourse/:slug/students",
                 element: <Students />
             },
             {

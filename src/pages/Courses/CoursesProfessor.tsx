@@ -25,7 +25,7 @@ const CoursesList: React.FC<ItemComponentProps> = ({ course }) => {
       <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main", margin: 2 }}>
         <CardContent className="cardContent">
           <Typography variant="h6" component="div" className="title">
-            <Link to={'react'}>{course.name}</Link>
+            <Link to={"/" + course.id + "/" + course.slug}>{course.name}</Link>
           </Typography>
           <Typography sx={{ fontSize: 14 }} gutterBottom>
             Professor: {course.professor.name}
@@ -40,7 +40,7 @@ const CoursesList: React.FC<ItemComponentProps> = ({ course }) => {
 
           <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
             onClick={() => {
-              navigate(course.slug + '/students');
+              navigate("/" + course.id + "/" + course.slug + '/students');
             }}
           >{t("courses.button.students")}</Button>
         </CardActions>
