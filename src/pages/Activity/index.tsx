@@ -1,11 +1,15 @@
 import PageHeader from "../../components/PageHeader";
 import { Button, Grid, Typography } from "@mui/material";
-
+import DropFileInput from '../../components/DropFileInput'
 function Activity() {
+
+  const onFileChange = (files) => {
+    console.log(files)
+  }
 
   return (
     <>
-      <PageHeader title="Course" text="My Course" />
+      <PageHeader title="Activity" text="Desc Example" />
       <Typography sx={{ fontSize: 14 }} gutterBottom>
         Title: Activity 1
         <br />
@@ -18,12 +22,9 @@ function Activity() {
       </Typography>
       <Grid item xs={12}>
         <label htmlFor="resolution-file">Resolution file</label>
-        <input
-          id="resolution-file"
-          accept=".java"
-          type="file"
-        />
       </Grid>
+      {/* TO-DO: put id and accept in the input tag */}
+      <DropFileInput onFileChange={(files) => onFileChange(files)} />
     </>
   );
 }
