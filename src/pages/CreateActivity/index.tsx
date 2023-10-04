@@ -13,23 +13,7 @@ import Textarea from '@mui/joy/Textarea';
 import { CustomDate } from "../../core/models/CustomDate";
 import dayjs from 'dayjs';
 import { useTranslation } from "react-i18next";
-import { Typography } from '@mui/material/Typography';
-
-interface ActivityForm {
-  criteria: {
-    name: string;
-    weight: number;
-  }[];
-  title: string;
-  description: string;
-  language: string;
-  startDate: Date;
-  endDate: Date;
-  initialFile: File;
-  testFile: File;
-  solutionFile: File;
-}
-
+import { ActivityForm } from "../../core/models/ActivityForm.ts"
 
 function CreateActivity() {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => console.log(data)
@@ -91,24 +75,6 @@ function CreateActivity() {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12}>
-              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="demo-simple-select-label">Language</InputLabel>
-                <Select
-                  {...register("language")}
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={language}
-                  label={t('createactivity.form.language')}
-                  onChange={handleChange}
-                >
-                  <MenuItem value={"java"}>Java</MenuItem>
-                  <MenuItem value={"javascript"}>Javascript</MenuItem>
-                </Select>
-              </FormControl>
-
-            </Grid>
-
             <Grid item xs={12} textAlign="right" display="flex" alignItems="spaceBetween">
               <Grid item xs={4}>
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
@@ -159,8 +125,25 @@ function CreateActivity() {
                   />
                 </LocalizationProvider>
               </Grid>
-
             </Grid>
+
+            <Grid item xs={12}>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-simple-select-label">Language</InputLabel>
+                <Select
+                  {...register("language")}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={language}
+                  label={t('createactivity.form.language')}
+                  onChange={handleChange}
+                >
+                  <MenuItem value={"java"}>Java</MenuItem>
+                  <MenuItem value={"javascript"}>Javascript</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
             <Grid item xs={12}>
               <span>
                 {t('createactivity.form.evaluation')}
@@ -199,33 +182,30 @@ function CreateActivity() {
                 {t('createactivity.form.evaluationField.add')}
               </button>
             </Grid>
-            <Grid item xs={12}>
+
+            {language ? <><Grid item xs={12}>
               <label htmlFor="initial-file">{t('createactivity.form.initialFile')}</label>
               <input
                 id="initial-file"
                 accept={fileType}
                 type="file"
-                {...register("initialFile")}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <label htmlFor="test-file">{t('createactivity.form.testFile')}</label>
-              <input
-                id="test-file"
-                accept={fileType}
-                {...register("testFile")}
-                type="file"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <label htmlFor="solution-file">{t('createactivity.form.solutionFile')}</label>
-              <input
-                id="solution-file"
-                accept={fileType}
-                {...register("solutionFile")}
-                type="file"
-              />
-            </Grid>
+                {...register("initialFile")} />
+            </Grid><Grid item xs={12}>
+                <label htmlFor="test-file">{t('createactivity.form.testFile')}</label>
+                <input
+                  id="test-file"
+                  accept={fileType}
+                  {...register("testFile")}
+                  type="file" />
+              </Grid><Grid item xs={12}>
+                <label htmlFor="solution-file">{t('createactivity.form.solutionFile')}</label>
+                <input
+                  id="solution-file"
+                  accept={fileType}
+                  {...register("solutionFile")}
+                  type="file" />
+              </Grid></> : <span></span>}
+
 
             <Grid item xs={12} textAlign="right">
               <Button variant="outlined" type="submit">{t('createactivity.form.button.publish')}</Button>
