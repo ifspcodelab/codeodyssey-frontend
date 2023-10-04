@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ActivityResponse } from "../../core/models/ActivityResponse"
 
-
 function Activities() {
   // const { getActivities } = useApiGetActivities()
   const [activities, setActivities] = useState([]);
