@@ -20,6 +20,12 @@
       "expired": "O token de confirmação expirou"
     }
   },
+  "course": {
+    "button": {
+      "create": "Criar Atividade",
+      "activities": "Ver Atividades"
+    }
+  },
   "courses": {
     "title": "Meus Cursos",
     "text": "Cursos que estou participando",
@@ -30,6 +36,30 @@
     "intlDate": "{{date, datetime}}",
     "until": "até",
     "emptyList": "Você ainda não participa de nenhum curso"
+  },
+  "createactivity": {
+    "title": "Criar Atividade",
+    "text": "Definir uma atividade para o curso",
+    "form": {
+      "title": "Título",
+      "desc": "Descrição",
+      "language": "Linguagem",
+      "startDate": "Data de início",
+      "endDate": "Data de término",
+      "initialFile": "Arquivo inicial",
+      "testFile": "Arquivo de teste",
+      "solutionFile": "Arquivo de solução",
+      "evaluation": "Avaliação",
+      "evaluationField": {
+        "name": "Nome",
+        "weight": "Peso",
+        "delete": "Deletar",
+        "add": "Adicionar"
+      },
+      "button": {
+        "publish": "Publicar Atividade"
+      }
+    }
   },
   "students": {
     "title": "Meus Alunos",

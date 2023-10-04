@@ -20,6 +20,12 @@
       "expired": "The confirmation token is expired"
     }
   },
+  "course": {
+    "button": {
+      "create": "Create Activity",
+      "activities": "Visualize Activities"
+    }
+  },
   "courses": {
     "title": "My Courses",
     "text": "Courses that i'm participating",
@@ -30,6 +36,30 @@
     "intlDate": "{{date, datetime}}",
     "until": "until",
     "emptyList": "You do not participate in any course yet"
+  },
+  "createactivity": {
+    "title": "Create Activity",
+    "text": "Define an activity for the course",
+    "form": {
+      "title": "Title",
+      "desc": "Description",
+      "language": "Language",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "initialFile": "Initial File",
+      "testFile": "Test File",
+      "solutionFile": "Solution File",
+      "evaluation": "Evaluation",
+      "evaluationField": {
+        "name": "Name",
+        "weight": "Weight",
+        "delete": "Delete",
+        "add": "Add"
+      },
+      "button": {
+        "publish": "Publish Activity"
+      }
+    }
   },
   "students": {
     "title": "My Students",

@@ -12,7 +12,8 @@ import 'dayjs/locale/en'
 import Textarea from '@mui/joy/Textarea';
 import { CustomDate } from "../../core/models/CustomDate";
 import dayjs from 'dayjs';
-
+import { useTranslation } from "react-i18next";
+import { Typography } from '@mui/material/Typography';
 
 interface ActivityForm {
   criteria: {
@@ -62,11 +63,13 @@ function CreateActivity() {
     setLanguage(event.target.value);
   };
 
+  const { t } = useTranslation();
+
   const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
   return (
     <>
       <Container maxWidth="md">
-        <PageHeader title="CreateActivity" text="CreateActivity" />
+        <PageHeader title={t('createactivity.title')} text={t('createactivity.text')} />
         <form onSubmit={handleSubmit(onSubmit)}>
 
           <Grid container spacing={1} rowSpacing={2}>
@@ -74,7 +77,7 @@ function CreateActivity() {
               <TextField
                 sx={{ width: "100%" }}
                 {...register("title")}
-                label="Title"
+                label={t('createactivity.form.title')}
                 variant="outlined"
                 error={!!errors.title}
                 helperText={errors.title && <span>{errors.title.message}</span>}
@@ -83,8 +86,8 @@ function CreateActivity() {
 
             <Grid item xs={12}>
               <FormControl sx={{ width: "100%" }}>
-                <FormLabel>Description</FormLabel>
-                <Textarea placeholder="Placeholder"  {...register("description")} minRows={2} variant="outlined" error={!!errors.description} />
+                <FormLabel>{t('createactivity.form.desc')}</FormLabel>
+                <Textarea placeholder={t('createactivity.form.desc')} {...register("description")} minRows={2} variant="outlined" error={!!errors.description} />
               </FormControl>
             </Grid>
 
@@ -96,7 +99,7 @@ function CreateActivity() {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={language}
-                  label="Language"
+                  label={t('createactivity.form.language')}
                   onChange={handleChange}
                 >
                   <MenuItem value={"java"}>Java</MenuItem>
@@ -143,7 +146,7 @@ function CreateActivity() {
                       <DatePicker
                         {...field}
                         inputRef={ref}
-                        label="endDate"
+                        label={t('createactivity.form.endDate')}
                         value={value ? value : null}
                         onChange={onChange as never}
                         slotProps={{
@@ -159,24 +162,27 @@ function CreateActivity() {
 
             </Grid>
             <Grid item xs={12}>
+              <span>
+                {t('createactivity.form.evaluation')}
+              </span>
               {fields.map((field, index) => {
                 return (
                   <section key={field.id}>
                     <label>
-                      <span>Name</span>
+                      <span>{t('createactivity.form.evaluationField.name')}</span>
                       <input
                         {...register(`criteria.${index}.name`, { required: true })}
                       />
                     </label>
                     <label>
-                      <span>evaluation</span>
+                      <span>{t('createactivity.form.evaluationField.weight')}</span>
                       <input
                         type="number"
                         {...register(`criteria.${index}.weight`, { valueAsNumber: true })}
                       />
                     </label>
                     <button type="button" onClick={() => remove(index)}>
-                      Delete
+                      {t('createactivity.form.evaluationField.delete')}
                     </button>
                   </section>
                 );
@@ -190,11 +196,11 @@ function CreateActivity() {
                   });
                 }}
               >
-                Append
+                {t('createactivity.form.evaluationField.add')}
               </button>
             </Grid>
             <Grid item xs={12}>
-              <label htmlFor="initial-file">Initial file</label>
+              <label htmlFor="initial-file">{t('createactivity.form.initialFile')}</label>
               <input
                 id="initial-file"
                 accept={fileType}
@@ -203,7 +209,7 @@ function CreateActivity() {
               />
             </Grid>
             <Grid item xs={12}>
-              <label htmlFor="test-file">Test file</label>
+              <label htmlFor="test-file">{t('createactivity.form.testFile')}</label>
               <input
                 id="test-file"
                 accept={fileType}
@@ -212,7 +218,7 @@ function CreateActivity() {
               />
             </Grid>
             <Grid item xs={12}>
-              <label htmlFor="solution-file">Solution file</label>
+              <label htmlFor="solution-file">{t('createactivity.form.solutionFile')}</label>
               <input
                 id="solution-file"
                 accept={fileType}
@@ -222,7 +228,7 @@ function CreateActivity() {
             </Grid>
 
             <Grid item xs={12} textAlign="right">
-              <Button variant="outlined" type="submit">create activity</Button>
+              <Button variant="outlined" type="submit">{t('createactivity.form.button.publish')}</Button>
             </Grid>
           </Grid>
         </form>

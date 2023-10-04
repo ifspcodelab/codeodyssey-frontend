@@ -14,12 +14,12 @@ function Course() {
         onClick={() => {
           navigate('activities');
         }}
-      >Activities</Button>
+      >{t('course.button.activities')}</Button>
       <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
         onClick={() => {
           navigate('create-activity');
         }}
-      >Create Activity</Button>
+      >{t('course.button.create')}</Button>
     </>
   );
 }
