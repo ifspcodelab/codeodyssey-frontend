@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Container, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import PageHeader from "../../components/PageHeader";
-import { Controller, SubmitHandler, useForm, useFieldArray } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { schema } from "./schema.ts";
 import React, { useEffect, useState } from "react";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -14,34 +14,92 @@ import { CustomDate } from "../../core/models/CustomDate";
 import dayjs from 'dayjs';
 import { useTranslation } from "react-i18next";
 import { ActivityForm } from "../../core/models/ActivityForm.ts"
+import { useApiCreateActivity } from "../../core/hooks/useApiCreateActivity";
+import { JwtService } from "../../core/auth/JwtService.ts";
 
 function CreateActivity() {
-  const onSubmit: SubmitHandler<ActivityForm> = (data) => console.log(data)
-  const { register, control, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema), defaultValues: {
-      criteria: [{ name: "", weight: 0 }]
-    }
-  })
+  // const onSubmit: SubmitHandler<ActivityForm> = (data) => {
+  //   void submitCreateActivity(data)
+  //   // console.log(code64)
+  //   console.log(data)
+  //   // console.log(data.initialFile)
+  // }
+  const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
 
-  const { fields, append, remove } = useFieldArray({
-    name: "criteria",
-    control,
-    rules: {
-      required: "Please append at least 1 item"
+  const { createActivity } = useApiCreateActivity();
+
+  const rawAccessToken = new JwtService().getRawAccessToken() as string;
+  async function submitCreateActivity(data: ActivityForm) {
+    try {
+
+      const response = await createActivity(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken)
+      // navigate('/courses?success=true')
+      // console.log("response", response)
+      // await createActivity(curso.title, curso.description, curso.startDate, curso.endDate, curso.initialFile, curso.solutionFile, curso.testFile, curso.extension, rawAccessToken);
+
+
     }
-  });
+    catch (error) {
+      console.log(error)
+      // if (axios.isAxiosError(error)) {
+      //   handleError(error)
+      // } else {
+      //   setErrorType('unexpected')
+      //   setOpen(true);
+      // }
+    }
+  }
+
+  const { register, setValue, control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  })
+  // , defaultValues: {
+  //   criteria: [{ name: "", weight: 0 }]
+  // }
+  // const { fields, append, remove } = useFieldArray({
+  //   name: "criteria",
+  //   control,
+  //   rules: {
+  //     required: "Please append at least 1 item"
+  //   }
+  // });
 
   const [fileType, setFileType] = useState("");
   const [language, setLanguage] = React.useState('');
 
   useEffect(() => {
-    if (language === "java") {
+    if (language === ".java") {
       setFileType(".java")
-    } else if (language === "javascript") {
+    } else if (language === ".js") {
       setFileType(".js")
     }
   }, [fileType, language]);
 
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  // const [baseImage, setBaseImage] = useState("");
+  // const [code64, setCode64] = useState("");
+
+  const uploadImage = async (e) => {
+    const file = e.target.files[0];
+    const base64 = await convertBase64(file);
+    const [_, parts] = base64.split('base64,')
+    return parts
+  };
 
   const handleChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value);
@@ -66,6 +124,7 @@ function CreateActivity() {
                 error={!!errors.title}
                 helperText={errors.title && <span>{errors.title.message}</span>}
               />
+
             </Grid>
 
             <Grid item xs={12}>
@@ -131,20 +190,20 @@ function CreateActivity() {
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                 <InputLabel id="demo-simple-select-label">Language</InputLabel>
                 <Select
-                  {...register("language")}
+                  {...register("extension")}
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={language}
                   label={t('createactivity.form.language')}
                   onChange={handleChange}
                 >
-                  <MenuItem value={"java"}>Java</MenuItem>
-                  <MenuItem value={"javascript"}>Javascript</MenuItem>
+                  <MenuItem value={".java"}>Java</MenuItem>
+                  <MenuItem value={".js"}>Javascript</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
 
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <span>
                 {t('createactivity.form.evaluation')}
               </span>
@@ -181,30 +240,51 @@ function CreateActivity() {
               >
                 {t('createactivity.form.evaluationField.add')}
               </button>
-            </Grid>
+            </Grid> */}
 
-            {language ? <><Grid item xs={12}>
-              <label htmlFor="initial-file">{t('createactivity.form.initialFile')}</label>
-              <input
-                id="initial-file"
-                accept={fileType}
-                type="file"
-                {...register("initialFile")} />
-            </Grid><Grid item xs={12}>
-                <label htmlFor="test-file">{t('createactivity.form.testFile')}</label>
+            {language ? <><Controller
+              name="field"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
                 <input
-                  id="test-file"
+                  type="file"
                   accept={fileType}
-                  {...register("testFile")}
-                  type="file" />
-              </Grid><Grid item xs={12}>
-                <label htmlFor="solution-file">{t('createactivity.form.solutionFile')}</label>
-                <input
-                  id="solution-file"
-                  accept={fileType}
-                  {...register("solutionFile")}
-                  type="file" />
-              </Grid></> : <span></span>}
+                  {...register("initialFile")}
+                  {...field}
+                  onChange={async (e) => {
+                    const valorTransformado = await uploadImage(e);
+                    setValue("initialFile", valorTransformado);
+                  }} />
+              )} /><Controller
+                name="field"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <input
+                    type="file"
+                    accept={fileType}
+                    {...register("testFile")}
+                    {...field}
+                    onChange={async (e) => {
+                      const valorTransformado = await uploadImage(e);
+                      setValue("testFile", valorTransformado);
+                    }} />
+                )} /><Controller
+                name="field"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <input
+                    type="file"
+                    accept={fileType}
+                    {...register("solutionFile")}
+                    {...field}
+                    onChange={async (e) => {
+                      const valorTransformado = await uploadImage(e);
+                      setValue("solutionFile", valorTransformado);
+                    }} />
+                )} /></> : <span></span>}
 
 
             <Grid item xs={12} textAlign="right">
@@ -212,6 +292,11 @@ function CreateActivity() {
             </Grid>
           </Grid>
         </form>
+
+        <div>
+
+          <br></br>
+        </div>
       </Container>
 
     </>

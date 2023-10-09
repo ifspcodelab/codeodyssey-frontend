@@ -3,7 +3,7 @@ import Yup from "../../config/yup.ts";
 export const schema = Yup.object({
     title: Yup.string().required().min(5).max(50),
     description: Yup.string().required().min(5),
-    language: Yup.string().required(),
+    extension: Yup.string().required(),
     startDate: Yup.date().required(),
     endDate: Yup.date().required().min(Yup.ref('startDate'))
 }).required()
