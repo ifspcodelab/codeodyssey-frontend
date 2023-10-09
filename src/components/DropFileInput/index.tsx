@@ -22,6 +22,7 @@ const DropFileInput = props => {
     }
   }
 
+
   return (
     <div
       ref={wrapperRef}
@@ -40,7 +41,7 @@ const DropFileInput = props => {
 }
 
 DropFileInput.propTypes = {
-  onFileChange: PropTypes.func
+  onFileChange: PropTypes.func,
 }
 
 export default DropFileInput
