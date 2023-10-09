@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageHeader from "../../components/PageHeader";
 import { useApiGetActivities } from "../../core/hooks/useApiGetActivities.ts";
 import React from "react";
@@ -19,9 +19,13 @@ function Activities() {
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { t } = useTranslation();
 
-  React.useEffect(async () => {
-    const activitiesResponse = await getActivities(COURSE_ID, rawAccessToken);
-    setActivities(activitiesResponse)
+
+
+  useEffect(() => {
+    void (async () => {
+      const activitiesResponse = await getActivities(COURSE_ID, rawAccessToken);
+      setActivities(activitiesResponse)
+    })();
   }, []);
 
   return (
