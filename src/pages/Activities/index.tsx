@@ -9,12 +9,13 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ActivityResponse } from "../../core/models/ActivityResponse"
 import { JwtService } from "../../core/auth/JwtService.ts";
+import { useParams } from "react-router-dom";
 
 function Activities() {
   const { getActivities } = useApiGetActivities()
   const [activities, setActivities] = useState([]);
 
-  const COURSE_ID = "25a197ae-bcbc-489c-899a-0aa3036b3020"
+  const { idCourse } = useParams()
 
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { t } = useTranslation();
@@ -23,7 +24,7 @@ function Activities() {
 
   useEffect(() => {
     void (async () => {
-      const activitiesResponse = await getActivities(COURSE_ID, rawAccessToken);
+      const activitiesResponse = await getActivities(idCourse, rawAccessToken);
       setActivities(activitiesResponse)
     })();
   }, []);
