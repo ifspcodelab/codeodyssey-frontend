@@ -16,9 +16,6 @@ interface ItemComponentProps {
 const CoursesList: React.FC<ItemComponentProps> = ({ course }) => {
   const { t } = useTranslation();
 
-
-
-
   return (
     <div>
       <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main", margin: 2 }}>
@@ -36,7 +33,6 @@ const CoursesList: React.FC<ItemComponentProps> = ({ course }) => {
 
         <CardActions key={course.id} className="cardActions">
           <CreateInviteModal course={course} />
-
         </CardActions>
       </Card>
 

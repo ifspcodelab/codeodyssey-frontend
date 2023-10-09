@@ -16,6 +16,9 @@ import { useTranslation } from "react-i18next";
 import { ActivityForm } from "../../core/models/ActivityForm.ts"
 import { useApiCreateActivity } from "../../core/hooks/useApiCreateActivity";
 import { JwtService } from "../../core/auth/JwtService.ts";
+import { useNavigate } from "react-router-dom"
+import { useParams } from "react-router-dom";
+import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
 
 function CreateActivity() {
   // const onSubmit: SubmitHandler<ActivityForm> = (data) => {
@@ -27,17 +30,22 @@ function CreateActivity() {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
 
   const { createActivity } = useApiCreateActivity();
+  const navigate = useNavigate()
+  const [course, setCourse] = useState();
+  const { getCourse } = useApiGetCourse()
+  const { idCourse } = useParams()
+  useEffect(() => {
+    void (async () => {
+      const courseResponse = await getCourse(idCourse, rawAccessToken);
+      setCourse(courseResponse)
+    })();
+  }, []);
 
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   async function submitCreateActivity(data: ActivityForm) {
     try {
-
-      const response = await createActivity(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken)
-      // navigate('/courses?success=true')
-      // console.log("response", response)
-      // await createActivity(curso.title, curso.description, curso.startDate, curso.endDate, curso.initialFile, curso.solutionFile, curso.testFile, curso.extension, rawAccessToken);
-
-
+      await createActivity(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken, course.id)
+      navigate(`/courses/${course.id}/${course.slug}/activities?success=true`)
     }
     catch (error) {
       console.log(error)

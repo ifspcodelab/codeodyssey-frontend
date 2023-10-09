@@ -40,6 +40,7 @@
   "createactivity": {
     "title": "Criar Atividade",
     "text": "Definir uma atividade para o curso",
+    "successMessage": "Atividade criada com sucesso!",
     "form": {
       "title": "Título",
       "desc": "Descrição",
@@ -170,13 +171,14 @@
           "uppercase": "A Senha deve ter pelo menos uma letra maiúscula",
           "special": "A Senha deve ter pelo menos um caractere especial"
         }
-      }},
+      }
+    },
     "login": "Faça login!",
     "register": "Novo no Code Odyssey? <1>Registre-se</1>.",
     "loginError": "Houve um erro, por favor tente novamente",
     "footer": "Login footer"
   },
-  "resendEmail":{
+  "resendEmail": {
     "title": "Reenviar o email",
     "text": "Caso você não tenha recebido o email de confirmação, clique no link abaixo para reenviar o email após um minuto.",
     "emailMessage": "O sistema mandou um email de confirmação para {{email}}. Verifique seu email.",
@@ -199,7 +201,7 @@
     },
     "footer": "Texto do footer aqui"
   },
-  "errorPage":{
+  "errorPage": {
     "title": "Erro {{statusCode}}",
     "subTitle": "Um erro inesperado ocorreu.",
     "message": {

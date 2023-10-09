@@ -10,13 +10,24 @@ import { Link } from "react-router-dom";
 import { ActivityResponse } from "../../core/models/ActivityResponse"
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useParams } from "react-router-dom";
+import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 
 function Activities() {
+  const queryParams = new URLSearchParams(location.search);
+
   const { getActivities } = useApiGetActivities()
   const [activities, setActivities] = useState([]);
 
   const { idCourse } = useParams()
+  const success = queryParams.get('success');
+  const [openSuccess, setOpenSuccess] = useState(true);
+  const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || event === undefined) {
+      return;
+    }
 
+    setOpenSuccess(false);
+  };
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { t } = useTranslation();
 
@@ -32,6 +43,7 @@ function Activities() {
   return (
 
     <>
+      {success && <SuccessrSnackBar message={t('createactivity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
       <PageHeader title="Activities" text="Activities course" />
       {Array.isArray(activities) && activities.map((activity: ActivityResponse) => (
         <Card key={activity.id}>
