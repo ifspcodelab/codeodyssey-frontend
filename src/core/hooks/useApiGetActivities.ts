@@ -1,11 +1,9 @@
-// import {api} from "../services/axios";
+import {api} from "../services/axios";
 
-// export const useApiGetActivities = () => ({
-//     getActivities: async () => {
-//         console.log("rawAccessToken: ", rawAccessToken);
-//         api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
-//         const response = await api.get< | ProblemDetail>('/activities');
-//         console.log("teste api: ", response)
-//         return response.data;
-//     }
-// })
+export const useApiGetActivities = () => ({
+    getActivities: async (courseId: string, rawAccessToken: string) => {
+        api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
+        const response = await api.get< | ProblemDetail>('/courses/' + courseId + '/activities');
+        return response.data;
+    }
+})

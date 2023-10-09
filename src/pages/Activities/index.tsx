@@ -1,7 +1,6 @@
 import { useState } from "react";
 import PageHeader from "../../components/PageHeader";
-// import { useApiGetActivities } from "../../core/hooks/useApiGetActivities.ts";
-import axios from "axios";
+import { useApiGetActivities } from "../../core/hooks/useApiGetActivities.ts";
 import React from "react";
 import { Card, CardContent } from "@mui/material";
 import Typography from '@mui/material/Typography';
@@ -9,20 +8,20 @@ import i18n from "../../locales/i18n";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ActivityResponse } from "../../core/models/ActivityResponse"
+import { JwtService } from "../../core/auth/JwtService.ts";
 
 function Activities() {
-  // const { getActivities } = useApiGetActivities()
+  const { getActivities } = useApiGetActivities()
   const [activities, setActivities] = useState([]);
 
-  const baseURL = "https://localhost:3000/activities";
+  const COURSE_ID = "25a197ae-bcbc-489c-899a-0aa3036b3020"
 
+  const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { t } = useTranslation();
 
-  React.useEffect(() => {
-    axios.get(baseURL).then((response) => {
-      console.log(response.data)
-      setActivities(response.data);
-    });
+  React.useEffect(async () => {
+    const activitiesResponse = await getActivities(COURSE_ID, rawAccessToken);
+    setActivities(activitiesResponse)
   }, []);
 
   return (
