@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Button, Card, CardActions, CardContent } from "@mui/material";
+import { Card, CardActions, CardContent } from "@mui/material";
 import Typography from '@mui/material/Typography';
 import { useTranslation } from "react-i18next";
 import { CourseResponse } from '../../core/models/CourseResponse.ts';
 import './style.css'
 import i18n from "../../locales/i18n.ts";
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import CreateInviteModal from '../../components/CreateInviteModal/index.tsx';
 
 
@@ -17,7 +17,6 @@ const CoursesList: React.FC<ItemComponentProps> = ({ course }) => {
   const { t } = useTranslation();
 
 
-  const navigate = useNavigate()
 
 
   return (
@@ -38,11 +37,6 @@ const CoursesList: React.FC<ItemComponentProps> = ({ course }) => {
         <CardActions key={course.id} className="cardActions">
           <CreateInviteModal course={course} />
 
-          <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-            onClick={() => {
-              navigate(course.id + "/" + course.slug + '/students');
-            }}
-          >{t("courses.button.students")}</Button>
         </CardActions>
       </Card>
 

@@ -48,6 +48,13 @@ function Course() {
           navigate('activities');
         }}
       >{t('course.button.activities')}</Button>
+
+
+      <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
+        onClick={() => {
+          navigate('students');
+        }}
+      >{t("courses.button.students")}</Button>
     </>
   );
 }
