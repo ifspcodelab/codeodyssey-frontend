@@ -7,6 +7,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { ResolutionForm } from "../../core/models/ResolutionForm.ts"
+import { ActivityResponse } from "../../core/models/ActivityResponse.ts"
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { schema } from "./schema.ts";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,15 +15,13 @@ import { useTranslation } from "react-i18next";
 import i18n from "../../locales/i18n";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 
-
 function Activity() {
   const { getActivity } = useApiGetActivity()
   const { sendResolution } = useApiSendResolution()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { idCourse, idActivity } = useParams()
-  const [activity, setActivity] = useState();
+  const [activity, setActivity] = useState<ActivityResponse[] | ProblemDetail>([]);
   const [openSuccess, setOpenSuccess] = useState(false);
-
   const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
       return;
@@ -59,7 +58,7 @@ function Activity() {
         console.log("Tratar erro")
       }
     })();
-  }, [getActivity, idActivity, idCourse, rawAccessToken]);
+  }, []);
 
   const authConsumer = AuthConsumer();
   const uploadImage = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -92,20 +91,20 @@ function Activity() {
   }
   return (
     <>
-      <PageHeader title={activity?.title} text="Desc Example" />
+      <PageHeader title={activity?.title} text={activity?.description} />
       {<SuccessrSnackBar message={t('activity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
       <Typography sx={{ fontSize: 14 }} gutterBottom>
-        Professor:  {activity?.course.professor.name}
+        Professor:  {activity.course?.professor.name}
         <br />
-        {t('activity.course')}: {activity?.course.name}
+        {t('activity.course')}: {activity.course?.name}
         <br />
-        {t('activity.date')}: {new Date(activity?.course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t('activity.until')} {new Date(activity?.course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
+        {t('activity.date')}: {new Date(activity.course?.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t('activity.until')} {new Date(activity.course?.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
         <br />
         {t('activity.initialfile')}: example.java
         <Button>{t('activity.button.download')}</Button>
       </Typography>
 
-      {activity?.course.professor.id === USER_ID ? <span></span> : <Grid item xs={12}>
+      {activity.course?.professor.id === USER_ID ? <span></span> : <Grid item xs={12}>
         <Typography sx={{ fontSize: 14 }}>
           {t('activity.title')}
         </Typography>
@@ -126,9 +125,7 @@ function Activity() {
                 }} />
             )} />
 
-          <Grid item xs={12} textAlign="right">
-            <Button variant="outlined" type="submit">{t('activity.button.resolution')}</Button>
-          </Grid>
+          <Button variant="outlined" type="submit">{t('activity.button.resolution')}</Button>
         </form>
       </Grid>}
       {/* <DropFileInput onFileChange={(files) => onFileChange(files)} /> */}
