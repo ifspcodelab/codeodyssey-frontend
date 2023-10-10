@@ -2,6 +2,7 @@ import PageHeader from "../../components/PageHeader";
 import { Button, Grid, Typography } from "@mui/material";
 // import DropFileInput from '../../components/DropFileInput'
 import { useApiGetActivity } from "../../core/hooks/useApiGetActivity.ts";
+import { useApiSendResolution } from "../../core/hooks/useApiSendResolution.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -9,6 +10,7 @@ import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 
 function Activity() {
   const { getActivity } = useApiGetActivity()
+  const { sendResolution } = useApiSendResolution()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { idCourse, idActivity } = useParams()
   const [activity, setActivity] = useState();
@@ -20,6 +22,17 @@ function Activity() {
       setActivity(activityResponse)
     })();
   }, []);
+
+  const resolutionFile = "cGFja2FnZSBhcHAuY29kZW9keXNzZXkuY29kZW9keXNzZXlhcGkuYWN0aXZpdHkuYXBpOwoKaW1wb3J0IGFwcC5jb2Rlb2R5c3NleS5jb2Rlb2R5c3NleWFwaS5jb3Vyc2UuZGF0YS5Db3Vyc2U7CgppbXBvcnQgamF2YS50aW1lLkluc3RhbnQ7CmltcG9ydCBqYXZhLnV0aWwuVVVJRDsKCnB1YmxpYyByZWNvcmQgQWN0aXZpdHlSZXNwb25zZShVVUlEIGlkLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU3RyaW5nIHRpdGxlLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU3RyaW5nIGRlc2NyaXB0aW9uLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSW5zdGFudCBzdGFydERhdGUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBJbnN0YW50IGVuZERhdGUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBieXRlW10gaW5pdGlhbEZpbGUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBieXRlW10gc29sdXRpb25GaWxlLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYnl0ZVtdIHRlc3RGaWxlLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU3RyaW5nIGV4dGVuc2lvbikgewp9Cg=="
+
+  useEffect(() => {
+    void (async () => {
+      const resolutionResponse = await sendResolution(resolutionFile, rawAccessToken, idCourse, idActivity);
+      console.log(resolutionResponse)
+      // setActivity(activityResponse)
+    })();
+  }, []);
+
   // const onFileChange = (files) => {
   //   console.log(files)
   // }
