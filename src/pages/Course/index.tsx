@@ -14,17 +14,10 @@ function Course() {
   const navigate = useNavigate()
   const authConsumer = AuthConsumer();
   const USER_ID: string = authConsumer.id;
-  const USER_ROLE: string = authConsumer.role;
-  const [userRole, setUserRole] = useState("");
   const [course, setCourse] = useState();
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { getCourse } = useApiGetCourse()
   const { idCourse } = useParams()
-
-  useEffect(() => {
-
-    setUserRole(USER_ROLE)
-  }, [USER_ROLE]);
 
   useEffect(() => {
     void (async () => {
@@ -35,9 +28,7 @@ function Course() {
 
   return (
     <>
-      <PageHeader title="Course" text="My Course" />
-      {course ? course.name : ""}
-      {/* TO-DO: Verficar se o usuário possui o mesmo ID de quem criou o Curso */}
+      <PageHeader title={course?.name} text={t("course.text")} />
       {course?.professor.id === USER_ID ? <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
         onClick={() => {
           navigate('create-activity');
@@ -48,7 +39,6 @@ function Course() {
           navigate('activities');
         }}
       >{t('course.button.activities')}</Button>
-
 
       <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
         onClick={() => {

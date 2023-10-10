@@ -21,6 +21,7 @@
     }
   },
   "course": {
+    "text": "Course information",
     "button": {
       "create": "Create Activity",
       "activities": "Visualize Activities"
@@ -67,6 +68,7 @@
     "course": "Course",
     "date": "Date",
     "initialfile": "Initial File",
+    "language": "Language",
     "successMessage": "Resolution send successfully!",
     "button": {
       "resolution": "Send Resolution",

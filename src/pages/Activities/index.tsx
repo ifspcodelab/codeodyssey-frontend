@@ -54,10 +54,10 @@ function Activities() {
         <Card key={activity.id}>
           <CardContent className="cardContent">
             <Typography variant="h6" component="div" className="title">
-              <Link to={activity.id}>{activity.name}</Link>
+              <Link to={activity.id}>{activity.title}</Link>
             </Typography>
             <Typography sx={{ fontSize: 14 }} gutterBottom>
-              Description: {activity.description}
+              {t("activity.language")}: {activity.extension === '.java' && 'Java'}
             </Typography>
             <Typography sx={{ mb: 1.5 }}>
               {new Date(activity.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t("courses.until")} {new Date(activity.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}

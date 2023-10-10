@@ -21,6 +21,7 @@
     }
   },
   "course": {
+    "text": "Informações sobre o curso",
     "button": {
       "create": "Criar Atividade",
       "activities": "Ver Atividades"
@@ -67,6 +68,7 @@
     "course": "Curso",
     "date": "Data",
     "initialfile": "Arquivo Inicial",
+    "language": "Linguagem",
     "successMessage": "Resolução enviada com sucesso!",
     "button": {
       "resolution": "Enviar Resolução",

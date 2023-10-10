@@ -98,6 +98,8 @@ function Activity() {
         <br />
         {t('activity.course')}: {activity.course?.name}
         <br />
+        {t("activity.language")}: {activity?.extension === '.java' && 'Java'}
+        <br />
         {t('activity.date')}: {new Date(activity.course?.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t('activity.until')} {new Date(activity.course?.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
         <br />
         {t('activity.initialfile')}: example.java
