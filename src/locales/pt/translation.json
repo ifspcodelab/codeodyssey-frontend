@@ -67,6 +67,7 @@
     "course": "Curso",
     "date": "Data",
     "initialfile": "Arquivo Inicial",
+    "successMessage": "Resolução enviada com sucesso!",
     "button": {
       "resolution": "Enviar Resolução",
       "download": "Baixar arquivo"

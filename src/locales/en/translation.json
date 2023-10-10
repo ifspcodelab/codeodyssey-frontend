@@ -67,6 +67,7 @@
     "course": "Course",
     "date": "Date",
     "initialfile": "Initial File",
+    "successMessage": "Resolution send successfully!",
     "button": {
       "resolution": "Send Resolution",
       "download": "Download File"

@@ -12,6 +12,8 @@ import { schema } from "./schema.ts";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import i18n from "../../locales/i18n";
+import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
+
 
 function Activity() {
   const { getActivity } = useApiGetActivity()
@@ -19,6 +21,17 @@ function Activity() {
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { idCourse, idActivity } = useParams()
   const [activity, setActivity] = useState();
+  const [openSuccess, setOpenSuccess] = useState(false);
+
+  const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || event === undefined) {
+      return;
+    }
+
+    setOpenSuccess(false);
+  };
+
+
   const convertBase64 = (file: Blob) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -67,6 +80,7 @@ function Activity() {
     try {
       if ((idCourse !== undefined) && (idActivity !== undefined)) {
         await sendResolution(data.resolutionFile, rawAccessToken, idCourse, idActivity);
+        setOpenSuccess(true)
       } else {
         // Tratar erros
         console.log("Tratar erro")
@@ -79,6 +93,7 @@ function Activity() {
   return (
     <>
       <PageHeader title={activity?.title} text="Desc Example" />
+      {<SuccessrSnackBar message={t('activity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
       <Typography sx={{ fontSize: 14 }} gutterBottom>
         Professor:  {activity?.course.professor.name}
         <br />
@@ -106,8 +121,8 @@ function Activity() {
                 {...register("resolutionFile")}
                 {...field}
                 onChange={async (e) => {
-                  const valorTransformado = await uploadImage(e);
-                  setValue("resolutionFile", valorTransformado);
+                  const base64 = await uploadImage(e);
+                  setValue("resolutionFile", base64);
                 }} />
             )} />
 
