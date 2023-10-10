@@ -5,6 +5,7 @@ import { useApiGetActivity } from "../../core/hooks/useApiGetActivity.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 
 function Activity() {
   const { getActivity } = useApiGetActivity()
@@ -22,25 +23,32 @@ function Activity() {
   // const onFileChange = (files) => {
   //   console.log(files)
   // }
+  const authConsumer = AuthConsumer();
 
+  const USER_ID: string = authConsumer.id;
+  const USER_ROLE: string = authConsumer.role;
   return (
     <>
+
+
       <PageHeader title="Activity" text="Desc Example" />
       <Typography sx={{ fontSize: 14 }} gutterBottom>
-        Title: {activity.title}
+        Title: {activity?.title}
         <br />
-        Name course: {activity.course.name}
+        Name course: {activity?.course.name}
         <br />
         {/* Description: {activity.description} */}
         <br />
-        Date: {activity.startDate} until {activity.endDate}
+        Date: {activity?.startDate} until {activity?.endDate}
         <br />
         Initial File: example.java
         <Button>Download file</Button>
       </Typography>
-      <Grid item xs={12}>
+
+
+      {activity?.course.professor.id === USER_ID ? <span></span> : <Grid item xs={12}>
         <label htmlFor="resolution-file">Resolution file</label>
-      </Grid>
+      </Grid>}
       {/* TO-DO: put id and accept in the input tag */}
       {/* <DropFileInput onFileChange={(files) => onFileChange(files)} /> */}
     </>
