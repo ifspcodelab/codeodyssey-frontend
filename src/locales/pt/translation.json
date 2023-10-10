@@ -62,6 +62,17 @@
       }
     }
   },
+  "activity": {
+    "title": "Resolução",
+    "course": "Curso",
+    "date": "Data",
+    "initialfile": "Arquivo Inicial",
+    "button": {
+      "resolution": "Enviar Resolução",
+      "download": "Baixar arquivo"
+    },
+    "until": "até"
+  },
   "students": {
     "title": "Meus Alunos",
     "text": "Alunos do curso",

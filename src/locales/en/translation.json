@@ -62,6 +62,17 @@
       }
     }
   },
+  "activity": {
+    "title": "Resolution",
+    "course": "Course",
+    "date": "Date",
+    "initialfile": "Initial File",
+    "button": {
+      "resolution": "Send Resolution",
+      "download": "Download File"
+    },
+    "until": "until"
+  },
   "students": {
     "title": "My Students",
     "text": "Course students",
@@ -171,13 +182,14 @@
           "uppercase": "Password must have at least one uppercase letter",
           "special": "Password must have at least one special character"
         }
-      }},
+      }
+    },
     "login": "Log In!",
     "register": "New to Code Odyssey? <1>Register</1>",
     "loginError": "Something went wrong, please try again later",
     "footer": "Login footer"
   },
-  "resendEmail":{
+  "resendEmail": {
     "title": "Resend email",
     "text": "In case you didn't receive the email, you can resend it by clicking the link below after one minute has passed.",
     "emailMessage": "The system has sent a confirmation email to {{email}}. Check your email.",
@@ -200,12 +212,12 @@
     },
     "footer": "Footer text here"
   },
-  "errorPage":{
+  "errorPage": {
     "title": "Error {{statusCode}}",
     "subTitle": "An unexpected error has occurred.",
     "message": {
-    "notFound": "Page not found.",
-    "badRequest": "Bad request."
+      "notFound": "Page not found.",
+      "badRequest": "Bad request."
     }
   },
   "invitation": {
@@ -245,7 +257,7 @@
     "string_uppercase": "${path} must be a upper case string",
     "number_max": "This field should be smaller than ${max}.",
     "number_min": "This field should be bigger than ${min}.",
-    "number_less_than":"${path} must be less than ${less}",
+    "number_less_than": "${path} must be less than ${less}",
     "number_more_than": "${path} must be greater than ${more}",
     "number_not_equal": "${path} must not be equal to ${notEqual}",
     "number_positive": "${path} must be a positive number",
