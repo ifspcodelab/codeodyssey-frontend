@@ -5,5 +5,6 @@ export const schema = Yup.object({
     description: Yup.string().required().min(5),
     extension: Yup.string().required(),
     startDate: Yup.date().required(),
-    endDate: Yup.date().required().min(Yup.ref('startDate'))
+    endDate: Yup.date().required().min(Yup.ref('startDate')),
+    initialFile: Yup.mixed().required('File is required'),
 }).required()

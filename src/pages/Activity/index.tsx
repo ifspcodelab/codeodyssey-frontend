@@ -1,21 +1,39 @@
 import PageHeader from "../../components/PageHeader";
 import { Button, Grid, Typography } from "@mui/material";
-import DropFileInput from '../../components/DropFileInput'
-function Activity() {
+// import DropFileInput from '../../components/DropFileInput'
+import { useApiGetActivity } from "../../core/hooks/useApiGetActivity.ts";
+import { JwtService } from "../../core/auth/JwtService.ts";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-  const onFileChange = (files) => {
-    console.log(files)
-  }
+function Activity() {
+  const { getActivity } = useApiGetActivity()
+  const rawAccessToken = new JwtService().getRawAccessToken() as string;
+  const { idCourse, idActivity } = useParams()
+  const [activity, setActivity] = useState();
+
+  useEffect(() => {
+    void (async () => {
+      const activityResponse = await getActivity(idCourse, idActivity, rawAccessToken);
+      console.log(activityResponse)
+      setActivity(activityResponse)
+    })();
+  }, []);
+  // const onFileChange = (files) => {
+  //   console.log(files)
+  // }
 
   return (
     <>
       <PageHeader title="Activity" text="Desc Example" />
       <Typography sx={{ fontSize: 14 }} gutterBottom>
-        Title: Activity 1
+        Title: {activity.title}
         <br />
-        Description: Course Java Spring
+        Name course: {activity.course.name}
         <br />
-        Date: xx/xx/xxxx until xx/xx/xxxx
+        {/* Description: {activity.description} */}
+        <br />
+        Date: {activity.startDate} until {activity.endDate}
         <br />
         Initial File: example.java
         <Button>Download file</Button>
@@ -24,7 +42,7 @@ function Activity() {
         <label htmlFor="resolution-file">Resolution file</label>
       </Grid>
       {/* TO-DO: put id and accept in the input tag */}
-      <DropFileInput onFileChange={(files) => onFileChange(files)} />
+      {/* <DropFileInput onFileChange={(files) => onFileChange(files)} /> */}
     </>
   );
 }

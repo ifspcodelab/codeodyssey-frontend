@@ -21,12 +21,6 @@ import { useParams } from "react-router-dom";
 import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
 
 function CreateActivity() {
-  // const onSubmit: SubmitHandler<ActivityForm> = (data) => {
-  //   void submitCreateActivity(data)
-  //   // console.log(code64)
-  //   console.log(data)
-  //   // console.log(data.initialFile)
-  // }
   const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
 
   const { createActivity } = useApiCreateActivity();
@@ -34,14 +28,15 @@ function CreateActivity() {
   const [course, setCourse] = useState();
   const { getCourse } = useApiGetCourse()
   const { idCourse } = useParams()
+  const rawAccessToken = new JwtService().getRawAccessToken() as string;
+
   useEffect(() => {
     void (async () => {
       const courseResponse = await getCourse(idCourse, rawAccessToken);
       setCourse(courseResponse)
     })();
-  }, []);
+  }, [getCourse, idCourse, rawAccessToken]);
 
-  const rawAccessToken = new JwtService().getRawAccessToken() as string;
   async function submitCreateActivity(data: ActivityForm) {
     try {
       await createActivity(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken, course.id)
@@ -61,16 +56,6 @@ function CreateActivity() {
   const { register, setValue, control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   })
-  // , defaultValues: {
-  //   criteria: [{ name: "", weight: 0 }]
-  // }
-  // const { fields, append, remove } = useFieldArray({
-  //   name: "criteria",
-  //   control,
-  //   rules: {
-  //     required: "Please append at least 1 item"
-  //   }
-  // });
 
   const [fileType, setFileType] = useState("");
   const [language, setLanguage] = React.useState('');
@@ -82,7 +67,6 @@ function CreateActivity() {
       setFileType(".js")
     }
   }, [fileType, language]);
-
 
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -98,9 +82,6 @@ function CreateActivity() {
       };
     });
   };
-
-  // const [baseImage, setBaseImage] = useState("");
-  // const [code64, setCode64] = useState("");
 
   const uploadImage = async (e) => {
     const file = e.target.files[0];
@@ -210,8 +191,88 @@ function CreateActivity() {
                 </Select>
               </FormControl>
             </Grid>
+            {/* <input
+              type="file"
+              accept={fileType}
+              {...register("initialFile")}
+              onChange={async (e) => {
+                const valorTransformado = await uploadImage(e);
+                setValue("initialFile", valorTransformado);
+              }} /> */}
+            {language ? <>
+              <Controller
+                name="field"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <input
+                    type="file"
+                    accept={fileType}
+                    {...register("initialFile")}
+                    {...field}
+                    onChange={async (e) => {
+                      const valorTransformado = await uploadImage(e);
+                      setValue("initialFile", valorTransformado);
+                    }} />
+                )} />
+              <Controller
+                name="field"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <input
+                    type="file"
+                    accept={fileType}
+                    {...register("testFile")}
+                    {...field}
+                    onChange={async (e) => {
+                      const valorTransformado = await uploadImage(e);
+                      setValue("testFile", valorTransformado);
+                    }} />
+                )} /><Controller
+                name="field"
+                control={control}
+                defaultValue={null}
+                render={({ field }) => (
+                  <input
+                    type="file"
+                    accept={fileType}
+                    {...register("solutionFile")}
+                    {...field}
+                    onChange={async (e) => {
+                      const valorTransformado = await uploadImage(e);
+                      setValue("solutionFile", valorTransformado);
+                    }} />
+                )} /></> : <span></span>}
 
-            {/* <Grid item xs={12}>
+            <Grid item xs={12} textAlign="right">
+              <Button variant="outlined" type="submit">{t('createactivity.form.button.publish')}</Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Container>
+
+    </>
+  );
+}
+
+export default CreateActivity
+
+// TO-DO: Criteria Part
+
+// , defaultValues: {
+//   criteria: [{ name: "", weight: 0 }]
+// }
+// const { fields, append, remove } = useFieldArray({
+//   name: "criteria",
+//   control,
+//   rules: {
+//     required: "Please append at least 1 item"
+//   }
+// });
+
+
+{/* <Grid item xs={12}>
               <span>
                 {t('createactivity.form.evaluation')}
               </span>
@@ -249,66 +310,3 @@ function CreateActivity() {
                 {t('createactivity.form.evaluationField.add')}
               </button>
             </Grid> */}
-
-            {language ? <><Controller
-              name="field"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <input
-                  type="file"
-                  accept={fileType}
-                  {...register("initialFile")}
-                  {...field}
-                  onChange={async (e) => {
-                    const valorTransformado = await uploadImage(e);
-                    setValue("initialFile", valorTransformado);
-                  }} />
-              )} /><Controller
-                name="field"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <input
-                    type="file"
-                    accept={fileType}
-                    {...register("testFile")}
-                    {...field}
-                    onChange={async (e) => {
-                      const valorTransformado = await uploadImage(e);
-                      setValue("testFile", valorTransformado);
-                    }} />
-                )} /><Controller
-                name="field"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <input
-                    type="file"
-                    accept={fileType}
-                    {...register("solutionFile")}
-                    {...field}
-                    onChange={async (e) => {
-                      const valorTransformado = await uploadImage(e);
-                      setValue("solutionFile", valorTransformado);
-                    }} />
-                )} /></> : <span></span>}
-
-
-            <Grid item xs={12} textAlign="right">
-              <Button variant="outlined" type="submit">{t('createactivity.form.button.publish')}</Button>
-            </Grid>
-          </Grid>
-        </form>
-
-        <div>
-
-          <br></br>
-        </div>
-      </Container>
-
-    </>
-  );
-}
-
-export default CreateActivity
