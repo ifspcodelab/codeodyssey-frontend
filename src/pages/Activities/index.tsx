@@ -35,10 +35,15 @@ function Activities() {
 
   useEffect(() => {
     void (async () => {
-      const activitiesResponse = await getActivities(idCourse, rawAccessToken);
-      setActivities(activitiesResponse)
+      if (idCourse !== undefined) {
+        const activitiesResponse = await getActivities(idCourse, rawAccessToken);
+        setActivities(activitiesResponse)
+      } else {
+        // Tratar erros
+        console.log("Tratar erro")
+      }
     })();
-  }, []);
+  }, [getActivities, idCourse, rawAccessToken]);
 
   return (
 

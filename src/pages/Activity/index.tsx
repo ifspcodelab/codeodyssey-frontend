@@ -3,7 +3,7 @@ import { Button, Grid, Typography } from "@mui/material";
 import { useApiGetActivity } from "../../core/hooks/useApiGetActivity.ts";
 import { useApiSendResolution } from "../../core/hooks/useApiSendResolution.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { ResolutionForm } from "../../core/models/ResolutionForm.ts"
@@ -19,7 +19,7 @@ function Activity() {
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { idCourse, idActivity } = useParams()
   const [activity, setActivity] = useState();
-  const convertBase64 = (file) => {
+  const convertBase64 = (file: Blob) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.readAsDataURL(file);
@@ -38,13 +38,18 @@ function Activity() {
 
   useEffect(() => {
     void (async () => {
-      const activityResponse = await getActivity(idCourse, idActivity, rawAccessToken);
-      setActivity(activityResponse)
+      if ((idCourse !== undefined) && (idActivity !== undefined)) {
+        const activityResponse = await getActivity(idCourse, idActivity, rawAccessToken);
+        setActivity(activityResponse)
+      } else {
+        // Tratar erros
+        console.log("Tratar erro")
+      }
     })();
-  }, []);
+  }, [getActivity, idActivity, idCourse, rawAccessToken]);
 
   const authConsumer = AuthConsumer();
-  const uploadImage = async (e) => {
+  const uploadImage = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
     const base64 = await convertBase64(file);
     const [_, parts] = base64.split('base64,')
@@ -60,7 +65,12 @@ function Activity() {
 
   async function submitResolutionActivity(data: ResolutionForm) {
     try {
-      await sendResolution(data.resolutionFile, rawAccessToken, idCourse, idActivity);
+      if ((idCourse !== undefined) && (idActivity !== undefined)) {
+        await sendResolution(data.resolutionFile, rawAccessToken, idCourse, idActivity);
+      } else {
+        // Tratar erros
+        console.log("Tratar erro")
+      }
     }
     catch (error) {
       console.log(error)
