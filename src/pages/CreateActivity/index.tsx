@@ -232,10 +232,10 @@ function CreateActivity() {
 
             <Grid item xs={12}>
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="demo-simple-select-label">Language</InputLabel>
+                <InputLabel id="language-label">Language</InputLabel>
                 <Select
                   {...register("extension")}
-                  labelId="demo-simple-select-label"
+                  labelId="language-label"
                   id="demo-simple-select"
                   value={language}
                   label={t('createactivity.form.language')}
@@ -244,6 +244,7 @@ function CreateActivity() {
                   <MenuItem value={".java"}>Java</MenuItem>
                   <MenuItem value={".js"}>Javascript</MenuItem>
                 </Select>
+                {errors.extension && <span style={{ color: "red" }}>{errors.extension.message}</span>}
               </FormControl>
             </Grid>
             {language ? <>

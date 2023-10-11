@@ -82,6 +82,11 @@
       "resolution": "Enviar Resolução",
       "download": "Baixar arquivo"
     },
+    "form": {
+      "validation": {
+        "resolutionfile": "O arquivo de resolução é obrigatório"
+      }
+    },
     "until": "até"
   },
   "activities": {

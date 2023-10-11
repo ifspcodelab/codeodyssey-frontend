@@ -82,6 +82,11 @@
       "resolution": "Send Resolution",
       "download": "Download File"
     },
+    "form": {
+      "validation": {
+        "resolutionfile": "The Resolution file is required"
+      }
+    },
     "until": "until"
   },
   "activities": {

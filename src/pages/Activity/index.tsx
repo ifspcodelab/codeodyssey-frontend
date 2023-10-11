@@ -16,6 +16,7 @@ import i18n from "../../locales/i18n";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 import axios, { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import Course from "../Course/index.tsx";
 
 function Activity() {
   const { getActivity } = useApiGetActivity()
@@ -24,6 +25,8 @@ function Activity() {
   const { idCourse, idActivity } = useParams()
   const [activity, setActivity] = useState<ActivityResponse[] | ProblemDetail>([]);
   const [openSuccess, setOpenSuccess] = useState(false);
+
+
   const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
       return;
@@ -47,6 +50,17 @@ function Activity() {
     });
   };
 
+
+  const [fileType, setFileType] = useState("");
+
+  useEffect(() => {
+    if (activity.extension === ".java") {
+      setFileType(".java")
+    } else if (activity.extension === ".js") {
+      setFileType(".js")
+    }
+  }, [fileType, activity.extension]);
+
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -55,6 +69,7 @@ function Activity() {
         try {
           const activityResponse = await getActivity(idCourse, idActivity, rawAccessToken);
           setActivity(activityResponse)
+
         } catch (error) {
           if (axios.isAxiosError(error)) {
             handleError(error)
@@ -123,6 +138,23 @@ function Activity() {
     }
   }
 
+
+  const handleDecodeAndDownload = () => {
+    const base64String = activity.initialFile;
+    const decodedString = atob(base64String);
+    const blob = new Blob([decodedString], { type: 'text/plain' });
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    const downloadLink = document.createElement('a');
+    downloadLink.href = blobUrl;
+    downloadLink.download = 'arquivo.txt';
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+
+    window.URL.revokeObjectURL(blobUrl);
+  }
+
   return (
     <>
       <PageHeader title={activity?.title} text={activity?.description} />
@@ -136,8 +168,8 @@ function Activity() {
         <br />
         {t('activity.date')}: {new Date(activity.course?.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t('activity.until')} {new Date(activity.course?.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
         <br />
-        {t('activity.initialfile')}: example.java
-        <Button>{t('activity.button.download')}</Button>
+
+        <button onClick={handleDecodeAndDownload}>{t('activity.button.download')}</button>
       </Typography>
 
       {activity.course?.professor.id === USER_ID ? <span></span> : <Grid item xs={12}>
@@ -152,7 +184,7 @@ function Activity() {
             render={({ field }) => (
               <input
                 type="file"
-                // accept={fileType}
+                accept={fileType}
                 {...register("resolutionFile")}
                 {...field}
                 onChange={async (e) => {
@@ -160,6 +192,8 @@ function Activity() {
                   setValue("resolutionFile", base64);
                 }} />
             )} />
+          {errors.resolutionFile && <span style={{ color: "red" }}>{errors.resolutionFile.message}</span>}
+
 
           <Button variant="outlined" type="submit">{t('activity.button.resolution')}</Button>
         </form>
