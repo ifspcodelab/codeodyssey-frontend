@@ -7,23 +7,26 @@ import { useEffect, useState } from "react";
 import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useParams } from "react-router-dom";
-
+import { CourseResponse } from "../../core/models/CourseResponse";
 
 function Course() {
   const { t } = useTranslation();
   const navigate = useNavigate()
   const authConsumer = AuthConsumer();
   const USER_ID: string = authConsumer.id;
-  const [course, setCourse] = useState();
+  const [course, setCourse] = useState<CourseResponse[] | ProblemDetail>([]);
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { getCourse } = useApiGetCourse()
   const { idCourse } = useParams()
 
   useEffect(() => {
     void (async () => {
-      const courseResponse = await getCourse(idCourse, rawAccessToken);
-      setCourse(courseResponse)
+      if ((idCourse !== undefined)) {
+        const courseResponse = await getCourse(idCourse, rawAccessToken);
+        setCourse(courseResponse)
+      }
     })();
+    // eslint-disable-next-line
   }, []);
 
   return (

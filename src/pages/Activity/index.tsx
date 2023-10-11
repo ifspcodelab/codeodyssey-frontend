@@ -58,6 +58,7 @@ function Activity() {
         console.log("Tratar erro")
       }
     })();
+    // eslint-disable-next-line
   }, []);
 
   const authConsumer = AuthConsumer();

@@ -19,23 +19,27 @@ import { JwtService } from "../../core/auth/JwtService.ts";
 import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom";
 import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
+import { CourseResponse } from "../../core/models/CourseResponse";
 
 function CreateActivity() {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
 
   const { createActivity } = useApiCreateActivity();
   const navigate = useNavigate()
-  const [course, setCourse] = useState();
+  const [course, setCourse] = useState<CourseResponse[] | ProblemDetail>([]);
   const { getCourse } = useApiGetCourse()
   const { idCourse } = useParams()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
 
   useEffect(() => {
     void (async () => {
-      const courseResponse = await getCourse(idCourse, rawAccessToken);
-      setCourse(courseResponse)
+      if ((idCourse !== undefined)) {
+        const courseResponse = await getCourse(idCourse, rawAccessToken);
+        setCourse(courseResponse)
+      }
     })();
-  }, [getCourse, idCourse, rawAccessToken]);
+    // eslint-disable-next-line
+  }, []);
 
   async function submitCreateActivity(data: ActivityForm) {
     try {
@@ -191,14 +195,6 @@ function CreateActivity() {
                 </Select>
               </FormControl>
             </Grid>
-            {/* <input
-              type="file"
-              accept={fileType}
-              {...register("initialFile")}
-              onChange={async (e) => {
-                const valorTransformado = await uploadImage(e);
-                setValue("initialFile", valorTransformado);
-              }} /> */}
             {language ? <>
               <Controller
                 name="field"

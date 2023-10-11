@@ -7,4 +7,6 @@ export const schema = Yup.object({
     startDate: Yup.date().required(),
     endDate: Yup.date().required().min(Yup.ref('startDate')),
     initialFile: Yup.mixed().required('File is required'),
+    testFile: Yup.mixed().required('File is required'),
+    solutionFile: Yup.mixed().required('File is required'),
 }).required()
