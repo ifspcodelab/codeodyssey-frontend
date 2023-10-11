@@ -11,12 +11,14 @@ import { ActivityResponse } from "../../core/models/ActivityResponse"
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useParams } from "react-router-dom";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
+import Spinner from "../../components/Spinner";
 
 function Activities() {
   const queryParams = new URLSearchParams(location.search);
 
   const { getActivities } = useApiGetActivities()
   const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const { idCourse } = useParams()
   const success = queryParams.get('success');
@@ -38,6 +40,7 @@ function Activities() {
       if (idCourse !== undefined) {
         const activitiesResponse = await getActivities(idCourse, rawAccessToken);
         setActivities(activitiesResponse)
+        setLoading(false)
       } else {
         // Tratar erros
         console.log("Tratar erro")
@@ -50,7 +53,7 @@ function Activities() {
     <>
       {success && <SuccessrSnackBar message={t('createactivity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
       <PageHeader title="Activities" text="Activities course" />
-      {Array.isArray(activities) && activities.map((activity: ActivityResponse) => (
+      {Array.isArray(activities) && activities.length ? activities.map((activity: ActivityResponse) => (
         <Card key={activity.id}>
           <CardContent className="cardContent">
             <Typography variant="h6" component="div" className="title">
@@ -63,9 +66,15 @@ function Activities() {
               {new Date(activity.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t("courses.until")} {new Date(activity.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
             </Typography>
           </CardContent>
-
         </Card>
-      ))}
+      )) : loading ? (
+        <Spinner size={150} />
+      ) : (
+        <Typography>{t("activity.emptyList")}</Typography>
+      )}
+
+
+
     </>
   );
 }

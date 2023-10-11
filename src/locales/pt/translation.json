@@ -74,7 +74,8 @@
       "resolution": "Enviar Resolução",
       "download": "Baixar arquivo"
     },
-    "until": "até"
+    "until": "até",
+    "emptyList": "Esse curso não possui nenhuma atividade"
   },
   "students": {
     "title": "Meus Alunos",
