@@ -3,7 +3,7 @@ import { CourseResponse } from './CourseResponse';
 
 export interface ActivityResponse {
   id: string,
-  name: string,
+  title: string,
   course: CourseResponse;
   extension: string,
   description: string,

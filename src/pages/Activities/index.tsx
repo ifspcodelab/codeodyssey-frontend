@@ -12,44 +12,69 @@ import { JwtService } from "../../core/auth/JwtService.ts";
 import { useParams } from "react-router-dom";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 import Spinner from "../../components/Spinner";
+import axios, { AxiosError } from "axios";
+import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 
 function Activities() {
   const queryParams = new URLSearchParams(location.search);
-
   const { getActivities } = useApiGetActivities()
-  const [activities, setActivities] = useState([]);
+  const [activities, setActivities] = useState<ActivityResponse[] | ProblemDetail>([]);
   const [loading, setLoading] = useState(true);
-
   const { idCourse } = useParams()
   const success = queryParams.get('success');
   const [openSuccess, setOpenSuccess] = useState(true);
+
   const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
       return;
     }
-
     setOpenSuccess(false);
   };
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { t } = useTranslation();
+  const [errorType, setErrorType] = useState('');
+  const [openError, setOpenError] = useState(false);
+  const handleError = (error: AxiosError) => {
+    let responseStatus: number
+    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
+    if (error.response) {
+      problemDetail = error.response.data as ProblemDetail
+      responseStatus = problemDetail.status
+      if (responseStatus == 400) {
+        setErrorType('badRequest')
+        setOpenError(true);
+      }
+    } else if (error.message == "Network Error") {
+      setErrorType('networkError')
+      setOpenError(true);
+    }
+  }
+  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || event === undefined) {
+      return;
+    }
 
-
-
+    setOpenError(false);
+  };
   useEffect(() => {
     void (async () => {
       if (idCourse !== undefined) {
-        const activitiesResponse = await getActivities(idCourse, rawAccessToken);
-        setActivities(activitiesResponse)
-        setLoading(false)
-      } else {
-        // Tratar erros
-        console.log("Tratar erro")
+        try {
+          const activitiesResponse = await getActivities(idCourse, rawAccessToken);
+          setActivities(activitiesResponse)
+          setLoading(false)
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            handleError(error)
+          } else {
+            setErrorType('unexpected')
+          }
+        }
       }
     })();
   }, [getActivities, idCourse, rawAccessToken]);
 
   return (
-
     <>
       {success && <SuccessrSnackBar message={t('createactivity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
       <PageHeader title="Activities" text="Activities course" />
@@ -74,7 +99,7 @@ function Activities() {
       )}
 
 
-
+      <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>
   );
 }
