@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Container, FormControl, FormLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { Button, Container, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import PageHeader from "../../components/PageHeader";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { schema } from "./schema.ts";
@@ -9,7 +9,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import i18n from '../../locales/i18n.ts'
 import 'dayjs/locale/pt-br'
 import 'dayjs/locale/en'
-import Textarea from '@mui/joy/Textarea';
 import { CustomDate } from "../../core/models/CustomDate";
 import dayjs from 'dayjs';
 import { useTranslation } from "react-i18next";
@@ -43,8 +42,11 @@ function CreateActivity() {
       problemDetail = error.response.data as ProblemDetail
       responseStatus = problemDetail.status
       if (responseStatus == 400) {
-        setErrorType('badRequest')
+        if (error.response) problemDetail = error.response.data as ProblemDetail
+        if (problemDetail.detail == "deve ser uma data futura")
+          setErrorType('invalidStartDate')
         setOpenError(true);
+
       }
     } else if (error.message == "Network Error") {
       setErrorType('networkError')
@@ -59,24 +61,7 @@ function CreateActivity() {
     setOpenError(false);
   };
 
-  useEffect(() => {
-    void (async () => {
-      if ((idCourse !== undefined)) {
-        try {
-          const courseResponse = await getCourse(idCourse, rawAccessToken);
-          setCourse(courseResponse)
-        }
-        catch (error) {
-          if (axios.isAxiosError(error)) {
-            handleError(error)
-          } else {
-            setErrorType('unexpected')
-          }
-        }
-      }
-    })();
-    // eslint-disable-next-line
-  }, []);
+
 
   async function submitCreateActivity(data: ActivityForm) {
     try {
@@ -92,7 +77,7 @@ function CreateActivity() {
     }
   }
 
-  const { register, setValue, control, handleSubmit, formState: { errors } } = useForm({
+  const { register, setValue, watch, control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   })
 
@@ -135,7 +120,31 @@ function CreateActivity() {
 
   const { t } = useTranslation();
 
+  useEffect(() => {
+    void (async () => {
+      if ((idCourse !== undefined)) {
+        try {
+          const courseResponse = await getCourse(idCourse, rawAccessToken);
+          setCourse(courseResponse)
+
+        }
+        catch (error) {
+          if (axios.isAxiosError(error)) {
+            handleError(error)
+          } else {
+            setErrorType('unexpected')
+          }
+        }
+      }
+    })();
+    // eslint-disable-next-line
+  }, []);
+
+
+
   const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
+
+
   return (
     <>
       <Container maxWidth="md">
@@ -156,10 +165,16 @@ function CreateActivity() {
             </Grid>
 
             <Grid item xs={12}>
-              <FormControl sx={{ width: "100%" }}>
-                <FormLabel>{t('createactivity.form.desc')}</FormLabel>
-                <Textarea placeholder={t('createactivity.form.desc')} {...register("description")} minRows={2} variant="outlined" error={!!errors.description} />
-              </FormControl>
+              <TextField
+                sx={{ width: "100%" }}
+                {...register("description")}
+                label={t('createactivity.form.desc')}
+                variant="outlined"
+                multiline
+                maxRows={5}
+                error={!!errors.description}
+                helperText={errors.description && <span>{errors.description.message}</span>}
+              />
             </Grid>
 
             <Grid item xs={12} textAlign="right" display="flex" alignItems="spaceBetween">
@@ -174,7 +189,8 @@ function CreateActivity() {
                       <DatePicker
                         {...field}
                         inputRef={ref}
-                        label="startDate" disablePast value={value ?? " "}
+                        label={t('createactivity.form.startDate')}
+                        disablePast value={value ?? " "}
                         onChange={onChange as never}
                         slotProps={{
                           textField: {
@@ -183,7 +199,6 @@ function CreateActivity() {
                         }}
                       />
                     )}
-
                   />
                 </LocalizationProvider>
               </Grid>
@@ -199,6 +214,7 @@ function CreateActivity() {
                       <DatePicker
                         {...field}
                         inputRef={ref}
+                        minDate={watch().startDate}
                         label={t('createactivity.form.endDate')}
                         value={value ? value : null}
                         onChange={onChange as never}
@@ -246,6 +262,7 @@ function CreateActivity() {
                       setValue("initialFile", valorTransformado);
                     }} />
                 )} />
+              {errors.initialFile && <span style={{ color: "red" }}>{errors.initialFile.message}</span>}
               <Controller
                 name="field"
                 control={control}
@@ -260,7 +277,9 @@ function CreateActivity() {
                       const valorTransformado = await uploadImage(e);
                       setValue("testFile", valorTransformado);
                     }} />
-                )} /><Controller
+                )} />
+              {errors.testFile && <span style={{ color: "red" }}>{errors.testFile.message}</span>}
+              <Controller
                 name="field"
                 control={control}
                 defaultValue={null}
@@ -274,7 +293,9 @@ function CreateActivity() {
                       const valorTransformado = await uploadImage(e);
                       setValue("solutionFile", valorTransformado);
                     }} />
-                )} /></> : <span></span>}
+                )} />
+              {errors.solutionFile && <span style={{ color: "red" }}>{errors.solutionFile.message}</span>}
+            </> : <span></span>}
 
             <Grid item xs={12} textAlign="right">
               <Button variant="outlined" type="submit">{t('createactivity.form.button.publish')}</Button>

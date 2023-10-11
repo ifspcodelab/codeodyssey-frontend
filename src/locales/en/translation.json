@@ -42,6 +42,9 @@
     "title": "Create Activity",
     "text": "Define an activity for the course",
     "successMessage": "Activity created successfully!",
+    "exception": {
+      "startdate": "Invalid Start Date"
+    },
     "form": {
       "title": "Title",
       "desc": "Description",
@@ -57,6 +60,11 @@
         "weight": "Weight",
         "delete": "Delete",
         "add": "Add"
+      },
+      "validation": {
+        "initialfile": "The initial file is required",
+        "testfile": "The test file is required",
+        "solutionfile": "The solution file is required"
       },
       "button": {
         "publish": "Publish Activity"

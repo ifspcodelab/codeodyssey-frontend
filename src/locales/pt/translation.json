@@ -42,6 +42,9 @@
     "title": "Criar Atividade",
     "text": "Definir uma atividade para o curso",
     "successMessage": "Atividade criada com sucesso!",
+    "exception": {
+      "startdate": "Data de início inválida"
+    },
     "form": {
       "title": "Título",
       "desc": "Descrição",
@@ -57,6 +60,11 @@
         "weight": "Peso",
         "delete": "Deletar",
         "add": "Adicionar"
+      },
+      "validation": {
+        "initialfile": "O arquivo inicial é obrigatório",
+        "testfile": "O arquivo de teste é obrigatório",
+        "solutionfile": "O arquivo de solução é obrigatório"
       },
       "button": {
         "publish": "Publicar Atividade"
