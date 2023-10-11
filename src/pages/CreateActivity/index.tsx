@@ -20,6 +20,8 @@ import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom";
 import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
 import { CourseResponse } from "../../core/models/CourseResponse";
+import axios, { AxiosError } from "axios";
+import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 
 function CreateActivity() {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
@@ -30,12 +32,47 @@ function CreateActivity() {
   const { getCourse } = useApiGetCourse()
   const { idCourse } = useParams()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
+  const [errorType, setErrorType] = useState('');
+  const [openError, setOpenError] = useState(false);
+
+
+  const handleError = (error: AxiosError) => {
+    let responseStatus: number
+    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
+    if (error.response) {
+      problemDetail = error.response.data as ProblemDetail
+      responseStatus = problemDetail.status
+      if (responseStatus == 400) {
+        setErrorType('badRequest')
+        setOpenError(true);
+      }
+    } else if (error.message == "Network Error") {
+      setErrorType('networkError')
+      setOpenError(true);
+    }
+  }
+
+  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || event === undefined) {
+      return;
+    }
+    setOpenError(false);
+  };
 
   useEffect(() => {
     void (async () => {
       if ((idCourse !== undefined)) {
-        const courseResponse = await getCourse(idCourse, rawAccessToken);
-        setCourse(courseResponse)
+        try {
+          const courseResponse = await getCourse(idCourse, rawAccessToken);
+          setCourse(courseResponse)
+        }
+        catch (error) {
+          if (axios.isAxiosError(error)) {
+            handleError(error)
+          } else {
+            setErrorType('unexpected')
+          }
+        }
       }
     })();
     // eslint-disable-next-line
@@ -47,13 +84,11 @@ function CreateActivity() {
       navigate(`/courses/${course.id}/${course.slug}/activities?success=true`)
     }
     catch (error) {
-      console.log(error)
-      // if (axios.isAxiosError(error)) {
-      //   handleError(error)
-      // } else {
-      //   setErrorType('unexpected')
-      //   setOpen(true);
-      // }
+      if (axios.isAxiosError(error)) {
+        handleError(error)
+      } else {
+        setErrorType('unexpected')
+      }
     }
   }
 
@@ -247,7 +282,7 @@ function CreateActivity() {
           </Grid>
         </form>
       </Container>
-
+      <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>
   );
 }

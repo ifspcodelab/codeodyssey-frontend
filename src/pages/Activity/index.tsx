@@ -14,6 +14,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import i18n from "../../locales/i18n";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
+import axios, { AxiosError } from "axios";
+import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 
 function Activity() {
   const { getActivity } = useApiGetActivity()
@@ -29,7 +31,6 @@ function Activity() {
 
     setOpenSuccess(false);
   };
-
 
   const convertBase64 = (file: Blob) => {
     return new Promise((resolve, reject) => {
@@ -51,16 +52,23 @@ function Activity() {
   useEffect(() => {
     void (async () => {
       if ((idCourse !== undefined) && (idActivity !== undefined)) {
-        const activityResponse = await getActivity(idCourse, idActivity, rawAccessToken);
-        setActivity(activityResponse)
-      } else {
-        // Tratar erros
-        console.log("Tratar erro")
+        try {
+          const activityResponse = await getActivity(idCourse, idActivity, rawAccessToken);
+          setActivity(activityResponse)
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            handleError(error)
+          } else {
+            setErrorType('unexpected')
+          }
+        }
       }
     })();
     // eslint-disable-next-line
   }, []);
 
+  const [errorType, setErrorType] = useState('');
+  const [openError, setOpenError] = useState(false);
   const authConsumer = AuthConsumer();
   const uploadImage = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
@@ -76,20 +84,45 @@ function Activity() {
     resolver: yupResolver(schema)
   })
 
+  const handleError = (error: AxiosError) => {
+    let responseStatus: number
+    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
+    if (error.response) {
+      problemDetail = error.response.data as ProblemDetail
+      responseStatus = problemDetail.status
+      if (responseStatus == 400) {
+        setErrorType('badRequest')
+        setOpenError(true);
+      }
+    } else if (error.message == "Network Error") {
+      setErrorType('networkError')
+      setOpenError(true);
+    }
+  }
+
+  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway' || event === undefined) {
+      return;
+    }
+    setOpenError(false);
+  };
+
   async function submitResolutionActivity(data: ResolutionForm) {
     try {
       if ((idCourse !== undefined) && (idActivity !== undefined)) {
         await sendResolution(data.resolutionFile, rawAccessToken, idCourse, idActivity);
         setOpenSuccess(true)
-      } else {
-        // Tratar erros
-        console.log("Tratar erro")
       }
     }
     catch (error) {
-      console.log(error)
+      if (axios.isAxiosError(error)) {
+        handleError(error)
+      } else {
+        setErrorType('unexpected')
+      }
     }
   }
+
   return (
     <>
       <PageHeader title={activity?.title} text={activity?.description} />
@@ -131,6 +164,8 @@ function Activity() {
           <Button variant="outlined" type="submit">{t('activity.button.resolution')}</Button>
         </form>
       </Grid>}
+
+      <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
       {/* <DropFileInput onFileChange={(files) => onFileChange(files)} /> */}
     </>
   );
