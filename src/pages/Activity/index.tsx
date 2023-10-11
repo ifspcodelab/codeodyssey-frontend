@@ -147,7 +147,8 @@ function Activity() {
 
     const downloadLink = document.createElement('a');
     downloadLink.href = blobUrl;
-    downloadLink.download = 'arquivo.txt';
+
+    downloadLink.download = `initialFile${fileType}`;
 
     document.body.appendChild(downloadLink);
     downloadLink.click();
