@@ -74,8 +74,12 @@
       "resolution": "Send Resolution",
       "download": "Download File"
     },
-    "until": "until",
-    "emptyList": "This course has no activities"
+    "until": "until"
+  },
+  "activities": {
+    "title": "Activities",
+    "text": "Course's activities",
+    "emptyList": "This course does not have any activities"
   },
   "students": {
     "title": "My Students",

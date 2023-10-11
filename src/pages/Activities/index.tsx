@@ -1,28 +1,34 @@
-import { useEffect, useState } from "react";
-import PageHeader from "../../components/PageHeader";
-import { useApiGetActivities } from "../../core/hooks/useApiGetActivities.ts";
 import React from "react";
-import { Card, CardContent } from "@mui/material";
-import Typography from '@mui/material/Typography';
+import { useEffect, useState } from "react";
 import i18n from "../../locales/i18n";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { ActivityResponse } from "../../core/models/ActivityResponse"
-import { JwtService } from "../../core/auth/JwtService.ts";
 import { useParams } from "react-router-dom";
+import { Card, CardContent } from "@mui/material";
+import Typography from '@mui/material/Typography';
+import axios, { AxiosError } from "axios";
+import { JwtService } from "../../core/auth/JwtService.ts";
+import { useApiGetActivities } from "../../core/hooks/useApiGetActivities.ts";
+import { ActivityResponse } from "../../core/models/ActivityResponse"
+import PageHeader from "../../components/PageHeader";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 import Spinner from "../../components/Spinner";
-import axios, { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 
 function Activities() {
   const queryParams = new URLSearchParams(location.search);
-  const { getActivities } = useApiGetActivities()
-  const [activities, setActivities] = useState<ActivityResponse[] | ProblemDetail>([]);
-  const [loading, setLoading] = useState(true);
   const { idCourse } = useParams()
   const success = queryParams.get('success');
+  const { t } = useTranslation();
+
+  const rawAccessToken = new JwtService().getRawAccessToken() as string;
+  const { getActivities } = useApiGetActivities()
+  const [activities, setActivities] = useState<ActivityResponse[] | ProblemDetail>([]);
+
+  const [loading, setLoading] = useState(true);
   const [openSuccess, setOpenSuccess] = useState(true);
+  const [errorType, setErrorType] = useState('');
+  const [openError, setOpenError] = useState(false);
 
   const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
@@ -30,10 +36,7 @@ function Activities() {
     }
     setOpenSuccess(false);
   };
-  const rawAccessToken = new JwtService().getRawAccessToken() as string;
-  const { t } = useTranslation();
-  const [errorType, setErrorType] = useState('');
-  const [openError, setOpenError] = useState(false);
+
   const handleError = (error: AxiosError) => {
     let responseStatus: number
     let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
@@ -49,13 +52,14 @@ function Activities() {
       setOpenError(true);
     }
   }
+
   const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
       return;
     }
-
     setOpenError(false);
   };
+
   useEffect(() => {
     void (async () => {
       if (idCourse !== undefined) {
@@ -72,12 +76,15 @@ function Activities() {
         }
       }
     })();
-  }, [getActivities, idCourse, rawAccessToken]);
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
       {success && <SuccessrSnackBar message={t('createactivity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
-      <PageHeader title="Activities" text="Activities course" />
+
+      <PageHeader title={t('activities.title')} text={t('activities.text')} />
+
       {Array.isArray(activities) && activities.length ? activities.map((activity: ActivityResponse) => (
         <Card key={activity.id}>
           <CardContent className="cardContent">
@@ -95,9 +102,8 @@ function Activities() {
       )) : loading ? (
         <Spinner size={150} />
       ) : (
-        <Typography>{t("activity.emptyList")}</Typography>
+        <Typography>{t("activities.emptyList")}</Typography>
       )}
-
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>
