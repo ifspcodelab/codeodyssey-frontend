@@ -9,4 +9,5 @@ export interface ActivityResponse {
   description: string,
   startDate: Date,
   endDate: Date,
+  initialFile: string
 }

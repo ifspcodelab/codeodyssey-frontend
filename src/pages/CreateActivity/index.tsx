@@ -27,7 +27,7 @@ function CreateActivity() {
 
   const { createActivity } = useApiCreateActivity();
   const navigate = useNavigate()
-  const [course, setCourse] = useState<CourseResponse[] | ProblemDetail>([]);
+  const [course, setCourse] = useState<CourseResponse>();
   const { getCourse } = useApiGetCourse()
   const { idCourse } = useParams()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
@@ -61,12 +61,12 @@ function CreateActivity() {
     setOpenError(false);
   };
 
-
-
   async function submitCreateActivity(data: ActivityForm) {
     try {
-      await createActivity(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken, course.id)
-      navigate(`/courses/${course.id}/${course.slug}/activities?success=true`)
+      if (course !== undefined) {
+        await createActivity(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken, course.id)
+        navigate(`/courses/${course.id}/${course.slug}/activities?success=true`)
+      }
     }
     catch (error) {
       if (axios.isAxiosError(error)) {
@@ -110,7 +110,7 @@ function CreateActivity() {
   const uploadImage = async (e) => {
     const file = e.target.files[0];
     const base64 = await convertBase64(file);
-    const [_, parts] = base64.split('base64,')
+    const [, parts] = base64.split('base64,')
     return parts
   };
 
@@ -140,10 +140,7 @@ function CreateActivity() {
     // eslint-disable-next-line
   }, []);
 
-
-
   const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
-
 
   return (
     <>

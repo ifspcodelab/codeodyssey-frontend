@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import PageHeader from "../../components/PageHeader";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom"
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
@@ -16,7 +15,7 @@ function Course() {
   const navigate = useNavigate()
   const authConsumer = AuthConsumer();
   const USER_ID: string = authConsumer.id;
-  const [course, setCourse] = useState<CourseResponse[] | ProblemDetail>([]);
+  const [course, setCourse] = useState<CourseResponse>();
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { getCourse } = useApiGetCourse()
   const { idCourse } = useParams()
@@ -66,8 +65,8 @@ function Course() {
 
   return (
     <>
-      <PageHeader title={course?.name} text={t("course.text")} />
-      {course.professor?.id === USER_ID ? <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
+      <h1>{course?.name}</h1>
+      {course?.professor?.id === USER_ID ? <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
         onClick={() => {
           navigate('create-activity');
         }}

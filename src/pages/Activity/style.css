@@ -1,0 +1,40 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.app {
+  width: 50vw;
+  height: 30vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.parent {
+  width: 500px;
+  margin: auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 25px;
+  box-shadow: 7px 20px 20px rgb(210, 227, 244);
+}
+.file-upload {
+  text-align: center;
+  border: 3px dashed rgb(210, 227, 244);
+  padding: 1.5rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.file-upload input {
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  cursor: pointer;
+}

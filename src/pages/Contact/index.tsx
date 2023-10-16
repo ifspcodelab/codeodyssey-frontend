@@ -1,27 +1,28 @@
-import {useTranslation} from "react-i18next";
-import { yupResolver } from "@hookform/resolvers/yup";
-import {Button, Container, Grid, TextField} from "@mui/material";
+import { useTranslation } from "react-i18next";
+// import { yupResolver } from "@hookform/resolvers/yup";
+// import { Button, Container, Grid, TextField } from "@mui/material";
+import { Container } from "@mui/material";
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
-import {SubmitHandler, useForm} from "react-hook-form";
-import {schema} from "./schema.ts";
+// import {SubmitHandler, useForm} from "react-hook-form";
+// import {schema} from "./schema.ts";
 
-interface ContactForm {
-    name: string;
-    email: string;
-    message: string;
-}
+// interface ContactForm {
+//     name: string;
+//     email: string;
+//     message: string;
+// }
 
 function Contact() {
-    const {t} = useTranslation();
-    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
+    const { t } = useTranslation();
+    // const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
 
-    const onSubmit: SubmitHandler<ContactForm> = (data) => console.log(data)
+    // const onSubmit: SubmitHandler<ContactForm> = (data) => console.log(data)
 
     return (
         <Container maxWidth="md">
             <PageHeader title={t('contact.title')} text={t('contact.text')} />
-             <form onSubmit={handleSubmit(onSubmit) }>
+            {/* <form onSubmit={handleSubmit(onSubmit) }>
                 <Grid container spacing={1} rowSpacing={2}>
                     <Grid item xs={12}>
                         <TextField
@@ -59,7 +60,7 @@ function Contact() {
                         <Button variant="outlined" type="submit">{t('contact.form.submit')}</Button>
                     </Grid>
                 </Grid>
-            </form>
+            </form> */}
             <PageFooter text={t('contact.footer')} />
         </Container>
     );

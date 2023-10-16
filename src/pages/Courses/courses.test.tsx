@@ -73,7 +73,7 @@ const MockAuthProvider: React.FC<MockAuthProviderProps> = ({ children, role }) =
 );
 
 function renderCreateInviteModal() {
-  return render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
+  return render(<CreateInviteModal course={{ id: "1", slug: "1", name: 'React Course', startDate: new Date(), endDate: new Date(), professor: { id: "1", name: 'Moriarty', email: 'email@example.com', role: 'PROFESSOR' }, }} />);
 }
 
 function renderCoursesProfessor() {
