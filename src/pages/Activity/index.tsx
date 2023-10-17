@@ -15,9 +15,7 @@ import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 import axios, { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import { ActivityResponse } from './../../core/models/ActivityResponse';
-import EncodeBase64 from './encodeBase.tsx'
 import "./style.css";
-import uploadImg from "../../assets/drop_file_input/cloud-upload-regular-240.png";
 
 function Activity() {
   const { getActivity } = useApiGetActivity()
@@ -160,8 +158,7 @@ function Activity() {
     }
   }, [fileType, activity]);
   const resetInputFile = () => {
-    // Resetar o valor de um campo específico usando setValue
-    setValue('resolutionFile', '');
+    setValue('resolutionFile', null);
     setSelectedName('')
   };
 
@@ -199,7 +196,6 @@ function Activity() {
           <div className="app">
             <div className="parent">
               <div className="file-upload">
-                {/* <img src={uploadImg} alt="upload" /> */}
                 <h3> {selectedName || "Click box to upload"}</h3>
                 <Controller
                   name="filename"
@@ -218,8 +214,6 @@ function Activity() {
                       }} />
                   )} />
                 {errors.resolutionFile && <span style={{ color: "red" }}>{errors.resolutionFile.message}</span>}
-
-
               </div>
               <button type="button" onClick={resetInputFile}>
                 X
