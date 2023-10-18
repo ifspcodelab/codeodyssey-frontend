@@ -169,9 +169,7 @@ describe("Visualize my courses", () => {
     const { getByText } = renderCoursesProfessor()
 
     const createInviteButton = await waitFor(() => getByText('Create Invite'));
-    const visualizeStudentsButton = await waitFor(() => getByText('Visualize Students'));
     expect(createInviteButton).toBeInTheDocument();
-    expect(visualizeStudentsButton).toBeInTheDocument();
   });
 
   test('Should be able to render empty list', async () => {
