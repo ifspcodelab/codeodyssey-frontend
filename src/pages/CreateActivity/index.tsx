@@ -157,6 +157,7 @@ function CreateActivity() {
                 variant="outlined"
                 error={!!errors.title}
                 helperText={errors.title && <span>{errors.title.message}</span>}
+                inputProps={{ "data-testid": "titleField" }}
               />
 
             </Grid>
@@ -171,6 +172,7 @@ function CreateActivity() {
                 maxRows={5}
                 error={!!errors.description}
                 helperText={errors.description && <span>{errors.description.message}</span>}
+                inputProps={{ "data-testid": "descField" }}
               />
             </Grid>
 
