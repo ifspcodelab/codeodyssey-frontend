@@ -196,7 +196,7 @@ function Activity() {
           <div className="app">
             <div className="parent">
               <div className="file-upload">
-                <h3> {selectedName || "Click box to upload"}</h3>
+                <h3> {selectedName || t('activity.form.resolution')}</h3>
                 <Controller
                   name="filename"
                   control={control}

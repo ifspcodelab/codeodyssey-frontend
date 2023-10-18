@@ -83,6 +83,7 @@
       "download": "Download File"
     },
     "form": {
+      "resolution": "Click here to upload the file",
       "validation": {
         "resolutionfile": "The Resolution file is required"
       }
