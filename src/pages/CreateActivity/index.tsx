@@ -21,6 +21,7 @@ import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
 import { CourseResponse } from "../../core/models/CourseResponse";
 import axios, { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import FileUpload from "./FileUpload.tsx";
 
 function CreateActivity() {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
@@ -43,7 +44,7 @@ function CreateActivity() {
       responseStatus = problemDetail.status
       if (responseStatus == 400) {
         if (error.response) problemDetail = error.response.data as ProblemDetail
-        if (problemDetail.detail == "deve ser uma data futura")
+        if (problemDetail.detail == "must be a future date")
           setErrorType('invalidStartDate')
         setOpenError(true);
 
@@ -92,27 +93,9 @@ function CreateActivity() {
     }
   }, [fileType, language]);
 
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
 
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
 
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
 
-  const uploadImage = async (e) => {
-    const file = e.target.files[0];
-    const base64 = await convertBase64(file);
-    const [, parts] = base64.split('base64,')
-    return parts
-  };
 
   const handleChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value);
@@ -247,54 +230,12 @@ function CreateActivity() {
               </FormControl>
             </Grid>
             {language ? <>
-              <Controller
-                name="field"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <input
-                    type="file"
-                    accept={fileType}
-                    {...register("initialFile")}
-                    {...field}
-                    onChange={async (e) => {
-                      const valorTransformado = await uploadImage(e);
-                      setValue("initialFile", valorTransformado);
-                    }} />
-                )} />
-              {errors.initialFile && <span style={{ color: "red" }}>{errors.initialFile.message}</span>}
-              <Controller
-                name="field"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <input
-                    type="file"
-                    accept={fileType}
-                    {...register("testFile")}
-                    {...field}
-                    onChange={async (e) => {
-                      const valorTransformado = await uploadImage(e);
-                      setValue("testFile", valorTransformado);
-                    }} />
-                )} />
-              {errors.testFile && <span style={{ color: "red" }}>{errors.testFile.message}</span>}
-              <Controller
-                name="field"
-                control={control}
-                defaultValue={null}
-                render={({ field }) => (
-                  <input
-                    type="file"
-                    accept={fileType}
-                    {...register("solutionFile")}
-                    {...field}
-                    onChange={async (e) => {
-                      const valorTransformado = await uploadImage(e);
-                      setValue("solutionFile", valorTransformado);
-                    }} />
-                )} />
-              {errors.solutionFile && <span style={{ color: "red" }}>{errors.solutionFile.message}</span>}
+
+              {/* 
+              {errors.testFile && <span style={{ color: "red" }}>{errors.testFile.message}</span>}  */}
+              <FileUpload fieldName="initialFile" register={register} setValue={setValue} control={control} fileType={fileType} errors={errors} />
+              <FileUpload fieldName="solutionFile" register={register} setValue={setValue} control={control} fileType={fileType} errors={errors} />
+              <FileUpload fieldName="testFile" register={register} setValue={setValue} control={control} fileType={fileType} errors={errors} />
             </> : <span></span>}
 
             <Grid item xs={12} textAlign="right">
