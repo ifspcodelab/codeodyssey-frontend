@@ -66,22 +66,22 @@ function Course() {
   return (
     <>
       <h1>{course?.name}</h1>
-      {course?.professor?.id === USER_ID ? <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
+      {course?.professor?.id === USER_ID ? <><Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
         onClick={() => {
           navigate('create-activity');
         }}
-      >{t('course.button.create')}</Button> : <span></span>}
+      >{t('course.button.create')}</Button><Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
+        onClick={() => {
+          navigate('students');
+        }}
+      >{t("courses.button.students")}</Button></> : <span></span>}
       <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
         onClick={() => {
           navigate('activities');
         }}
       >{t('course.button.activities')}</Button>
 
-      <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-        onClick={() => {
-          navigate('students');
-        }}
-      >{t("courses.button.students")}</Button>
+
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>
