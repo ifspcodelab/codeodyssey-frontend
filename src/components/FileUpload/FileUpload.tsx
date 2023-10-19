@@ -41,6 +41,7 @@ const FileUpload = ({ fieldName, register, setValue, control, fileType, errors }
   return (
     <div className="app">
       <div className="parent">
+        <h3>{fieldName}</h3>
         <div className="file-upload">
           <h3> {selectedName || t('activity.form.resolution')}</h3>
           <Controller

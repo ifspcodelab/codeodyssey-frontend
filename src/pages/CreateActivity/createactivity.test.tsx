@@ -50,7 +50,7 @@ describe("Create Course Form", () => {
 
   test("Should title be validated", async () => {
     await expect(schema.validateAt('title', { title: "" })).rejects.toMatch(/This field is required./)
-    await expect(schema.validateAt('title', { title: "react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react " })).rejects.toMatch(/This field should be smaller than 50./)
+    await expect(schema.validateAt('title', { title: "react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react react " })).rejects.toMatch(/This field should be smaller than 255./)
     await expect(schema.validateAt('title', { title: "desc" })).rejects.toMatch(/This field should be bigger than 5./)
   })
 

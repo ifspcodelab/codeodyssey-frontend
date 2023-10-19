@@ -2,7 +2,7 @@ import Yup from "../../config/yup.ts";
 import i18n from "../../locales/i18n";
 
 export const schema = Yup.object({
-    title: Yup.string().required().min(5).max(50),
+    title: Yup.string().required().min(5).max(255),
     description: Yup.string().required().min(5),
     extension: Yup.string().required(),
     startDate: Yup.date().required(),

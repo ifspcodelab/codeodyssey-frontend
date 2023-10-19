@@ -21,7 +21,7 @@ import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
 import { CourseResponse } from "../../core/models/CourseResponse";
 import axios, { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
-import FileUpload from "./FileUpload.tsx";
+import FileUpload from "../../components/FileUpload/FileUpload.tsx";
 
 function CreateActivity() {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
@@ -231,8 +231,6 @@ function CreateActivity() {
             </Grid>
             {language ? <>
 
-              {/* 
-              {errors.testFile && <span style={{ color: "red" }}>{errors.testFile.message}</span>}  */}
               <FileUpload fieldName="initialFile" register={register} setValue={setValue} control={control} fileType={fileType} errors={errors} />
               <FileUpload fieldName="solutionFile" register={register} setValue={setValue} control={control} fileType={fileType} errors={errors} />
               <FileUpload fieldName="testFile" register={register} setValue={setValue} control={control} fileType={fileType} errors={errors} />
