@@ -2,11 +2,11 @@ import { Button, Grid, Typography } from "@mui/material";
 import { useApiGetActivity } from "../../core/hooks/useApiGetActivity.ts";
 import { useApiSendResolution } from "../../core/hooks/useApiSendResolution.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { ResolutionForm } from "../../core/models/ResolutionForm.ts"
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { schema } from "./schema.ts";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
@@ -16,6 +16,7 @@ import axios, { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import { ActivityResponse } from './../../core/models/ActivityResponse';
 import "./style.css";
+import FileUpload from "../../components/FileUpload/FileUpload.tsx";
 
 function Activity() {
   const { getActivity } = useApiGetActivity()
@@ -30,21 +31,6 @@ function Activity() {
       return;
     }
     setOpenSuccess(false);
-  };
-
-  const convertBase64 = (file: Blob): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        resolve(fileReader.result as string);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
   };
 
   const [fileType, setFileType] = useState("");
@@ -73,18 +59,6 @@ function Activity() {
   const [errorType, setErrorType] = useState('');
   const [openError, setOpenError] = useState(false);
   const authConsumer = AuthConsumer();
-
-  const uploadImage = async (e: ChangeEvent<HTMLInputElement>): Promise<string | null> => {
-    if (e.target.files !== null) {
-      const file = e.target.files[0];
-      const base64: string = await convertBase64(file);
-      const [, parts] = base64.split('base64,');
-      setSelectedFile(file);
-      setSelectedName(file.name);
-      return parts;
-    }
-    return null;
-  };
 
   const USER_ID: string = authConsumer.id;
 
@@ -157,15 +131,6 @@ function Activity() {
       setFileType(".js")
     }
   }, [fileType, activity]);
-  const resetInputFile = () => {
-    setValue('resolutionFile', null);
-    setSelectedName('')
-  };
-
-
-
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedName, setSelectedName] = useState("");
 
   return (
     <>
@@ -188,47 +153,16 @@ function Activity() {
 
 
       {activity?.course?.professor?.id === USER_ID ? <span></span> : <Grid item xs={12}>
-        <Typography sx={{ fontSize: 14 }}>
-          {t('activity.title')}
-        </Typography>
+
         <form onSubmit={handleSubmit(onSubmit)}>
 
-          <div className="app">
-            <div className="parent">
-              <div className="file-upload">
-                <h3> {selectedName || t('activity.form.resolution')}</h3>
-                <Controller
-                  name="filename"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <input
-                      className="file-upload"
-                      type="file"
-                      accept={fileType}
-                      {...register("resolutionFile")}
-                      {...field}
-                      onChange={async (e) => {
-                        const base64 = await uploadImage(e);
-                        setValue("resolutionFile", base64 !== null ? base64 : "");
-                      }} />
-                  )} />
-                {errors.resolutionFile && <span style={{ color: "red" }}>{errors.resolutionFile.message}</span>}
-              </div>
-              <button type="button" onClick={resetInputFile}>
-                X
-              </button>
-            </div>
-          </div>
-
-
+          <FileUpload fieldName="resolutionFile" register={register} setValue={setValue} control={control} fileType={fileType} errors={errors} />
 
           <Button variant="outlined" type="submit">{t('activity.button.resolution')}</Button>
         </form>
       </Grid>}
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
-      {/* <DropFileInput onFileChange={(files) => onFileChange(files)} /> */}
     </>
   );
 }
