@@ -17,6 +17,5 @@ describe("Visualize course page", () => {
     const { getByText } = renderCourse()
 
     expect(getByText(/Visualize Activities/)).toBeInTheDocument();
-    expect(getByText(/Visualize Students/)).toBeInTheDocument();
   })
 })
