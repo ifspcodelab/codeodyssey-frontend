@@ -148,7 +148,7 @@ function Activity() {
         <br />
         {t("activity.language")}: {activity?.extension === '.java' && 'Java'}
         <br />
-        {t('activity.date')}: {new Date(activity?.course?.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })} {t('activity.until')} {new Date(activity?.course?.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}
+        {t('activity.date')}: {activity?.course?.startDate ? new Date(activity?.course?.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null} {t('activity.until')} {activity?.course?.endDate ? new Date(activity?.course?.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null}
         <br />
 
         <button onClick={handleDecodeAndDownload}>{t('activity.button.download')}</button>
