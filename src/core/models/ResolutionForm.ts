@@ -1,3 +1,3 @@
-export interface ResolutionForm {
-  resolutionFile: string;
+export interface ResolutionForm<T = any> {
+  resolutionFile: T ;
 }
