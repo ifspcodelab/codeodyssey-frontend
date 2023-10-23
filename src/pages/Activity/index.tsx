@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { ResolutionForm } from "../../core/models/ResolutionForm.ts"
-import { SubmitHandler, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { schema } from "./schema.ts";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
@@ -64,9 +64,10 @@ function Activity() {
 
   const onSubmit: SubmitHandler<ResolutionForm> = (data) => submitResolutionActivity(data)
 
-  const { register, setValue, control, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
-  })
+
+  const methods = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const handleError = (error: AxiosError) => {
     let responseStatus: number
@@ -153,16 +154,16 @@ function Activity() {
         <button onClick={handleDecodeAndDownload}>{t('activity.button.download')}</button>
       </Typography>
 
-
-
       {activity?.course?.professor?.id === USER_ID ? <span></span> : <Grid item xs={12}>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)}>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+            <FileUpload fieldName="resolutionFile" fileType={fileType} />
 
-          <FileUpload fieldName="resolutionFile" register={register} setValue={setValue} control={control} fileType={fileType} errors={errors} />
+            <Button variant="outlined" type="submit">{t('activity.button.resolution')}</Button>
+          </form>
+        </FormProvider>
 
-          <Button variant="outlined" type="submit">{t('activity.button.resolution')}</Button>
-        </form>
       </Grid>}
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />

@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Container, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { Button, Container, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import PageHeader from "../../components/PageHeader";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { schema } from "./schema.ts";
 import React, { useEffect, useState } from "react";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -22,6 +22,7 @@ import { CourseResponse } from "../../core/models/CourseResponse";
 import axios, { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import FileUpload from "../../components/FileUpload/FileUpload.tsx";
+import InputField from './InputField';
 
 function CreateActivity() {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
@@ -64,7 +65,7 @@ function CreateActivity() {
 
   async function submitCreateActivity(data: ActivityForm) {
     try {
-      if (course !== undefined) {
+      if ((course !== undefined) && (data.initialFile !== null) && (data.solutionFile !== null) && (data.testFile !== null)) {
         await createActivity(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken, course.id)
         navigate(`/courses/${course.id}/${course.slug}/activities?success=true`)
       }
@@ -78,9 +79,9 @@ function CreateActivity() {
     }
   }
 
-  const { register, setValue, watch, control, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
-  })
+  const methods = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const [fileType, setFileType] = useState("");
   const [language, setLanguage] = React.useState('');
@@ -92,9 +93,6 @@ function CreateActivity() {
       setFileType(".js")
     }
   }, [fileType, language]);
-
-
-
 
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -129,118 +127,87 @@ function CreateActivity() {
     <>
       <Container maxWidth="md">
         <PageHeader title={t('createactivity.title')} text={t('createactivity.text')} />
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <Grid container spacing={1} rowSpacing={2}>
+              <InputField fieldName="title" />
+              <InputField fieldName="description" />
 
-          <Grid container spacing={1} rowSpacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                sx={{ width: "100%" }}
-                {...register("title")}
-                label={t('createactivity.form.title')}
-                variant="outlined"
-                error={!!errors.title}
-                helperText={errors.title && <span>{errors.title.message}</span>}
-                inputProps={{ "data-testid": "titleField" }}
-              />
+              <Grid item xs={12} textAlign="right" display="flex" alignItems="spaceBetween">
+                <Grid item xs={4}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
+                    <Controller
+                      name={"startDate"}
+                      control={methods.control}
+                      defaultValue={convertedDate}
+                      render={({ field: { ref, onChange, value, ...field } }) => (
 
-            </Grid>
+                        <DatePicker
+                          {...field}
+                          inputRef={ref}
+                          label={t('createactivity.form.startDate')}
+                          disablePast value={value ?? " "}
+                          onChange={onChange as never}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                sx={{ width: "100%" }}
-                {...register("description")}
-                label={t('createactivity.form.desc')}
-                variant="outlined"
-                multiline
-                maxRows={5}
-                error={!!errors.description}
-                helperText={errors.description && <span>{errors.description.message}</span>}
-                inputProps={{ "data-testid": "descField" }}
-              />
-            </Grid>
+                <Grid >
+                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
+                    <Controller
+                      name={"endDate"}
+                      control={methods.control}
+                      defaultValue={undefined}
+                      render={({ field: { ref, onChange, value, ...field } }) => (
 
-            <Grid item xs={12} textAlign="right" display="flex" alignItems="spaceBetween">
-              <Grid item xs={4}>
-                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
-                  <Controller
-                    name={"startDate"}
-                    control={control}
-                    defaultValue={convertedDate}
-                    render={({ field: { ref, onChange, value, ...field } }) => (
+                        <DatePicker
+                          {...field}
+                          inputRef={ref}
+                          minDate={methods.watch().startDate}
+                          label={t('createactivity.form.endDate')}
+                          value={value ? value : null}
+                          onChange={onChange as never}
 
-                      <DatePicker
-                        {...field}
-                        inputRef={ref}
-                        label={t('createactivity.form.startDate')}
-                        disablePast value={value ?? " "}
-                        onChange={onChange as never}
-                        slotProps={{
-                          textField: {
-                            helperText: errors.startDate && <span>{errors.startDate.message}</span>
-                          },
-                        }}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Grid>
               </Grid>
 
-              <Grid >
-                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
-                  <Controller
-                    name={"endDate"}
-                    control={control}
-                    defaultValue={undefined}
-                    render={({ field: { ref, onChange, value, ...field } }) => (
+              <Grid item xs={12}>
+                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                  <InputLabel id="language-label">Language</InputLabel>
+                  <Select
+                    {...methods.register("extension")}
+                    labelId="language-label"
+                    id="demo-simple-select"
+                    value={language}
+                    label={t('createactivity.form.language')}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={".java"}>Java</MenuItem>
+                    <MenuItem value={".js"}>Javascript</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
 
-                      <DatePicker
-                        {...field}
-                        inputRef={ref}
-                        minDate={watch().startDate}
-                        label={t('createactivity.form.endDate')}
-                        value={value ? value : null}
-                        onChange={onChange as never}
-                        slotProps={{
-                          textField: {
-                            helperText: errors.endDate && <span>{errors.endDate.message}</span>
-                          },
-                        }}
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
+              {language ? <>
+
+                <FileUpload fieldName="initialFile" fileType={fileType} />
+                <FileUpload fieldName="testFile" fileType={fileType} />
+                <FileUpload fieldName="solutionFile" fileType={fileType} />
+              </> : <span></span>}
+
+              <Grid item xs={12} textAlign="right">
+                <Button variant="outlined" type="submit">{t('createactivity.form.button.publish')}</Button>
               </Grid>
             </Grid>
+          </form>
+        </FormProvider>
 
-            <Grid item xs={12}>
-              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="language-label">Language</InputLabel>
-                <Select
-                  {...register("extension")}
-                  labelId="language-label"
-                  id="demo-simple-select"
-                  value={language}
-                  label={t('createactivity.form.language')}
-                  onChange={handleChange}
-                >
-                  <MenuItem value={".java"}>Java</MenuItem>
-                  <MenuItem value={".js"}>Javascript</MenuItem>
-                </Select>
-                {errors.extension && <span style={{ color: "red" }}>{errors.extension.message}</span>}
-              </FormControl>
-            </Grid>
-            {language ? <>
-
-              <FileUpload fieldName="initialFile" register={register} setValue={setValue} control={control} fileType={fileType} errors={errors} />
-              <FileUpload fieldName="solutionFile" register={register} setValue={setValue} control={control} fileType={fileType} errors={errors} />
-              <FileUpload fieldName="testFile" register={register} setValue={setValue} control={control} fileType={fileType} errors={errors} />
-            </> : <span></span>}
-
-            <Grid item xs={12} textAlign="right">
-              <Button variant="outlined" type="submit">{t('createactivity.form.button.publish')}</Button>
-            </Grid>
-          </Grid>
-        </form>
       </Container>
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>

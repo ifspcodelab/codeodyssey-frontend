@@ -1,8 +1,5 @@
 export interface ActivityForm {
-  // criteria: {
-  //   name: string;
-  //   weight: number;
-  // }[];
+
   title: string;
   description: string;
   extension: string;
@@ -10,5 +7,5 @@ export interface ActivityForm {
   endDate: Date;
   initialFile: string;
   testFile: string;
-  solutionFile: string;
+  solutionFile: string ;
 }

@@ -1,25 +1,18 @@
 import { ChangeEvent, useState } from 'react';
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import "./style.css";
 import { useTranslation } from "react-i18next";
-import { FieldValues, FieldPath, Control } from 'react-hook-form';
 
 interface FileUploadProps {
-  fieldName: FieldPath<FieldValues>;
-  register: (name: FieldPath<FieldValues>, options?: { shouldValidate: boolean }) => void;
-  setValue: (name: FieldPath<FieldValues>, value: any, options?: { shouldDirty?: boolean }) => void;
-  control: Control<FieldValues>;
+  fieldName: string;
   fileType: string;
-  errors: {
-    [K in FieldPath<FieldValues>]?: {
-      message: string;
-    };
-  };
 }
 
 const FileUpload = (props: FileUploadProps) => {
   const [selectedName, setSelectedName] = useState("");
   const { t } = useTranslation();
+
+  const { register, setValue, control, } = useFormContext()
 
   const convertBase64 = (file: Blob): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -36,19 +29,30 @@ const FileUpload = (props: FileUploadProps) => {
     });
   };
 
+  // const uploadImage = async (e: ChangeEvent<HTMLInputElement>): Promise<string | null> => {
+  //   if (e.target.files !== null) {
+  //     const file = e.target.files[0];
+  //     const base64: string = await convertBase64(file);
+  //     const [, parts] = base64.split('base64,');
+  //     setSelectedName(file.name);
+  //     return parts.toString();
+  //   }
+  //   return null;
+  // };
+
   const uploadImage = async (e: ChangeEvent<HTMLInputElement>): Promise<string | null> => {
-    if (e.target.files !== null) {
+    if (e.target.files !== null && e.target.files.length > 0) {
       const file = e.target.files[0];
       const base64: string = await convertBase64(file);
       const [, parts] = base64.split('base64,');
       setSelectedName(file.name);
-      return parts;
+      return parts.toString();
     }
     return null;
   };
 
   const resetInputFile = () => {
-    props.setValue(props.fieldName, null);
+    setValue(props.fieldName, null);
     setSelectedName('')
   };
 
@@ -60,16 +64,15 @@ const FileUpload = (props: FileUploadProps) => {
           <h3> {selectedName || t('activity.form.resolution')}</h3>
           <Controller
             name="field"
-            control={props.control}
-            defaultValue=""
+            control={control}
+            defaultValue={null}
             render={({ field }) => (
-              <input {...props.register(props.fieldName)} {...field} accept={props.fileType} type="file" onChange={async (e) => {
-                const valorTransformado = await uploadImage(e);
-                props.setValue(props.fieldName, valorTransformado);
+              <input {...register(props.fieldName)} {...field} accept={props.fileType} type="file" onChange={async (e) => {
+                const convertedValue = await uploadImage(e);
+                setValue(props.fieldName, convertedValue);
               }} />
             )}
           />
-          {props.errors[props.fieldName] && <span style={{ color: "red" }}>{props.errors[props.fieldName].message}</span>}
         </div>
         <button type="button" onClick={resetInputFile}>
           X
