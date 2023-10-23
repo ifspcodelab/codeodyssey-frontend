@@ -109,19 +109,22 @@ function Activity() {
 
   const handleDecodeAndDownload = () => {
     const base64String = activity?.initialFile;
-    const decodedString = atob(base64String);
-    const blob = new Blob([decodedString], { type: 'text/plain' });
-    const blobUrl = window.URL.createObjectURL(blob);
+    if (typeof base64String === 'string') {
+      const decodedString = atob(base64String);
+      const blob = new Blob([decodedString], { type: 'text/plain' });
+      const blobUrl = window.URL.createObjectURL(blob);
 
-    const downloadLink = document.createElement('a');
-    downloadLink.href = blobUrl;
+      const downloadLink = document.createElement('a');
+      downloadLink.href = blobUrl;
 
-    downloadLink.download = `initialFile${fileType}`;
+      downloadLink.download = `initialFile${fileType}`;
 
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
 
-    window.URL.revokeObjectURL(blobUrl);
+      window.URL.revokeObjectURL(blobUrl);
+    }
+
   }
 
   useEffect(() => {
@@ -168,26 +171,3 @@ function Activity() {
 }
 
 export default Activity
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function watch(arg0: string) {
-  throw new Error("Function not implemented.");
-}
-

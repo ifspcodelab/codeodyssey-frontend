@@ -2,8 +2,22 @@ import { ChangeEvent, useState } from 'react';
 import { Controller } from "react-hook-form";
 import "./style.css";
 import { useTranslation } from "react-i18next";
+import { FieldValues, FieldPath, Control } from 'react-hook-form';
 
-const FileUpload = ({ fieldName, register, setValue, control, fileType, errors }) => {
+interface FileUploadProps {
+  fieldName: FieldPath<FieldValues>;
+  register: (name: FieldPath<FieldValues>, options?: { shouldValidate: boolean }) => void;
+  setValue: (name: FieldPath<FieldValues>, value: any, options?: { shouldDirty?: boolean }) => void;
+  control: Control<FieldValues>;
+  fileType: string;
+  errors: {
+    [K in FieldPath<FieldValues>]?: {
+      message: string;
+    };
+  };
+}
+
+const FileUpload = (props: FileUploadProps) => {
   const [selectedName, setSelectedName] = useState("");
   const { t } = useTranslation();
 
@@ -34,28 +48,28 @@ const FileUpload = ({ fieldName, register, setValue, control, fileType, errors }
   };
 
   const resetInputFile = () => {
-    setValue(fieldName, null);
+    props.setValue(props.fieldName, null);
     setSelectedName('')
   };
 
   return (
     <div className="app">
       <div className="parent">
-        <h3>{fieldName}</h3>
+        <h3>{props.fieldName}</h3>
         <div className="file-upload">
           <h3> {selectedName || t('activity.form.resolution')}</h3>
           <Controller
             name="field"
-            control={control}
+            control={props.control}
             defaultValue=""
             render={({ field }) => (
-              <input {...register(fieldName)} {...field} accept={fileType} type="file" onChange={async (e) => {
+              <input {...props.register(props.fieldName)} {...field} accept={props.fileType} type="file" onChange={async (e) => {
                 const valorTransformado = await uploadImage(e);
-                setValue(fieldName, valorTransformado);
+                props.setValue(props.fieldName, valorTransformado);
               }} />
             )}
           />
-          {errors[fieldName] && <span style={{ color: "red" }}>{errors[fieldName].message}</span>}
+          {props.errors[props.fieldName] && <span style={{ color: "red" }}>{props.errors[props.fieldName].message}</span>}
         </div>
         <button type="button" onClick={resetInputFile}>
           X
