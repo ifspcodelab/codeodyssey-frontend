@@ -5,36 +5,31 @@ import { describe, test, vi } from "vitest";
 import { schema } from "../CreateActivity/schema.ts"
 import { BrowserRouter } from "react-router-dom";
 
-const descField = "descField"
-const titleField = "titleField"
-const startDateLabelName = "Start Date"
-const endDateLabelName = "End Date"
-const languageLabelName = "Language"
-
 vi.mock('../../core/hooks/useApiCreateActivity', () => ({
   useApiCreateActivity: () => ({
     createActivity: vi.fn(),
   }),
 }));
 
-describe("Create Course Form", () => {
+function renderCreateActivity() {
+  return render(
+    <BrowserRouter>
+      <CreateActivity />
+    </BrowserRouter>
+  );
+}
+
+
+describe("Create Activity Form", () => {
 
   test("Should be able to see the title on the screen", () => {
-    const { getByText } = render(
-      <BrowserRouter>
-        <CreateActivity />
-      </BrowserRouter>
-    )
+    const { getByText } = renderCreateActivity()
 
     expect(getByText(/Create Activity/)).toBeInTheDocument();
   })
 
   test("Should be able to render the publish button", async () => {
-    const { getByText } = render(
-      <BrowserRouter>
-        <CreateActivity />
-      </BrowserRouter>
-    )
+    const { getByText } = renderCreateActivity()
 
     const createButton = await waitFor(() => getByText(/Publish Activity/));
     expect(createButton).toBeInTheDocument();
@@ -75,17 +70,18 @@ describe("Create Course Form", () => {
     await expect(schema.validateAt('solutionFile', { solutionFile: null })).rejects.toMatch(/The solution file is required/)
   })
 
-  test("Should be able to render the form fields", () => {
-    const { getByTestId, getByLabelText } = render(
-      <BrowserRouter>
-        <CreateActivity />
-      </BrowserRouter>
-    )
+  test("Should be able to render the form fields", async () => {
+    const { getByLabelText } = renderCreateActivity()
 
-    expect(getByTestId(descField)).toBeInTheDocument();
-    expect(getByTestId(titleField)).toBeInTheDocument();
-    expect(getByLabelText(startDateLabelName)).toBeInTheDocument();
-    expect(getByLabelText(endDateLabelName)).toBeInTheDocument();
-    expect(getByLabelText(languageLabelName)).toBeInTheDocument();
+    const titleLabel = await waitFor(() => getByLabelText('Title'));
+    expect(titleLabel).toBeInTheDocument();
+    const descLabel = await waitFor(() => getByLabelText('Description'));
+    expect(descLabel).toBeInTheDocument();
+    const startDateLabel = await waitFor(() => getByLabelText('Start Date'));
+    expect(startDateLabel).toBeInTheDocument();
+    const endDateLabel = await waitFor(() => getByLabelText('End Date'));
+    expect(endDateLabel).toBeInTheDocument();
+    const languageLabel = await waitFor(() => getByLabelText('Language'));
+    expect(languageLabel).toBeInTheDocument();
   })
 })

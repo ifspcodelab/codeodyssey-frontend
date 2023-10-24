@@ -12,7 +12,8 @@ const FileUpload = (props: FileUploadProps) => {
   const [selectedName, setSelectedName] = useState("");
   const { t } = useTranslation();
 
-  const { register, setValue, control, } = useFormContext()
+  const { register, setValue, control,
+    formState: { errors } } = useFormContext()
 
   const convertBase64 = (file: Blob): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -65,7 +66,7 @@ const FileUpload = (props: FileUploadProps) => {
           <Controller
             name="field"
             control={control}
-            defaultValue={null}
+            defaultValue=""
             render={({ field }) => (
               <input {...register(props.fieldName)} {...field} accept={props.fileType} type="file" onChange={async (e) => {
                 const convertedValue = await uploadImage(e);
@@ -73,6 +74,9 @@ const FileUpload = (props: FileUploadProps) => {
               }} />
             )}
           />
+          {errors?.[props.fieldName]?.message ? (
+            <span>{errors[props.fieldName]!.message!.toString()}</span>
+          ) : null}
         </div>
         <button type="button" onClick={resetInputFile}>
           X

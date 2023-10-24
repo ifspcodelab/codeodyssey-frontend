@@ -16,7 +16,7 @@ import axios, { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import { ActivityResponse } from './../../core/models/ActivityResponse';
 import "./style.css";
-import FileUpload from "../../components/FileUpload/FileUpload.tsx";
+import FileUpload from "../../components/Form/FileUpload.tsx";
 
 function Activity() {
   const { getActivity } = useApiGetActivity()

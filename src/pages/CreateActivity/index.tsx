@@ -21,8 +21,9 @@ import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
 import { CourseResponse } from "../../core/models/CourseResponse";
 import axios, { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
-import FileUpload from "../../components/FileUpload/FileUpload.tsx";
-import InputField from './InputField';
+import FileUpload from "../../components/Form/FileUpload.tsx";
+import InputField from '../../components/Form/InputField.tsx';
+import TextAreaField from "../../components/Form/TextAreaField.tsx";
 
 function CreateActivity() {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
@@ -107,7 +108,6 @@ function CreateActivity() {
         try {
           const courseResponse = await getCourse(idCourse, rawAccessToken);
           setCourse(courseResponse)
-
         }
         catch (error) {
           if (axios.isAxiosError(error)) {
@@ -123,6 +123,9 @@ function CreateActivity() {
 
   const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
 
+  const convertedEndDate: CustomDate = course?.endDate ? dayjs(new Date(course?.endDate)) as unknown as CustomDate : dayjs(new Date()) as unknown as CustomDate;
+
+
   return (
     <>
       <Container maxWidth="md">
@@ -130,8 +133,14 @@ function CreateActivity() {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <Grid container spacing={1} rowSpacing={2}>
-              <InputField fieldName="title" />
-              <InputField fieldName="description" />
+
+              <Grid item xs={12}>
+                <InputField fieldName="title" labelName="createactivity.form.title" />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextAreaField fieldName="description" labelName="createactivity.form.desc" minRows={2} maxRows={5} />
+              </Grid>
 
               <Grid item xs={12} textAlign="right" display="flex" alignItems="spaceBetween">
                 <Grid item xs={4}>
@@ -147,6 +156,7 @@ function CreateActivity() {
                           inputRef={ref}
                           label={t('createactivity.form.startDate')}
                           disablePast value={value ?? " "}
+                          maxDate={convertedEndDate}
                           onChange={onChange as never}
                         />
                       )}
@@ -166,10 +176,10 @@ function CreateActivity() {
                           {...field}
                           inputRef={ref}
                           minDate={methods.watch().startDate}
+                          maxDate={convertedEndDate}
                           label={t('createactivity.form.endDate')}
                           value={value ? value : null}
                           onChange={onChange as never}
-
                         />
                       )}
                     />
@@ -195,7 +205,6 @@ function CreateActivity() {
               </Grid>
 
               {language ? <>
-
                 <FileUpload fieldName="initialFile" fileType={fileType} />
                 <FileUpload fieldName="testFile" fileType={fileType} />
                 <FileUpload fieldName="solutionFile" fileType={fileType} />

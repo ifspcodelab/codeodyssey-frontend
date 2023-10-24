@@ -2,11 +2,12 @@ import { Grid, TextField } from "@mui/material";
 import { t } from "i18next";
 import { useFormContext } from "react-hook-form";
 
-interface FileUploadProps {
+interface InputFieldProps {
   fieldName: string;
+  labelName: string;
 }
 
-function InputField(props: FileUploadProps) {
+function InputField(props: InputFieldProps) {
   const {
     register,
     formState: { errors }
@@ -18,10 +19,8 @@ function InputField(props: FileUploadProps) {
         <TextField
           sx={{ width: "100%" }}
           {...register(props.fieldName)}
-          label={t('createactivity.form.desc')}
+          label={t(props.labelName)}
           variant="outlined"
-          multiline
-          maxRows={5}
           error={!!errors?.[props.fieldName]}
           helperText={errors?.[props.fieldName]?.message ? (
             <span>{errors[props.fieldName]!.message!.toString()}</span>
