@@ -43,7 +43,6 @@ function Activity() {
         try {
           const activityResponse = await getActivity(idCourse, idActivity, rawAccessToken);
           setActivity(activityResponse)
-
         } catch (error) {
           if (axios.isAxiosError(error)) {
             handleError(error)
@@ -142,13 +141,11 @@ function Activity() {
 
       <h1>{activity?.title}</h1>
       <Typography sx={{ fontSize: 14 }} gutterBottom>
-        Professor:  {activity?.course?.professor.name}
-        <br />
-        {t('activity.course')}: {activity?.course?.name}
-        <br />
+
+
         {t("activity.language")}: {activity?.extension === '.java' && 'Java'}
         <br />
-        {t('activity.date')}: {activity?.course?.startDate ? new Date(activity?.course?.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null} {t('activity.until')} {activity?.course?.endDate ? new Date(activity?.course?.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null}
+        {t('activity.date')}: {activity?.startDate ? new Date(activity?.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null} {t('activity.until')} {activity?.course?.endDate ? new Date(activity?.course?.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null}
         <br />
 
         <button onClick={handleDecodeAndDownload}>{t('activity.button.download')}</button>
