@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Button, Card, CardActions, CardContent } from "@mui/material";
+import { Card, CardActions, CardContent } from "@mui/material";
 import Typography from '@mui/material/Typography';
 import { useTranslation } from "react-i18next";
 import { CourseResponse } from '../../core/models/CourseResponse.ts';
 import './style.css'
 import i18n from "../../locales/i18n.ts";
-import { useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import CreateInviteModal from '../../components/CreateInviteModal/index.tsx';
 
 
@@ -16,16 +16,12 @@ interface ItemComponentProps {
 const CoursesList: React.FC<ItemComponentProps> = ({ course }) => {
   const { t } = useTranslation();
 
-
-  const navigate = useNavigate()
-
-
   return (
     <div>
       <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main", margin: 2 }}>
         <CardContent className="cardContent">
           <Typography variant="h6" component="div" className="title">
-            {course.name}
+            <Link to={course.id + "/" + course.slug}>{course.name}</Link>
           </Typography>
           <Typography sx={{ fontSize: 14 }} gutterBottom>
             Professor: {course.professor.name}
@@ -37,12 +33,6 @@ const CoursesList: React.FC<ItemComponentProps> = ({ course }) => {
 
         <CardActions key={course.id} className="cardActions">
           <CreateInviteModal course={course} />
-
-          <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-            onClick={() => {
-              navigate(course.slug + '/students');
-            }}
-          >{t("courses.button.students")}</Button>
         </CardActions>
       </Card>
 

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { CourseResponse } from '../../core/models/CourseResponse.ts';
 import './style.css'
 import i18n from "../../locales/i18n";
+import { Link } from 'react-router-dom';
 
 
 interface ItemComponentProps {
@@ -22,7 +23,7 @@ const CoursesList: React.FC<ItemComponentProps> = ({ course }) => {
       <Card key={course.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main", margin: 2 }}>
         <CardContent className="cardContent">
           <Typography variant="h6" component="div" className="title">
-            {course.name}
+            <Link to={course.id + "/" + course.slug}>{course.name}</Link>
           </Typography>
           <Typography sx={{ fontSize: 14 }} gutterBottom>
             Professor: {course.professor.name}

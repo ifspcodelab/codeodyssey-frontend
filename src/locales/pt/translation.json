@@ -20,6 +20,13 @@
       "expired": "O token de confirmação expirou"
     }
   },
+  "course": {
+    "text": "Informações sobre o curso",
+    "button": {
+      "create": "Criar Atividade",
+      "activities": "Ver Atividades"
+    }
+  },
   "courses": {
     "title": "Meus Cursos",
     "text": "Cursos que estou participando",
@@ -30,6 +37,63 @@
     "intlDate": "{{date, datetime}}",
     "until": "até",
     "emptyList": "Você ainda não participa de nenhum curso"
+  },
+  "createactivity": {
+    "title": "Criar Atividade",
+    "text": "Definir uma atividade para o curso",
+    "successMessage": "Atividade criada com sucesso!",
+    "exception": {
+      "startdate": "Data de início inválida"
+    },
+    "form": {
+      "title": "Título",
+      "desc": "Descrição",
+      "language": "Linguagem",
+      "startDate": "Data de início",
+      "endDate": "Data de término",
+      "initialFile": "Arquivo inicial",
+      "testFile": "Arquivo de teste",
+      "solutionFile": "Arquivo de solução",
+      "evaluation": "Avaliação",
+      "evaluationField": {
+        "name": "Nome",
+        "weight": "Peso",
+        "delete": "Deletar",
+        "add": "Adicionar"
+      },
+      "validation": {
+        "initialfile": "O arquivo inicial é obrigatório",
+        "testfile": "O arquivo de teste é obrigatório",
+        "solutionfile": "O arquivo de solução é obrigatório"
+      },
+      "button": {
+        "publish": "Publicar Atividade"
+      }
+    }
+  },
+  "activity": {
+    "title": "Resolução",
+    "course": "Curso",
+    "date": "Data",
+    "initialfile": "Arquivo Inicial",
+    "language": "Linguagem",
+    "successMessage": "Resolução enviada com sucesso!",
+    "button": {
+      "resolution": "Enviar Resolução",
+      "download": "Baixar arquivo"
+    },
+    "form": {
+      "resolution": "Clique aqui para fazer upload do arquivo",
+      "validation": {
+        "resolutionfile": "O arquivo de resolução é obrigatório"
+      }
+    },
+    "until": "até"
+  },
+  "activities": {
+    "title": "Atividades",
+    "text": "Atividades do curso",
+    "emptyList": "Esse curso não possui nenhuma atividade"
   },
   "students": {
     "title": "Meus Alunos",
@@ -140,13 +204,14 @@
           "uppercase": "A Senha deve ter pelo menos uma letra maiúscula",
           "special": "A Senha deve ter pelo menos um caractere especial"
         }
-      }},
+      }
+    },
     "login": "Faça login!",
     "register": "Novo no Code Odyssey? <1>Registre-se</1>.",
     "loginError": "Houve um erro, por favor tente novamente",
     "footer": "Login footer"
   },
-  "resendEmail":{
+  "resendEmail": {
     "title": "Reenviar o email",
     "text": "Caso você não tenha recebido o email de confirmação, clique no link abaixo para reenviar o email após um minuto.",
     "emailMessage": "O sistema mandou um email de confirmação para {{email}}. Verifique seu email.",
@@ -169,7 +234,7 @@
     },
     "footer": "Texto do footer aqui"
   },
-  "errorPage":{
+  "errorPage": {
     "title": "Erro {{statusCode}}",
     "subTitle": "Um erro inesperado ocorreu.",
     "message": {
