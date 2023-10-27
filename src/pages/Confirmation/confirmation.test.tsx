@@ -1,5 +1,5 @@
 import {describe, test} from "vitest";
-import {render} from "@testing-library/react";
+import {render, waitFor} from "@testing-library/react";
 import {BrowserRouter} from "react-router-dom";
 import Confirmation from "./index";
 import "@testing-library/jest-dom";
@@ -128,16 +128,16 @@ describe("Confirmation", () => {
         expect(await findByText("The confirmation token is expired")).toBeInTheDocument();
     });
 
-    // test("Should show network error message", async () => {
-    //     server.use(
-    //         rest.patch(MSW_URL, (req, res, ctx) => {
-    //             console.log(req, ctx) // for build purposes
-    //             return res.networkError('Failed to connect'); // << This is not working
-    //         }),
-    //     );
-    //
-    //     const { findByText } = renderConfirmation();
-    //
-    //     expect(await findByText("There was a connection error")).toBeInTheDocument();
-    // });
+    test("Should show network error message", () => {
+        server.use(
+            rest.patch(MSW_URL, (req, res, ctx) => {
+                console.log(req, ctx) // for build purposes
+                return res.networkError('Failed to connect');
+            }),
+        );
+
+        const { getByText } = renderConfirmation();
+
+       void waitFor(() => expect(getByText("There was a connection error")).toBeInTheDocument());
+    });
 });
