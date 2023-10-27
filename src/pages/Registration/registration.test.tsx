@@ -211,33 +211,33 @@ describe("Registration", () => {
         })
     })
 
-    // test("Should show network error message on form submission", async () => {
-    //     server.use(
-    //         rest.post(MSW_URL,  (req, res, ctx) => {
-    //                 console.log(req, ctx) // for build purposes
-    //                 return res.networkError('Failed to connect') // << this is not working
-    //             }
-    //         ))
-    //
-    //     const {getByText, getByLabelText, getByTestId} = renderRegistration();
-    //
-    //     const inputName = getByLabelText('Name') as HTMLInputElement;
-    //     const inputEmail = getByLabelText('Email') as HTMLInputElement;
-    //     const inputPassword = getByLabelText('Password') as HTMLInputElement;
-    //     const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy') as HTMLInputElement
-    //
-    //     fireEvent.change(inputName, { target: { value: 'John Doe' } });
-    //     fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
-    //     fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
-    //     fireEvent.change(inputTerms, { target: {value: true}})
-    //
-    //     fireEvent.click(inputTerms)
-    //
-    //     await waitFor(() => {
-    //         void userEvent.click(getByTestId("registerButton"))
-    //         expect(getByText("Network error")).toBeInTheDocument()
-    //     })
-    // })
+    test("Should show network error message on form submission", async () => {
+        server.use(
+            rest.post(MSW_URL,  (req, res, ctx) => {
+                    console.log(req, ctx); // for build purposes
+                    return res.networkError('Failed to connect');
+                }
+            ))
+
+        const {getByText, getByLabelText, getByTestId} = renderRegistration();
+
+        const inputName = getByLabelText('Name') as HTMLInputElement;
+        const inputEmail = getByLabelText('Email') as HTMLInputElement;
+        const inputPassword = getByLabelText('Password') as HTMLInputElement;
+        const inputTerms = getByLabelText('I have read and agree with the Terms of Use and Privacy Policy') as HTMLInputElement;
+
+        fireEvent.change(inputName, { target: { value: 'John Doe' } });
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
+        fireEvent.change(inputTerms, { target: {value: true}});
+
+        fireEvent.click(inputTerms);
+
+        await void waitFor(() => {
+            void userEvent.click(getByTestId("registerButton"));
+            expect(getByText("Network error")).toBeInTheDocument();
+        })
+    })
 
     test("Should check if terms and privacy links have their respective href and target values", () => {
         const { getByRole } = renderRegistration();
