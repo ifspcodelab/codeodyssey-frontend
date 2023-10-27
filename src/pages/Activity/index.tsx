@@ -141,8 +141,8 @@ function Activity() {
 
       <h1>{activity?.title}</h1>
       <Typography sx={{ fontSize: 14 }} gutterBottom>
-
-
+        {activity?.description}
+        <br />
         {t("activity.language")}: {activity?.extension === '.java' && 'Java'}
         <br />
         {t('activity.date')}: {activity?.startDate ? new Date(activity?.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null} {t('activity.until')} {activity?.course?.endDate ? new Date(activity?.course?.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null}
