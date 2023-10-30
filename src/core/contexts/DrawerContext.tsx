@@ -18,6 +18,7 @@ interface IDrawerOption {
 
 const DrawerContext = createContext({} as IDrawerContextData);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useDrawerContext = () => {
   return useContext(DrawerContext);
 };
@@ -56,17 +57,17 @@ export const DrawerProvider: React.FC<IDrawerProvider> = ({ children }) => {
           label: 'Home'
         },
         {
-          icon: 'star',
+          icon: 'app_registration',
           path: '/registration',
           label: t("navbar.register")
         },
         {
-          icon: 'star',
+          icon: 'login',
           path: '/login',
           label: t("navbar.login")
         },
         {
-          icon: 'star',
+          icon: 'call',
           path: '/contact',
           label: t("navbar.contact")
         }
@@ -79,23 +80,23 @@ export const DrawerProvider: React.FC<IDrawerProvider> = ({ children }) => {
           label: 'Home'
         },
         {
-          icon: 'star',
+          icon: 'code',
           path: '/courses',
           label: t("navbar.courses")
         },
         {
-          icon: 'star',
-          path: '/',
-          label: t("navbar.logout")
-        },
-        {
-          icon: 'star',
+          icon: 'call',
           path: '/contact',
           label: t("navbar.contact")
+        },
+        {
+          icon: 'logout',
+          path: '/',
+          label: t("navbar.logout")
         }
       ])
     }
-  }, [token]);
+  }, [t, token]);
 
   return (
     <DrawerContext.Provider value={{ isDrawerOpen, drawerOptions, toggleDrawerOpen, setDrawerOptions: handleSetDrawerOptions }}>

@@ -1,6 +1,6 @@
 import { Avatar, Box, Divider, Drawer, Icon, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from "@mui/material"
 import { useDrawerContext } from "../../contexts/DrawerContext"
-import { matchRoutes, useMatch, useNavigate, useResolvedPath } from "react-router-dom";
+import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { JwtService } from '../../auth/JwtService';
 import { AccessToken } from '../../models/AccessToken';
@@ -43,7 +43,6 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }
     navigate("/");
     window.location.reload();
   }
-
 
   return (
     <ListItemButton selected={!!match} onClick={handleClick}>
