@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { CourseResponse } from "../../core/models/CourseResponse";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import axios, { AxiosError } from "axios";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 
 function Course() {
   const { t } = useTranslation();
@@ -65,7 +66,9 @@ function Course() {
 
   return (
     <>
-      <h1>{course?.name}</h1>
+      <PageBaseLayout title={course?.name !== undefined ? course?.name : "title"}
+      > </PageBaseLayout>
+
       {course?.professor?.id === USER_ID ? <><Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
         onClick={() => {
           navigate('create-activity');
