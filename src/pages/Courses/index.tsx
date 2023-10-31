@@ -15,6 +15,7 @@ import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 import CoursesList from './CoursesProfessor.tsx'
 import CoursesStudent from './CoursesStudent.tsx'
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import { ToolBar } from "../../core/components/tool-bar/ToolBar.tsx";
 
 const Courses: React.FC = () => {
   const { t } = useTranslation();
@@ -101,7 +102,9 @@ const Courses: React.FC = () => {
 
   return (
     <>
-      <PageBaseLayout title="Cursos" toolbar={<>Toolbar</>}>
+      <PageBaseLayout title="Cursos" toolbar={(
+        <ToolBar showInputSearch />
+      )}>
         Testando
       </PageBaseLayout>
       <PageHeader title={t('courses.title')} text={t('courses.text')} />
