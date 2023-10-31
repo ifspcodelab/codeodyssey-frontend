@@ -14,6 +14,7 @@ import Spinner from "../../components/Spinner";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 import CoursesList from './CoursesProfessor.tsx'
 import CoursesStudent from './CoursesStudent.tsx'
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 
 const Courses: React.FC = () => {
   const { t } = useTranslation();
@@ -100,6 +101,9 @@ const Courses: React.FC = () => {
 
   return (
     <>
+      <PageBaseLayout title="Cursos" toolbar={<>Toolbar</>}>
+        Testando
+      </PageBaseLayout>
       <PageHeader title={t('courses.title')} text={t('courses.text')} />
       {success && <SuccessrSnackBar message={t('createcourse.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
       {
