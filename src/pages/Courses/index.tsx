@@ -1,14 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios, { AxiosError } from "axios";
-import { useLocation } from 'react-router-dom';
-import './style.css'
+import { useLocation, useSearchParams } from 'react-router-dom';
+// import './style.css'
 import Typography from '@mui/material/Typography';
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { CourseResponse } from "../../core/models/CourseResponse";
 import { useApiGetCourses } from "../../core/hooks/useApiGetCourses.ts";
-import PageHeader from "../../components/PageHeader";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import Spinner from "../../components/Spinner";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
@@ -16,7 +15,7 @@ import CoursesList from './CoursesProfessor.tsx'
 import CoursesStudent from './CoursesStudent.tsx'
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { ToolBar } from "../../core/components/tool-bar/ToolBar.tsx";
-import { ToolDetails } from "../../core/components/tool-details/ToolDetails.tsx";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 
 const Courses: React.FC = () => {
   const { t } = useTranslation();
@@ -101,14 +100,48 @@ const Courses: React.FC = () => {
     }
   }
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const search = useMemo(() => {
+    return searchParams.get('search') || ''
+  }, [searchParams])
+
   return (
     <>
-      <PageBaseLayout title="Cursos" toolbar={(
-        <ToolDetails showSaveAndLeaveButton />
-      )}>
-        Testando
+      <PageBaseLayout title={t('courses.title')}
+        toolbar={(<ToolBar
+          showSearchInput
+          textSearch={search}
+          onChangeTextSearch={text => setSearchParams({ search: text }, { replace: true })}
+        />
+        )}>
       </PageBaseLayout>
-      <PageHeader title={t('courses.title')} text={t('courses.text')} />
+
+      <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Professor</TableCell>
+              <TableCell>Start Date</TableCell>
+              <TableCell>End Date</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {coursesProfessor.map(course => (
+              <TableRow>
+                <TableCell>{course.name}</TableCell>
+                <TableCell>{course.professor.name}</TableCell>
+                <TableCell>{course.startDate}</TableCell>
+                <TableCell>{course.endDate}</TableCell>
+                <TableCell>Edit | Delete</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
       {success && <SuccessrSnackBar message={t('createcourse.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
       {
         (Array.isArray(coursesProfessor) && coursesProfessor.length) || (Array.isArray(coursesStudent) && coursesStudent.length) ? (

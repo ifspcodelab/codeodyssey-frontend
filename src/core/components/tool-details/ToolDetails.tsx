@@ -8,7 +8,7 @@ interface IToolDetails {
   showBackButton?: boolean,
   showDeleteButton?: boolean,
   showSaveButton?: boolean,
-  showSaveAndLeaveButton?: boolean,
+  showSaveAndBackButton?: boolean,
 
   onClickNew?: () => void;
   onClickBack?: () => void;
@@ -24,7 +24,7 @@ export const ToolDetails: React.FC<IToolDetails> = ({
   showBackButton = true,
   showDeleteButton = true,
   showSaveButton = true,
-  showSaveAndLeaveButton = false,
+  showSaveAndBackButton = false,
 
   onClickNew,
   onClickBack,
@@ -45,7 +45,7 @@ export const ToolDetails: React.FC<IToolDetails> = ({
         onClick={onClickSave}
         startIcon={<Icon>save</Icon>}
       >Salvar</Button>)}
-      {showSaveAndLeaveButton && (<Button
+      {showSaveAndBackButton && (<Button
         variant="outlined"
         color="primary"
         disableElevation

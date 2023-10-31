@@ -1,9 +1,10 @@
-import { Box, Button, Icon, Paper, TextField, useTheme } from "@mui/material"
+import { Box, Button, Icon, Paper, TextField, useTheme } from '@mui/material';
+
 
 interface IToolBar {
   textSearch?: string;
-  showInputSearch?: boolean;
-  changeTextSearch?: (newText: string) => void;
+  showSearchInput?: boolean;
+  onChangeTextSearch?: (newText: string) => void;
   textNewButton?: string;
   showNewButton?: boolean;
   onClickNewButton?: () => void;
@@ -11,28 +12,44 @@ interface IToolBar {
 
 export const ToolBar: React.FC<IToolBar> = ({
   textSearch = '',
-  showInputSearch = false,
-  changeTextSearch,
+  showSearchInput = false,
+  onChangeTextSearch,
   textNewButton = 'Novo',
   showNewButton = true,
   onClickNewButton
 }) => {
   const theme = useTheme()
-
   return (
-    <Box height={theme.spacing(5)} marginX={1} padding={1} paddingX={2} display="flex" gap={1} alignItems="center" component={Paper} >
-      {showInputSearch && (
+    <Box
+      gap={1}
+      marginX={1}
+      padding={1}
+      paddingX={2}
+      display="flex"
+      alignItems="center"
+      height={theme.spacing(5)}
+      component={Paper}
+    >
+      {showSearchInput && (
         <TextField
           size="small"
           value={textSearch}
-          onChange={(e) => changeTextSearch?.(e.target.value)}
           placeholder="Pesquisar..."
+          onChange={(e) => onChangeTextSearch?.(e.target.value)}
         />
       )}
+
       <Box flex={1} display="flex" justifyContent="end">
-        {showNewButton && (<Button variant="contained" color="primary" disableElevation
-          onClick={onClickNewButton} endIcon={<Icon>add</Icon>}>{textNewButton}</Button>)}
+        {showNewButton && (
+          <Button
+            color='primary'
+            disableElevation
+            variant='contained'
+            onClick={onClickNewButton}
+            endIcon={<Icon>add</Icon>}
+          >{textNewButton}</Button>
+        )}
       </Box>
     </Box>
-  )
-}
+  );
+};
