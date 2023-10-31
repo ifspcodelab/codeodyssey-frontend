@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useState } from "react";
 import axios, { AxiosError } from "axios";
-import { useLocation, useSearchParams } from 'react-router-dom';
-// import './style.css'
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
@@ -16,6 +15,8 @@ import CoursesStudent from './CoursesStudent.tsx'
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { ToolBar } from "../../core/components/tool-bar/ToolBar.tsx";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { ICoursesResponse, CoursesService, } from '../../core/services/api/courses/CoursesService.ts';
+import i18n from "../../locales/i18n";
 
 const Courses: React.FC = () => {
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ const Courses: React.FC = () => {
   const { getCoursesProfessor, getCoursesStudent } = useApiGetCourses()
 
   const [coursesStudent, setCoursesStudent] = useState<CourseResponse[] | ProblemDetail>([]);
-  const [coursesProfessor, setCoursesProfessor] = useState<CourseResponse[] | ProblemDetail>([]);
+  const [coursesProfessor, setCoursesProfessor] = useState<ICoursesResponse[]>([]);
   const [errorType, setErrorType] = useState('');
   const [openSuccess, setOpenSuccess] = useState(true);
   const [openError, setOpenError] = useState(false);
@@ -39,19 +40,29 @@ const Courses: React.FC = () => {
   useEffect(() => {
     void (async () => {
       if (USER_ROLE == "PROFESSOR") {
-        try {
-          const coursesProfessorResponse = await getCoursesProfessor(USER_ID, rawAccessToken);
-          setCoursesProfessor(coursesProfessorResponse)
-          const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
-          setCoursesStudent(coursesStudentResponse)
-          setLoading(false)
-        } catch (error) {
-          if (axios.isAxiosError(error)) {
-            handleError(error)
-          } else {
-            setErrorType('unexpected')
-          }
-        }
+        void CoursesService.getAll(USER_ID, rawAccessToken)
+          .then((result) => {
+            setLoading(false)
+            if (result instanceof Error) {
+              alert(result.message);
+            } else {
+              console.log(result);
+              setCoursesProfessor(result);
+            }
+          });
+        // try {
+        //   const coursesProfessorResponse = await getCoursesProfessor(USER_ID, rawAccessToken);
+        //   setCoursesProfessor(coursesProfessorResponse)
+        //   const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
+        //   setCoursesStudent(coursesStudentResponse)
+        //   setLoading(false)
+        // } catch (error) {
+        //   if (axios.isAxiosError(error)) {
+        //     handleError(error)
+        //   } else {
+        //     setErrorType('unexpected')
+        //   }
+        // }
       } else if (USER_ROLE == "STUDENT") {
         const coursesStudentResponse = await getCoursesStudent(USER_ID, rawAccessToken)
         setCoursesStudent(coursesStudentResponse)
@@ -106,6 +117,10 @@ const Courses: React.FC = () => {
     return searchParams.get('search') || ''
   }, [searchParams])
 
+  function moment(startDate: Date) {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <>
       <PageBaseLayout title={t('courses.title')}
@@ -129,12 +144,12 @@ const Courses: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {coursesProfessor.map(course => (
+            {coursesProfessor?.map(course => (
               <TableRow>
-                <TableCell>{course.name}</TableCell>
+                <TableCell><Link to={course.id + "/" + course.slug}>{course.name}</Link></TableCell>
                 <TableCell>{course.professor.name}</TableCell>
-                <TableCell>{course.startDate}</TableCell>
-                <TableCell>{course.endDate}</TableCell>
+                <TableCell>{new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}  </TableCell>
+                <TableCell>{new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}</TableCell>
                 <TableCell>Edit | Delete</TableCell>
               </TableRow>
             ))}
