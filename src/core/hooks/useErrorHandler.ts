@@ -14,8 +14,13 @@ export function useErrorHandler() {
       responseStatus = problemDetail.status
       console.log(error.response.data)
       if (responseStatus == 400) {
-        setErrorType('badRequest')
-        setOpenError(true);
+        if (problemDetail.detail == "must be a future date") {
+          setErrorType('invalidStartDate')
+          setOpenError(true);
+        } else {
+          setErrorType('badRequest')
+          setOpenError(true);
+        }
       } else if (responseStatus == 409) {
         if (error.response) problemDetail = error.response.data as ProblemDetail
         if (problemDetail.title === "Course Already exists") {

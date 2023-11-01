@@ -13,71 +13,41 @@ import { CustomDate } from "../../core/models/CustomDate";
 import dayjs from 'dayjs';
 import { useTranslation } from "react-i18next";
 import { ActivityForm } from "../../core/models/ActivityForm.ts"
-import { useApiCreateActivity } from "../../core/hooks/useApiCreateActivity";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom";
 import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
 import { CourseResponse } from "../../core/models/CourseResponse";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import FileUpload from "../../components/Form/FileUpload.tsx";
 import InputField from '../../components/Form/InputField.tsx';
 import TextAreaField from "../../components/Form/TextAreaField.tsx";
+import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
+import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 
 function CreateActivity() {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
 
-  const { createActivity } = useApiCreateActivity();
   const navigate = useNavigate()
   const [course, setCourse] = useState<CourseResponse>();
   const { getCourse } = useApiGetCourse()
   const { idCourse } = useParams()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
-  const [errorType, setErrorType] = useState('');
-  const [openError, setOpenError] = useState(false);
 
+  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
-  const handleError = (error: AxiosError) => {
-    let responseStatus: number
-    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
-    if (error.response) {
-      problemDetail = error.response.data as ProblemDetail
-      responseStatus = problemDetail.status
-      if (responseStatus == 400) {
-        if (error.response) problemDetail = error.response.data as ProblemDetail
-        if (problemDetail.detail == "must be a future date")
-          setErrorType('invalidStartDate')
-        setOpenError(true);
-
-      }
-    } else if (error.message == "Network Error") {
-      setErrorType('networkError')
-      setOpenError(true);
+  const submitCreateActivity = async (data: ActivityForm) => {
+    if ((course !== undefined) && (data.initialFile !== null) && (data.solutionFile !== null) && (data.testFile !== null)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      await ActivitiesService.create(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken, course.id)
+        .then(() => {
+          navigate(`/courses/${course.id}/${course.slug}/activities?success=true`)
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
     }
-  }
 
-  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway' || event === undefined) {
-      return;
-    }
-    setOpenError(false);
-  };
-
-  async function submitCreateActivity(data: ActivityForm) {
-    try {
-      if ((course !== undefined) && (data.initialFile !== null) && (data.solutionFile !== null) && (data.testFile !== null)) {
-        await createActivity(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken, course.id)
-        navigate(`/courses/${course.id}/${course.slug}/activities?success=true`)
-      }
-    }
-    catch (error) {
-      if (axios.isAxiosError(error)) {
-        handleError(error)
-      } else {
-        setErrorType('unexpected')
-      }
-    }
   }
 
   const methods = useForm({
@@ -110,11 +80,12 @@ function CreateActivity() {
           setCourse(courseResponse)
         }
         catch (error) {
-          if (axios.isAxiosError(error)) {
-            handleError(error)
-          } else {
-            setErrorType('unexpected')
-          }
+          console.log(error)
+          // if (axios.isAxiosError(error)) {
+          //   handleError(error)
+          // } else {
+          //   setErrorType('unexpected')
+          // }
         }
       }
     })();
