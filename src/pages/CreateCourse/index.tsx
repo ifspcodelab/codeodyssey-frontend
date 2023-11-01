@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import { useNavigate } from "react-router-dom"
 import { CreateCourseResponse } from "../../core/models/CreateCourseResponse";
 import { CustomDate } from "../../core/models/CustomDate";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import 'dayjs/locale/pt-br'

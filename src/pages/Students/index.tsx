@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom"
 import { AxiosError } from "axios";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import Avatar from '@mui/material/Avatar';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { IStudentResponse, StudentService } from "../../core/services/api/students/StudentsService.ts";

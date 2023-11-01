@@ -1,13 +1,13 @@
 import PageHeader from "../../components/PageHeader";
-import {Trans, useTranslation} from "react-i18next";
-import {useLocation} from "react-router-dom"
+import { Trans, useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom"
 import PageFooter from "../../components/PageFooter";
-import {Container, Link, Typography} from "@mui/material";
-import {useApiRegistration} from "../../core/hooks/useApiRegistration";
-import {useState} from "react";
+import { Container, Link, Typography } from "@mui/material";
+import { useApiRegistration } from "../../core/hooks/useApiRegistration";
+import { useState } from "react";
 import Spinner from "../../components/Spinner";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
-import {AxiosError} from "axios";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar";
+import { AxiosError } from "axios";
 import ErrorPage from "../ErrorPage";
 
 
@@ -16,7 +16,7 @@ interface UseLocationState {
 }
 
 function ResendEmail() {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const location = useLocation();
     const { resendConfirmationEmail } = useApiRegistration();
     const [loading, setLoading] = useState(false);
@@ -39,7 +39,7 @@ function ResendEmail() {
 
     const handleError = (error: AxiosError) => {
         let responseStatus: number;
-        let problemDetail: ProblemDetail = { title: '', detail: '' , instance: '', status: 0, type: ''};
+        let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' };
         if (error.response) {
             problemDetail = error.response?.data as ProblemDetail;
             responseStatus = problemDetail.status;
@@ -66,23 +66,23 @@ function ResendEmail() {
     return (
         <Container maxWidth="md">
             {location.state ?
-            <>
-                <PageHeader title={t("resendEmail.title")} text={t("resendEmail.text", { email: location.state.data })}/>
-                <Typography variant="h6" gutterBottom>{t("resendEmail.emailMessage", { email: location.state.data })}</Typography>
-                {!resendSuccess ?
-                    <Trans i18nKey="resendEmail.linkMessage">
-                        Click <Link sx={{marginRight: '3px'}} component="button" variant="body2"
-                                    onClick={resendEmail}>here</Link>
-                        to resend the email.
-                    </Trans>
-                    :
-                    <Typography variant="subtitle1" gutterBottom>{t("resendEmail.successMessage")}</Typography>
-                }
-                {loading && <Spinner size={10}/>}
-                <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType}/>
-                <PageFooter text={t('resendEmail.footer')}/>
-            </>
-            : <ErrorPage status={400}/>}
+                <>
+                    <PageHeader title={t("resendEmail.title")} text={t("resendEmail.text", { email: location.state.data })} />
+                    <Typography variant="h6" gutterBottom>{t("resendEmail.emailMessage", { email: location.state.data })}</Typography>
+                    {!resendSuccess ?
+                        <Trans i18nKey="resendEmail.linkMessage">
+                            Click <Link sx={{ marginRight: '3px' }} component="button" variant="body2"
+                                onClick={resendEmail}>here</Link>
+                            to resend the email.
+                        </Trans>
+                        :
+                        <Typography variant="subtitle1" gutterBottom>{t("resendEmail.successMessage")}</Typography>
+                    }
+                    {loading && <Spinner size={10} />}
+                    <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType} />
+                    <PageFooter text={t('resendEmail.footer')} />
+                </>
+                : <ErrorPage status={400} />}
         </Container>
 
     )

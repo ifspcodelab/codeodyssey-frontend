@@ -16,22 +16,20 @@ import { ActivityForm } from "../../core/models/ActivityForm.ts"
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom";
-import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
-import { CourseResponse } from "../../core/models/CourseResponse";
 import { AxiosError } from "axios";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import FileUpload from "../../components/Form/FileUpload.tsx";
 import InputField from '../../components/Form/InputField.tsx';
 import TextAreaField from "../../components/Form/TextAreaField.tsx";
 import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { CoursesService, ICourseResponse } from "../../core/services/api/courses/CoursesService.ts";
 
-function CreateActivity() {
+const CreateActivity: React.FC = () => {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
 
   const navigate = useNavigate()
-  const [course, setCourse] = useState<CourseResponse>();
-  const { getCourse } = useApiGetCourse()
+  const [course, setCourse] = useState<ICourseResponse>();
   const { idCourse } = useParams()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
 
@@ -73,24 +71,17 @@ function CreateActivity() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    void (async () => {
-      if ((idCourse !== undefined)) {
-        try {
-          const courseResponse = await getCourse(idCourse, rawAccessToken);
-          setCourse(courseResponse)
-        }
-        catch (error) {
-          console.log(error)
-          // if (axios.isAxiosError(error)) {
-          //   handleError(error)
-          // } else {
-          //   setErrorType('unexpected')
-          // }
-        }
-      }
-    })();
-    // eslint-disable-next-line
-  }, []);
+    if (idCourse !== undefined) {
+      CoursesService.getById(idCourse, rawAccessToken)
+        .then((response) => {
+          setCourse(response as ICourseResponse);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rawAccessToken])
 
   const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
 

@@ -7,13 +7,14 @@ import { useParams } from "react-router-dom";
 import Typography from '@mui/material/Typography';
 import { JwtService } from "../../core/auth/JwtService.ts";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { IActivityResponse, ActivitiesService, } from '../../core/services/api/activities/ActivitiesService.ts';
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { AxiosError } from "axios";
-function Activities() {
+
+const Activities: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
   const { idCourse } = useParams()
   const success = queryParams.get('success');

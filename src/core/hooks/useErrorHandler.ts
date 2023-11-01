@@ -28,6 +28,10 @@ export function useErrorHandler() {
           console.log(problemDetail)
           setOpenError(true);
         } 
+        if (problemDetail.title === "Resolution Submit date later than its activity end date") {
+          setErrorType('unexpected')
+          setOpenError(true);
+        }
         if (problemDetail.title === "Course Slug not found") {
           setErrorType('slugNotFound')
           setOpenError(true);

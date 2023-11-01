@@ -1,6 +1,4 @@
 import { Button, Grid, Typography } from "@mui/material";
-import { useApiGetActivity } from "../../core/hooks/useApiGetActivity.ts";
-import { useApiSendResolution } from "../../core/hooks/useApiSendResolution.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -12,19 +10,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import i18n from "../../locales/i18n";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
-import axios, { AxiosError } from "axios";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
-import { ActivityResponse } from './../../core/models/ActivityResponse';
+import { AxiosError } from "axios";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import "./style.css";
 import FileUpload from "../../components/Form/FileUpload.tsx";
+import { ActivitiesService, IActivityResponse } from "../../core/services/api/activities/ActivitiesService.ts";
+import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { ResolutionsService } from "../../core/services/api/resolutions/ResolutionsService.ts";
 
 function Activity() {
-  const { getActivity } = useApiGetActivity()
-  const { sendResolution } = useApiSendResolution()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { idCourse, idActivity } = useParams()
-  const [activity, setActivity] = useState<ActivityResponse>();
+  const [activity, setActivity] = useState<IActivityResponse>();
   const [openSuccess, setOpenSuccess] = useState(false);
+  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
   const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
@@ -38,73 +37,39 @@ function Activity() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    void (async () => {
-      if ((idCourse !== undefined) && (idActivity !== undefined)) {
-        try {
-          const activityResponse = await getActivity(idCourse, idActivity, rawAccessToken);
-          setActivity(activityResponse)
-        } catch (error) {
-          if (axios.isAxiosError(error)) {
-            handleError(error)
-          } else {
-            setErrorType('unexpected')
-          }
-        }
-      }
-    })();
-    // eslint-disable-next-line
-  }, []);
+    if ((idCourse !== undefined) && (idActivity !== undefined)) {
+      ActivitiesService.getById(idCourse, idActivity, rawAccessToken)
+        .then((response) => {
+          setActivity(response as IActivityResponse);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rawAccessToken])
 
-  const [errorType, setErrorType] = useState('');
-  const [openError, setOpenError] = useState(false);
   const authConsumer = AuthConsumer();
 
   const USER_ID: string = authConsumer.id;
 
   const onSubmit: SubmitHandler<ResolutionForm> = (data) => submitResolutionActivity(data)
 
-
   const methods = useForm({
     resolver: yupResolver(schema),
   });
 
-  const handleError = (error: AxiosError) => {
-    let responseStatus: number
-    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
-    if (error.response) {
-      problemDetail = error.response.data as ProblemDetail
-      responseStatus = problemDetail.status
-      if (responseStatus == 400) {
-        setErrorType('badRequest')
-        setOpenError(true);
-      }
-    } else if (error.message == "Network Error") {
-      setErrorType('networkError')
-      setOpenError(true);
-    }
-  }
 
-  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway' || event === undefined) {
-      return;
+  const submitResolutionActivity = async (data: ResolutionForm) => {
+    if ((idCourse !== undefined) && (idActivity !== undefined)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      await ResolutionsService.create(data.resolutionFile, rawAccessToken, idCourse, idActivity)
+        .then(() => {
+          setOpenSuccess(true)
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
     }
-    setOpenError(false);
-  };
 
-  async function submitResolutionActivity(data: ResolutionForm) {
-    try {
-      if ((idCourse !== undefined) && (idActivity !== undefined)) {
-        await sendResolution(data.resolutionFile, rawAccessToken, idCourse, idActivity);
-        setOpenSuccess(true)
-      }
-    }
-    catch (error) {
-      if (axios.isAxiosError(error)) {
-        handleError(error)
-      } else {
-        setErrorType('unexpected')
-      }
-    }
   }
 
   const handleDecodeAndDownload = () => {
@@ -145,7 +110,7 @@ function Activity() {
         <br />
         {t("activity.language")}: {activity?.extension === '.java' && 'Java'}
         <br />
-        {t('activity.date')}: {activity?.startDate ? new Date(activity?.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null} {t('activity.until')} {activity?.course?.endDate ? new Date(activity?.course?.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null}
+        {t('activity.date')}: {activity?.startDate ? new Date(activity?.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null} {t('activity.until')} {activity?.endDate ? new Date(activity?.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null}
         <br />
 
         <button onClick={handleDecodeAndDownload}>{t('activity.button.download')}</button>

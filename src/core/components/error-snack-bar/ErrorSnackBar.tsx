@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, Snackbar } from "@mui/material";
-import i18n from "../../locales/i18n";
+import i18n from "../../../locales/i18n";
 
 interface SnackBarProps {
     open: boolean;

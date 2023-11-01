@@ -20,10 +20,10 @@ const getAll = async (courseId: string, rawAccessToken: string): Promise<IActivi
   return response.data;
 };
 
-const getById = async (courseId: string, activityId: string,rawAccessToken: string): Promise<IActivityResponse[] | ProblemDetail> => {
+const getById = async (courseId: string, activityId: string,rawAccessToken: string): Promise<IActivityResponse | ProblemDetail> => {
   api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
 
-  const response = await api.get<IActivityResponse[] | ProblemDetail>('/courses/' + courseId + '/activities/' + activityId);
+  const response = await api.get<IActivityResponse | ProblemDetail>('/courses/' + courseId + '/activities/' + activityId);
 
   return response.data;
 };

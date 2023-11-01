@@ -10,7 +10,7 @@ import { ToolBar } from "../../core/components/tool-bar/ToolBar.tsx";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import i18n from "../../locales/i18n";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 
 const Courses: React.FC = () => {

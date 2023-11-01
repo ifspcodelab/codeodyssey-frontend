@@ -1,13 +1,13 @@
 import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
 import './style.css'
-import {useNavigate} from "react-router-dom"
-import {useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
-import {Trans, useTranslation} from "react-i18next";
-import {CreateUserResponse} from "../../core/models/CreateUserResponse";
-import {schema} from "./schema";
-import {useApiRegistration} from "../../core/hooks/useApiRegistration";
+import { useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Trans, useTranslation } from "react-i18next";
+import { CreateUserResponse } from "../../core/models/CreateUserResponse";
+import { schema } from "./schema";
+import { useApiRegistration } from "../../core/hooks/useApiRegistration";
 import {
     Button,
     Checkbox,
@@ -19,16 +19,16 @@ import {
     Link,
     Typography,
 } from "@mui/material";
-import axios, {AxiosError} from "axios";
-import React, {useState} from "react";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
+import axios, { AxiosError } from "axios";
+import React, { useState } from "react";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar";
 import Spinner from "../../components/Spinner";
 import SwipeableTextMobileStepper from "../../components/SwipeableTextMobileStepper";
 
 
 function Registration() {
-    const {t} = useTranslation()
-    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema)})
+    const { t } = useTranslation()
+    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
     const navigate = useNavigate()
     const api = useApiRegistration()
     const [open, setOpen] = useState(false);
@@ -49,7 +49,7 @@ function Registration() {
             if (response.name != "AxiosError") {
                 setDisableSubmitButton(false)
                 setLoading(false)
-                navigate('/resend-email', { state: { data: data.email }})
+                navigate('/resend-email', { state: { data: data.email } })
             }
         } catch (error) {
             setDisableSubmitButton(false)
@@ -73,7 +73,7 @@ function Registration() {
 
     const handleError = (error: AxiosError) => {
         let responseStatus: number
-        let problemDetail: ProblemDetail = { title: '', detail: '' , instance: '', status: 0, type: ''}
+        let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
         if (error.response) {
             problemDetail = error.response.data as ProblemDetail
             responseStatus = problemDetail.status
@@ -84,7 +84,7 @@ function Registration() {
                 if (error.response) problemDetail = error.response.data as ProblemDetail
                 if (problemDetail.title == "User Already exists" && problemDetail.detail == "Email already exists")
                     setErrorType('emailAlreadyExists')
-                    setOpen(true);
+                setOpen(true);
             }
         } else if (error.message == "Network Error") {
             setErrorType('networkError')
@@ -101,7 +101,7 @@ function Registration() {
         <>
             <Container maxWidth="md">
                 <div className="formContainer">
-                    <PageHeader title={t('registration.title')} text={t('registration.text')}/>
+                    <PageHeader title={t('registration.title')} text={t('registration.text')} />
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container spacing={1} rowSpacing={2}>
                             <Grid item xs={12}>
@@ -111,7 +111,7 @@ function Registration() {
                                     label={t("registration.form.name")}
                                     variant="outlined"
                                     error={!!errors.name}
-                                    helperText={errors.name && <span>{errors.name.message}</span> }
+                                    helperText={errors.name && <span>{errors.name.message}</span>}
                                     inputProps={{ "data-testid": "nameField" }}
                                     aria-labelledby="name"
                                     onChange={(e) => handleNameInput(e)}
@@ -124,7 +124,7 @@ function Registration() {
                                     label={t("registration.form.email")}
                                     variant="outlined"
                                     error={!!errors.email}
-                                    helperText={errors.email && <span>{errors.email.message}</span> }
+                                    helperText={errors.email && <span>{errors.email.message}</span>}
                                     inputProps={{ "data-testid": "emailField" }}
                                     aria-labelledby="email"
                                 />
@@ -136,7 +136,7 @@ function Registration() {
                                     label={t("registration.form.password")}
                                     variant="outlined"
                                     error={!!errors.password}
-                                    helperText={errors.password && <span>{errors.password.message}</span> }
+                                    helperText={errors.password && <span>{errors.password.message}</span>}
                                     inputProps={{ "data-testid": "passwordField" }}
                                     aria-labelledby="password"
                                     type="password"
@@ -145,7 +145,7 @@ function Registration() {
                             <Typography id="emailMessage">* {t("registration.form.email_message")}</Typography>
                             <Grid item xs={12}>
                                 <FormGroup aria-labelledby="terms" >
-                                    <FormControlLabel {...register("terms")} control={<Checkbox  />} label={
+                                    <FormControlLabel {...register("terms")} control={<Checkbox />} label={
                                         <Trans i18nKey="registration.form.termsCheckbox">
                                             I have read and agree with the
                                             <Link href="/terms-of-use" target="_blank">Terms of Use</Link>
@@ -159,7 +159,7 @@ function Registration() {
                             <Grid item xs={12}>
                                 <div id="registration-menu">
                                     <Button data-testid="registerButton" disabled={disableSubmitButton} type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>
-                                    {loading && <Spinner size={10}/>}
+                                    {loading && <Spinner size={10} />}
                                     <div>
                                         <Trans i18nKey="registration.form.login">
                                             Already have an account?
@@ -172,8 +172,8 @@ function Registration() {
                             </Grid>
                         </Grid>
                     </form>
-                    <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType}/>
-                    <PageFooter text={t('registration.footer')}/>
+                    <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType} />
+                    <PageFooter text={t('registration.footer')} />
                 </div>
                 <Button size='small' id="tutorialButton" variant="contained" onClick={toggleDialog}>
                     {!dialog ? t('registration.tutorial.open') : t('registration.tutorial.close')}
@@ -182,7 +182,7 @@ function Registration() {
                     <div id="swipeable">
                         <SwipeableTextMobileStepper />
                     </div>
-                    )}
+                )}
             </Container>
         </>
     );

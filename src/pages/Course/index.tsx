@@ -3,66 +3,37 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom"
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { useEffect, useState } from "react";
-import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useParams } from "react-router-dom";
-import { CourseResponse } from "../../core/models/CourseResponse";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
-import axios, { AxiosError } from "axios";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
+import { AxiosError } from "axios";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { CoursesService, ICourseResponse } from "../../core/services/api/courses/CoursesService.ts";
 
-function Course() {
+const Course: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate()
   const authConsumer = AuthConsumer();
   const USER_ID: string = authConsumer.id;
-  const [course, setCourse] = useState<CourseResponse>();
+  const [course, setCourse] = useState<ICourseResponse>();
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
-  const { getCourse } = useApiGetCourse()
   const { idCourse } = useParams()
-  const [errorType, setErrorType] = useState('');
-  const [openError, setOpenError] = useState(false);
 
-  const handleError = (error: AxiosError) => {
-    let responseStatus: number
-    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
-    if (error.response) {
-      problemDetail = error.response.data as ProblemDetail
-      responseStatus = problemDetail.status
-      if (responseStatus == 400) {
-        setErrorType('badRequest')
-        setOpenError(true);
-      }
-    } else if (error.message == "Network Error") {
-      setErrorType('networkError')
-      setOpenError(true);
-    }
-  }
-
-  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway' || event === undefined) {
-      return;
-    }
-    setOpenError(false);
-  };
+  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
   useEffect(() => {
-    void (async () => {
-      if (idCourse !== undefined) {
-        try {
-          const courseResponse = await getCourse(idCourse, rawAccessToken);
-          setCourse(courseResponse)
-        } catch (error) {
-          if (axios.isAxiosError(error)) {
-            handleError(error)
-          } else {
-            setErrorType('unexpected')
-          }
-        }
-      }
-    })();
-    // eslint-disable-next-line
-  }, []);
+    if (idCourse !== undefined) {
+      CoursesService.getById(idCourse, rawAccessToken)
+        .then((response) => {
+          setCourse(response as ICourseResponse);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [USER_ID, rawAccessToken])
 
   return (
     <>
@@ -83,8 +54,6 @@ function Course() {
           navigate('activities');
         }}
       >{t('course.button.activities')}</Button>
-
-
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>
