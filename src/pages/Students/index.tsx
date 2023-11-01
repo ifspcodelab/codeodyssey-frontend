@@ -10,88 +10,38 @@ import { StudentResponse } from "../../core/models/StudentResponse";
 import { useTranslation } from "react-i18next";
 import Spinner from "../../components/Spinner";
 import { useNavigate } from "react-router-dom"
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
 import './style.css'
 import Avatar from '@mui/material/Avatar';
 import { CardContent } from "@mui/material";
-import { StudentService } from "../../core/services/api/students/StudentsService.ts";
+import { IStudentResponse, StudentService } from "../../core/services/api/students/StudentsService.ts";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
-function Students() {
+import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+
+const Students: React.FC = () => {
   const [students, setStudents] = useState<StudentResponse[] | ProblemDetail>([]);
   const authConsumer = AuthConsumer();
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { slug } = useParams()
   const { t } = useTranslation();
   const USER_ID: string = authConsumer.id;
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
-  const [errorType, setErrorType] = useState('');
-  const [openError, setOpenError] = useState(false);
+
+  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
   useEffect(() => {
     if (typeof slug === 'string') {
-      void StudentService.getAll(USER_ID, slug, rawAccessToken)
+      StudentService.getAll(USER_ID, slug, rawAccessToken)
         .then((response) => {
-          if (response instanceof Error) {
-            alert(response.message);
-          } else {
-            setStudents(response);
-          }
-        });
+          setStudents(response as IStudentResponse[]);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
     }
-  }
-    // eslint-disable-next-line
-    , [rawAccessToken]);
-
-  // useEffect(() => {
-  //   void (async () => {
-  //     if (typeof slug === 'string') {
-  //       try {
-  //         const studentsResponse = await getStudents(USER_ID, slug, rawAccessToken)
-  //         setStudents(studentsResponse)
-  //         setLoading(false)
-  //       } catch (error) {
-  //         if (axios.isAxiosError(error)) {
-  //           handleError(error)
-  //         } else {
-  //           setErrorType('unexpected')
-  //         }
-  //       }
-  //     } else {
-  //       setErrorType('unexpected')
-  //     }
-
-  //   })();
-  //   // eslint-disable-next-line
-  // }, [rawAccessToken]);
-
-  const handleError = (error: AxiosError) => {
-    let responseStatus: number
-    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
-    if (error.response) {
-      problemDetail = error.response.data as ProblemDetail
-      responseStatus = problemDetail.status
-      if (responseStatus == 400) {
-        setErrorType('badRequest')
-        setOpenError(true);
-      } else if (responseStatus == 409) {
-        setErrorType('slugNotFound')
-        setOpenError(true);
-      }
-    } else if (error.message == "Network Error") {
-      setErrorType('networkError')
-      setOpenError(true);
-    }
-  }
-
-  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway' || event === undefined) {
-      return;
-    }
-
-    setOpenError(false);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [USER_ID, rawAccessToken, slug])
 
   return (
     <>
@@ -137,8 +87,6 @@ function Students() {
             </>
           )
         }
-
-
       </div>
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />

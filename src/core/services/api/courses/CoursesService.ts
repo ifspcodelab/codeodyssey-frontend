@@ -10,72 +10,37 @@ export interface ICourseResponse {
   professor: UserResponse;
 }
 
-const getAllCourses = async (userId: string, rawAccessToken: string): Promise<ICourseResponse[] | Error> => {
-  try {
+const getAllCourses = async (userId: string, rawAccessToken: string): Promise<ICourseResponse[] | ProblemDetail> => {
     api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
 
-    const response = await api.get<ICourseResponse[]>(`/users/${userId}/courses`);
-      
-    if (response) {
-      return response.data;
-    }
+    const response = await api.get<ICourseResponse[] | ProblemDetail>(`/users/${userId}/courses`);
 
-    return new Error('Erro ao consultar o registro.');
-  } catch (error) {
-    console.error(error);
-    return new Error((error as { message: string }).message || 'Erro ao consultar o registro.');
-  }
+    return response.data;
 };
 
-const getAllEnrollments = async (userId: string, rawAccessToken: string): Promise<ICourseResponse[] | Error> => {
-  try {
+const getAllEnrollments = async (userId: string, rawAccessToken: string): Promise<ICourseResponse[] | ProblemDetail> => {
     api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
 
-    const response = await api.get<ICourseResponse[]>(`/users/${userId}/enrollments`);
-      
-    if (response) {
-      return response.data;
-    }
+    const response = await api.get<ICourseResponse[] | ProblemDetail>(`/users/${userId}/enrollments`);
 
-    return new Error('Erro ao consultar o registro.');
-  } catch (error) {
-    console.error(error);
-    return new Error((error as { message: string }).message || 'Erro ao consultar o registro.');
-  }
+    return response.data;
 };
 
-const getById = async (courseId: string, rawAccessToken: string): Promise<ICourseResponse | Error> => {
-  try {
+const getById = async (courseId: string, rawAccessToken: string): Promise<ICourseResponse | ProblemDetail> => {
     api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
-    const response = await api.get<ICourseResponse>(`/courses/${courseId}`);
 
-    if (response) {
-      return response.data;
-    }
+    const response = await api.get<ICourseResponse | ProblemDetail>(`/courses/${courseId}`);
 
-    return new Error('Erro ao consultar o registro.');
-  } catch (error) {
-    console.error(error);
-    return new Error((error as { message: string }).message || 'Erro ao consultar o registro.');
-  }
+    return response.data;
 };
 
-const create = async (name: string, slug: string, startDate: string, endDate: string, professorId: string, rawAccessToken: string): Promise<ICourseResponse | Error> => {
-  try {
-    api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
-    const response = await api.post<ICourseResponse>('/users/' + professorId +'/courses', {name, slug, startDate, endDate});
+const create = async (name: string, slug: string, startDate: string, endDate: string, professorId: string, rawAccessToken: string): Promise<ICourseResponse | ProblemDetail> => {
+  api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
 
-    if (response) {
-      return response.data;
-    }
+  const response = await api.post<ICourseResponse | ProblemDetail>('/users/' + professorId +'/courses', {name, slug, startDate, endDate});
 
-    return new Error('Erro ao criar o registro.');
-  } catch (error) {
-    console.error(error);
-    return new Error((error as { message: string }).message || 'Erro ao criar o registro.');
-  }
-};
-
+  return response.data;
+}
 
 export const CoursesService = {
   getAllCourses,
