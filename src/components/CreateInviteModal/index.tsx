@@ -10,7 +10,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "./schema.ts";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { CourseResponse } from '../../core/models/CourseResponse.ts';
 import { InviteForm } from '../../core/models/InviteForm.ts'
 import { useApiSendInvitation } from "../../core/hooks/useApiSendInvitation.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
@@ -20,9 +19,10 @@ import axios, { AxiosError } from 'axios';
 import './style.css'
 import i18n from "../../locales/i18n";
 import { useApiGetInvitation } from "../../core/hooks/useApiGetInvitation.ts";
+import { ICourseResponse } from '../../core/services/api/courses/CoursesService.ts';
 
 interface ItemComponentProps {
-  course: CourseResponse;
+  course: ICourseResponse;
 }
 
 const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
@@ -63,9 +63,9 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
   useEffect(() => {
     void (() => {
-      setCourseExpirationDate(new Date(course.endDate))
+      setCourseExpirationDate(new Date(course?.endDate))
     })();
-  }, [course.endDate]);
+  }, [course?.endDate]);
 
   async function submitCreateInvite(data: InviteForm) {
     try {

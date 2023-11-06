@@ -10,6 +10,7 @@ import { AxiosError } from "axios";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { CoursesService, ICourseResponse } from "../../core/services/api/courses/CoursesService.ts";
+import CreateInviteModal from "../../components/CreateInviteModal/index.tsx";
 
 const Course: React.FC = () => {
   const { t } = useTranslation();
@@ -54,6 +55,8 @@ const Course: React.FC = () => {
           navigate('activities');
         }}
       >{t('course.button.activities')}</Button>
+      {course && <CreateInviteModal course={course} />}
+
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>

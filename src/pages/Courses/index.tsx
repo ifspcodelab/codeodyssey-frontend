@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
@@ -27,11 +27,15 @@ const Courses: React.FC = () => {
   const [coursesStudent, setCoursesStudent] = useState<ICourseResponse[]>([]);
   const [coursesProfessor, setCoursesProfessor] = useState<ICourseResponse[]>([]);
   const [openSuccess, setOpenSuccess] = useState(true);
+  const [isLoadingCourses, setIsLoadingCourses] = useState(true);
+  const [isLoadingEnrollments, setIsLoadingEnrollments] = useState(true);
 
   useEffect(() => {
+    setIsLoadingEnrollments(true);
     CoursesService.getAllEnrollments(USER_ID, rawAccessToken)
       .then((response) => {
         setCoursesStudent(response as ICourseResponse[]);
+        setIsLoadingEnrollments(false);
       }).catch((error: AxiosError<ProblemDetail>) => {
         handleError(error)
       })
@@ -40,8 +44,10 @@ const Courses: React.FC = () => {
 
   useEffect(() => {
     if (USER_ROLE == "PROFESSOR") {
+      setIsLoadingCourses(true)
       CoursesService.getAllCourses(USER_ID, rawAccessToken)
         .then((response) => {
+          setIsLoadingCourses(false)
           setCoursesProfessor(response as ICourseResponse[]);
         }).catch((error: AxiosError<ProblemDetail>) => {
           handleError(error)
@@ -107,6 +113,18 @@ const Courses: React.FC = () => {
                 </TableRow>
               ))}
             </TableBody>
+            {coursesProfessor.length === 0 && !isLoadingCourses && <caption>{t("courses.emptyList")}</caption>
+            }
+
+            <TableFooter>
+              {isLoadingCourses && (
+                <TableRow>
+                  <TableCell colSpan={5}>
+                    <LinearProgress variant='indeterminate' />
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableFooter>
           </Table>
         </TableContainer></>}
 
@@ -130,7 +148,7 @@ const Courses: React.FC = () => {
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
-          {coursesStudent.length > 0 ? <TableBody>
+          <><TableBody>
             {coursesStudent?.map(course => (
               <TableRow key={course.id}>
                 <TableCell><Link to={course.id + "/" + course.slug}>{course.name}</Link></TableCell>
@@ -140,8 +158,20 @@ const Courses: React.FC = () => {
                 <TableCell>Edit | Delete</TableCell>
               </TableRow>
             ))}
-          </TableBody> : <Typography>{t("courses.emptyList")}</Typography>
-          }
+          </TableBody>
+
+            {coursesStudent.length === 0 && !isLoadingEnrollments && <caption>{t("courses.emptyList")}</caption>
+            }
+
+            <TableFooter>
+              {isLoadingEnrollments && (
+                <TableRow>
+                  <TableCell colSpan={5}>
+                    <LinearProgress variant='indeterminate' />
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableFooter></>
         </Table>
       </TableContainer>}
 

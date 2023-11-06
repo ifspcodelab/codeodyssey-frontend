@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom"
 import { AxiosError } from "axios";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import Avatar from '@mui/material/Avatar';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { IStudentResponse, StudentService } from "../../core/services/api/students/StudentsService.ts";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
@@ -22,16 +18,17 @@ const Students: React.FC = () => {
   const { slug } = useParams()
   const { t } = useTranslation();
   const USER_ID: string = authConsumer.id;
-  const navigate = useNavigate()
 
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (typeof slug === 'string') {
+      setIsLoading(true)
       StudentService.getAll(USER_ID, slug, rawAccessToken)
         .then((response) => {
+          setIsLoading(false)
           setStudents(response as IStudentResponse[]);
-          console.log("teste", students)
         }).catch((error: AxiosError<ProblemDetail>) => {
           handleError(error)
         })
@@ -54,7 +51,7 @@ const Students: React.FC = () => {
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
-          {students?.length > 0 ? <TableBody>
+          <TableBody>
             {students?.map(student => (
               <TableRow key={student.id}>
                 <TableCell>
@@ -67,22 +64,20 @@ const Students: React.FC = () => {
                 <TableCell>Edit | Delete</TableCell>
               </TableRow>
             ))}
-          </TableBody> : <>
-            <Typography>
-              {t("students.emptyList")}
-            </Typography>
-            <Typography>
-              {t("students.emptyListQuestion")}
-            </Typography>
-            <CardActions className="cardActions">
-              <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-                onClick={() => {
-                  navigate('/courses')
-                }}
-              >{t("courses.button.invite")}</Button>
-            </CardActions>
-          </>
-          }
+          </TableBody>
+
+          {students.length === 0 && !isLoading && <caption>{t("students.emptyList")}</caption>}
+
+          <TableFooter>
+            {isLoading && (
+              <TableRow>
+                <TableCell colSpan={4}>
+                  <LinearProgress variant='indeterminate' />
+                </TableCell>
+              </TableRow>
+            )}
+          </TableFooter>
+
         </Table>
       </TableContainer>
 

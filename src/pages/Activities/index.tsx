@@ -4,12 +4,11 @@ import i18n from "../../locales/i18n";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import Typography from '@mui/material/Typography';
 import { JwtService } from "../../core/auth/JwtService.ts";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { IActivityResponse, ActivitiesService, } from '../../core/services/api/activities/ActivitiesService.ts';
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { AxiosError } from "axios";
@@ -25,6 +24,7 @@ const Activities: React.FC = () => {
 
   const [openSuccess, setOpenSuccess] = useState(true);
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
@@ -35,8 +35,10 @@ const Activities: React.FC = () => {
 
   useEffect(() => {
     if (idCourse !== undefined) {
+      setIsLoading(true)
       ActivitiesService.getAll(idCourse, rawAccessToken)
         .then((response) => {
+          setIsLoading(false)
           setActivities(response as IActivityResponse[]);
         }).catch((error: AxiosError<ProblemDetail>) => {
           handleError(error)
@@ -63,7 +65,7 @@ const Activities: React.FC = () => {
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
-          {activities.length > 0 ? <TableBody>
+          <TableBody>
             {activities?.map(activity => (
               <TableRow key={activity.id}>
                 <TableCell><Link to={activity.id}>{activity.title}</Link></TableCell>
@@ -73,8 +75,19 @@ const Activities: React.FC = () => {
                 <TableCell>Edit | Delete</TableCell>
               </TableRow>
             ))}
-          </TableBody> : <Typography>{t("activities.emptyList")}</Typography>
-          }
+          </TableBody>
+          {activities.length === 0 && !isLoading && <caption>{t("activities.emptyList")}</caption>}
+
+          <TableFooter>
+            {isLoading && (
+              <TableRow>
+                <TableCell colSpan={5}>
+                  <LinearProgress variant='indeterminate' />
+                </TableCell>
+              </TableRow>
+            )}
+          </TableFooter>
+
         </Table>
       </TableContainer>
 
