@@ -1,11 +1,14 @@
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout";
 
 function PrivacyPolicy() {
     const { t } = useTranslation();
 
     return (
         <>
-            <h1>{t("privacypolicy.title")}</h1>
+            <PageBaseLayout title={t("privacypolicy.title")}>
+
+            </PageBaseLayout>
         </>
     );
 }

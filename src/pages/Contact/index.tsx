@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Container, Grid, TextField } from "@mui/material";
-import PageHeader from "../../components/PageHeader";
+import { Box, Button, Grid, Paper, TextField } from "@mui/material";
 import PageFooter from "../../components/PageFooter";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { schema } from "./schema.ts";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 
 interface ContactForm {
     name: string;
@@ -19,49 +19,65 @@ function Contact() {
     const onSubmit: SubmitHandler<ContactForm> = (data) => console.log(data)
 
     return (
-        <Container maxWidth="md">
-            <PageHeader title={t('contact.title')} text={t('contact.text')} />
+        <>
+            <PageBaseLayout title={t('contact.title')}  >
+
+            </PageBaseLayout>
+
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Grid container spacing={1} rowSpacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            sx={{ width: "100%" }}
-                            {...register("name")}
-                            label={t("contact.form.name")}
-                            variant="outlined"
-                            error={!!errors.name}
-                            helperText={errors.name && <span>{errors.name.message}</span>}
-                        />
+                <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
+                    <Grid container direction="column" padding={2} spacing={2}>
+
+
+                        <Grid container item direction="row" spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                                <TextField
+                                    sx={{ width: "100%" }}
+                                    {...register("name")}
+                                    label={t("contact.form.name")}
+                                    variant="outlined"
+                                    error={!!errors.name}
+                                    helperText={errors.name && <span>{errors.name.message}</span>} />
+                            </Grid>
+                        </Grid>
+
+                        <Grid container item direction="row" spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                                <TextField
+                                    sx={{ width: "100%" }}
+                                    {...register("email")}
+                                    label={t("contact.form.email")}
+                                    variant="outlined"
+                                    error={!!errors.email}
+                                    helperText={errors.email && <span>{errors.email.message}</span>} />
+                            </Grid>
+                        </Grid>
+
+                        <Grid container item direction="row" spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                                <TextField
+                                    sx={{ width: "100%" }}
+                                    {...register("message")}
+                                    label={t("contact.form.message")}
+                                    variant="outlined"
+                                    multiline
+                                    rows={4}
+                                    error={!!errors.message}
+                                    helperText={errors.message && <span>{errors.message.message}</span>} />
+                            </Grid>
+                        </Grid>
+
+                        <Grid container item direction="row" spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                                <Button variant="outlined" type="submit">{t('contact.form.submit')}</Button>
+                            </Grid>
+                        </Grid>
+
                     </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            sx={{ width: "100%" }}
-                            {...register("email")}
-                            label={t("contact.form.email")}
-                            variant="outlined"
-                            error={!!errors.email}
-                            helperText={errors.email && <span>{errors.email.message}</span>}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            sx={{ width: "100%" }}
-                            {...register("message")}
-                            label={t("contact.form.message")}
-                            variant="outlined"
-                            multiline
-                            rows={4}
-                            error={!!errors.message}
-                            helperText={errors.message && <span>{errors.message.message}</span>}
-                        />
-                    </Grid>
-                    <Grid item xs={12} textAlign="right">
-                        <Button variant="outlined" type="submit">{t('contact.form.submit')}</Button>
-                    </Grid>
-                </Grid>
+                </Box>
             </form>
             <PageFooter text={t('contact.footer')} />
-        </Container>
+        </>
     );
 }
 

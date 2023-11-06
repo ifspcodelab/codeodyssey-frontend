@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import Avatar from '@mui/material/Avatar';
-import { LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
+import { Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { IStudentResponse, StudentService } from "../../core/services/api/students/StudentsService.ts";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
@@ -61,7 +61,14 @@ const Students: React.FC = () => {
                 </TableCell>
                 <TableCell>{student.name}</TableCell>
                 <TableCell>{student.email}</TableCell>
-                <TableCell>Edit | Delete</TableCell>
+                <TableCell>
+                  <IconButton size="small">
+                    <Icon>edit</Icon>
+                  </IconButton>
+                  <IconButton size="small">
+                    <Icon>delete</Icon>
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

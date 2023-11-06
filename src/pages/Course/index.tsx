@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Button } from "@mui/material";
+import { Button, Tab, Tabs } from "@mui/material";
 import { useNavigate } from "react-router-dom"
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { useEffect, useState } from "react";
@@ -11,6 +11,8 @@ import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { CoursesService, ICourseResponse } from "../../core/services/api/courses/CoursesService.ts";
 import CreateInviteModal from "../../components/CreateInviteModal/index.tsx";
+import TestComponent from "./TestComponent.tsx";
+
 
 const Course: React.FC = () => {
   const { t } = useTranslation();
@@ -20,7 +22,6 @@ const Course: React.FC = () => {
   const [course, setCourse] = useState<ICourseResponse>();
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { idCourse } = useParams()
-
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
   useEffect(() => {
@@ -35,28 +36,26 @@ const Course: React.FC = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [USER_ID, rawAccessToken])
+  const [selectedTab, setSelectedTab] = useState(0);
 
+  const handleChangeTab = (event, newValue) => {
+    navigate(`${newValue}`);
+  };
   return (
     <>
       <PageBaseLayout title={course?.name !== undefined ? course?.name : "title"}
       > </PageBaseLayout>
 
-      {course?.professor?.id === USER_ID ? <><Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-        onClick={() => {
-          navigate('create-activity');
-        }}
-      >{t('course.button.create')}</Button><Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-        onClick={() => {
-          navigate('students');
-        }}
-      >{t("courses.button.students")}</Button></> : <span></span>}
-      <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-        onClick={() => {
-          navigate('activities');
-        }}
-      >{t('course.button.activities')}</Button>
-      {course && <CreateInviteModal course={course} />}
+      <div>
+        <Tabs value={selectedTab} onChange={handleChangeTab} centered>
+          <Tab label="Home" />
+          <Tab label="Ver Atividades" value="activities" />
+          {USER_ID === course?.professor?.id && <Tab label="Ver Alunos" value="students" />}
+        </Tabs>
+        {selectedTab === 0 && <TestComponent course={course} />}
+      </div>
 
+      {USER_ID === course?.professor?.id && course && <CreateInviteModal course={course} />}
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>

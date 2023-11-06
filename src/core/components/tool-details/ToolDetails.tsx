@@ -14,15 +14,15 @@ interface IToolDetails {
   onClickBack?: () => void;
   onClickDelete?: () => void;
   onClickSave?: () => void;
-  onClickSaveLeave?: () => void;
+  onClickSaveAndBack?: () => void;
 }
 
 export const ToolDetails: React.FC<IToolDetails> = ({
   textNewButton = 'Novo',
 
-  showNewButton = true,
+  showNewButton = false,
   showBackButton = true,
-  showDeleteButton = true,
+  showDeleteButton = false,
   showSaveButton = true,
   showSaveAndBackButton = false,
 
@@ -30,7 +30,7 @@ export const ToolDetails: React.FC<IToolDetails> = ({
   onClickBack,
   onClickDelete,
   onClickSave,
-  onClickSaveLeave
+  onClickSaveAndBack
 }) => {
 
   const theme = useTheme()
@@ -49,7 +49,7 @@ export const ToolDetails: React.FC<IToolDetails> = ({
         variant="outlined"
         color="primary"
         disableElevation
-        onClick={onClickSaveLeave}
+        onClick={onClickSaveAndBack}
         startIcon={<Icon>save</Icon>}
       >Salvar e voltar</Button>)}
       {showDeleteButton && (<Button

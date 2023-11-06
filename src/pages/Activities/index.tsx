@@ -8,7 +8,7 @@ import { JwtService } from "../../core/auth/JwtService.ts";
 import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
-import { LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
+import { Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { IActivityResponse, ActivitiesService, } from '../../core/services/api/activities/ActivitiesService.ts';
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { AxiosError } from "axios";
@@ -72,7 +72,13 @@ const Activities: React.FC = () => {
                 <TableCell> {activity.extension === '.java' && 'Java'}</TableCell>
                 <TableCell>{new Date(activity.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}  </TableCell>
                 <TableCell>{new Date(activity.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}</TableCell>
-                <TableCell>Edit | Delete</TableCell>
+                <TableCell>
+                  <IconButton size="small">
+                    <Icon>edit</Icon>
+                  </IconButton>
+                  <IconButton size="small">
+                    <Icon>delete</Icon>
+                  </IconButton></TableCell>
               </TableRow>
             ))}
           </TableBody>

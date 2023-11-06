@@ -1,6 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Container, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import PageHeader from "../../components/PageHeader";
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { schema } from "./schema.ts";
 import React, { useEffect, useState } from "react";
@@ -24,6 +23,7 @@ import TextAreaField from "../../components/Form/TextAreaField.tsx";
 import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { CoursesService, ICourseResponse } from "../../core/services/api/courses/CoursesService.ts";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 
 const CreateActivity: React.FC = () => {
   const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
@@ -45,7 +45,6 @@ const CreateActivity: React.FC = () => {
           handleError(error)
         })
     }
-
   }
 
   const methods = useForm({
@@ -90,22 +89,34 @@ const CreateActivity: React.FC = () => {
 
   return (
     <>
-      <Container maxWidth="md">
-        <PageHeader title={t('createactivity.title')} text={t('createactivity.text')} />
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <Grid container spacing={1} rowSpacing={2}>
 
-              <Grid item xs={12}>
-                <InputField fieldName="title" labelName="createactivity.form.title" />
+      <PageBaseLayout title={t('createactivity.title')} >
+
+      </PageBaseLayout>
+
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
+            <Grid container direction="column" padding={2} spacing={2}>
+
+              <Grid item>
+                <Typography variant='h6'>Activity</Typography>
               </Grid>
 
-              <Grid item xs={12}>
-                <TextAreaField fieldName="description" labelName="createactivity.form.desc" minRows={2} maxRows={5} />
+              <Grid container item direction="row" spacing={2}>
+                <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                  <InputField fieldName="title" labelName="createactivity.form.title" />
+                </Grid>
               </Grid>
 
-              <Grid item xs={12} textAlign="right" display="flex" alignItems="spaceBetween">
-                <Grid item xs={4}>
+              <Grid container item direction="row" spacing={2}>
+                <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                  <TextAreaField fieldName="description" labelName="createactivity.form.desc" minRows={2} maxRows={5} />
+                </Grid>
+              </Grid>
+
+              <Grid container item direction="row" spacing={2}>
+                <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                   <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
                     <Controller
                       name={"startDate"}
@@ -125,8 +136,10 @@ const CreateActivity: React.FC = () => {
                     />
                   </LocalizationProvider>
                 </Grid>
+              </Grid>
 
-                <Grid >
+              <Grid container item direction="row" spacing={2}>
+                <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                   <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
                     <Controller
                       name={"endDate"}
@@ -149,37 +162,41 @@ const CreateActivity: React.FC = () => {
                 </Grid>
               </Grid>
 
-              <Grid item xs={12}>
-                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                  <InputLabel id="language-label">Language</InputLabel>
-                  <Select
-                    {...methods.register("extension")}
-                    labelId="language-label"
-                    id="demo-simple-select"
-                    value={language}
-                    label={t('createactivity.form.language')}
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={".java"}>Java</MenuItem>
-                    <MenuItem value={".js"}>Javascript</MenuItem>
-                  </Select>
-                </FormControl>
+              <Grid container item direction="row" spacing={2}>
+                <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                  <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                    <InputLabel id="language-label">Language</InputLabel>
+                    <Select
+                      {...methods.register("extension")}
+                      labelId="language-label"
+                      id="demo-simple-select"
+                      value={language}
+                      label={t('createactivity.form.language')}
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={".java"}>Java</MenuItem>
+                      <MenuItem value={".js"}>Javascript</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
 
-              {language ? <>
-                <FileUpload fieldName="initialFile" fileType={fileType} />
-                <FileUpload fieldName="testFile" fileType={fileType} />
-                <FileUpload fieldName="solutionFile" fileType={fileType} />
-              </> : <span></span>}
+              <Grid container item direction="row" spacing={2}>
+                <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                  <FileUpload fieldName="initialFile" fileType={fileType} />
+                  <FileUpload fieldName="testFile" fileType={fileType} />
+                  <FileUpload fieldName="solutionFile" fileType={fileType} />
+                </Grid>
+              </Grid>
 
               <Grid item xs={12} textAlign="right">
                 <Button variant="outlined" type="submit">{t('createactivity.form.button.publish')}</Button>
               </Grid>
             </Grid>
-          </form>
-        </FormProvider>
+          </Box>
+        </form>
+      </FormProvider>
 
-      </Container>
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>
   );

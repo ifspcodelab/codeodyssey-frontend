@@ -1,4 +1,3 @@
-import PageHeader from "../../components/PageHeader";
 import PageFooter from "../../components/PageFooter";
 import './style.css'
 import { useNavigate } from "react-router-dom"
@@ -11,19 +10,21 @@ import { useApiRegistration } from "../../core/hooks/useApiRegistration";
 import {
     Button,
     Checkbox,
-    Container,
     FormControlLabel,
     FormGroup,
     Grid,
     TextField,
     Link,
     Typography,
+    Box,
+    Paper,
 } from "@mui/material";
 import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar";
 import Spinner from "../../components/Spinner";
 import SwipeableTextMobileStepper from "../../components/SwipeableTextMobileStepper";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout";
 
 
 function Registration() {
@@ -99,12 +100,16 @@ function Registration() {
 
     return (
         <>
-            <Container maxWidth="md">
-                <div className="formContainer">
-                    <PageHeader title={t('registration.title')} text={t('registration.text')} />
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Grid container spacing={1} rowSpacing={2}>
-                            <Grid item xs={12}>
+            <PageBaseLayout title={t('registration.title')}>
+
+            </PageBaseLayout>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
+                    <Grid container direction="column" padding={2} spacing={2}>
+
+
+                        <Grid container item direction="row" spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                                 <TextField
                                     sx={{ width: "100%" }}
                                     {...register("name")}
@@ -117,7 +122,10 @@ function Registration() {
                                     onChange={(e) => handleNameInput(e)}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                        </Grid>
+
+                        <Grid container item direction="row" spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                                 <TextField
                                     sx={{ width: "100%" }}
                                     {...register("email")}
@@ -129,7 +137,10 @@ function Registration() {
                                     aria-labelledby="email"
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                        </Grid>
+
+                        <Grid container item direction="row" spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                                 <TextField
                                     sx={{ width: "100%" }}
                                     {...register("password")}
@@ -142,48 +153,51 @@ function Registration() {
                                     type="password"
                                 />
                             </Grid>
-                            <Typography id="emailMessage">* {t("registration.form.email_message")}</Typography>
-                            <Grid item xs={12}>
-                                <FormGroup aria-labelledby="terms" >
-                                    <FormControlLabel {...register("terms")} control={<Checkbox />} label={
-                                        <Trans i18nKey="registration.form.termsCheckbox">
-                                            I have read and agree with the
-                                            <Link href="/terms-of-use" target="_blank">Terms of Use</Link>
-                                            and
-                                            <Link href="/privacy-policy" target="_blank">Privacy Policy</Link>
-                                        </Trans>
-                                    } />
-                                    <Typography color="error">{errors.terms?.message}</Typography>
-                                </FormGroup>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <div id="registration-menu">
-                                    <Button data-testid="registerButton" disabled={disableSubmitButton} type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>
-                                    {loading && <Spinner size={10} />}
-                                    <div>
-                                        <Trans i18nKey="registration.form.login">
-                                            Already have an account?
-                                            <Link data-testid="loginLink" href="/login">
-                                                Login
-                                            </Link>
-                                        </Trans>
-                                    </div>
-                                </div>
-                            </Grid>
                         </Grid>
-                    </form>
-                    <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType} />
-                    <PageFooter text={t('registration.footer')} />
-                </div>
-                <Button size='small' id="tutorialButton" variant="contained" onClick={toggleDialog}>
-                    {!dialog ? t('registration.tutorial.open') : t('registration.tutorial.close')}
-                </Button>
-                {dialog && (
+
+                        <Typography id="emailMessage">* {t("registration.form.email_message")}</Typography>
+                        <Grid item xs={12}>
+                            <FormGroup aria-labelledby="terms" >
+                                <FormControlLabel {...register("terms")} control={<Checkbox />} label={
+                                    <Trans i18nKey="registration.form.termsCheckbox">
+                                        I have read and agree with the
+                                        <Link href="/terms-of-use" target="_blank">Terms of Use</Link>
+                                        and
+                                        <Link href="/privacy-policy" target="_blank">Privacy Policy</Link>
+                                    </Trans>
+                                } />
+                                <Typography color="error">{errors.terms?.message}</Typography>
+                            </FormGroup>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div id="registration-menu">
+                                <Button data-testid="registerButton" disabled={disableSubmitButton} type="submit" variant="contained" size="large">{t('registration.form.submit')}</Button>
+                                {loading && <Spinner size={10} />}
+                                <div>
+                                    <Trans i18nKey="registration.form.login">
+                                        Already have an account?
+                                        <Link data-testid="loginLink" href="/login">
+                                            Login
+                                        </Link>
+                                    </Trans>
+                                </div>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </form>
+            <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType} />
+            <PageFooter text={t('registration.footer')} />
+            <Button size='small' id="tutorialButton" variant="contained" onClick={toggleDialog}>
+                {!dialog ? t('registration.tutorial.open') : t('registration.tutorial.close')}
+            </Button>
+            {
+                dialog && (
                     <div id="swipeable">
                         <SwipeableTextMobileStepper />
                     </div>
-                )}
-            </Container>
+                )
+            }
         </>
     );
 }

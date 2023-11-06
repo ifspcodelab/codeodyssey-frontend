@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { Link, useLocation } from 'react-router-dom';
+import { Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
 import { ICourseResponse, CoursesService, } from '../../core/services/api/courses/CoursesService.ts';
@@ -74,15 +74,17 @@ const Courses: React.FC = () => {
   const theme = useTheme()
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
   const mdDown = useMediaQuery(theme.breakpoints.down('md'))
-
+  const navigate = useNavigate();
   return (
     <>
       <PageBaseLayout title={t('courses.title')}
-        toolbar={USER_ROLE === "PROFESSOR" && (<ToolBar />
+        toolbar={USER_ROLE === "PROFESSOR" && (<ToolBar onClickNewButton={() => navigate('/create-course')} />
         )}>
       </PageBaseLayout>
 
       {success && <SuccessrSnackBar message={t('createcourse.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
+
+
 
       {USER_ROLE == "PROFESSOR" && <><Typography
         overflow="hidden"
@@ -109,7 +111,14 @@ const Courses: React.FC = () => {
                   <TableCell>{course.professor.name}</TableCell>
                   <TableCell>{new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}  </TableCell>
                   <TableCell>{new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}</TableCell>
-                  <TableCell>Edit | Delete</TableCell>
+                  <TableCell>
+                    <IconButton size="small">
+                      <Icon>edit</Icon>
+                    </IconButton>
+                    <IconButton size="small">
+                      <Icon>delete</Icon>
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -155,7 +164,14 @@ const Courses: React.FC = () => {
                 <TableCell>{course.professor.name}</TableCell>
                 <TableCell>{new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}  </TableCell>
                 <TableCell>{new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}</TableCell>
-                <TableCell>Edit | Delete</TableCell>
+                <TableCell>
+                  <IconButton size="small">
+                    <Icon>edit</Icon>
+                  </IconButton>
+                  <IconButton size="small">
+                    <Icon>delete</Icon>
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
