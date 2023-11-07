@@ -10,16 +10,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { schema } from "./schema.ts";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { InviteForm } from '../../core/models/InviteForm.ts'
-import { useApiSendInvitation } from "../../core/hooks/useApiSendInvitation.ts";
-import { JwtService } from "../../core/auth/JwtService.ts";
+import { InviteForm } from '../../models/InviteForm.ts'
+import { JwtService } from "../../auth/JwtService.ts";
 import dayjs from 'dayjs';
-import { useCopyToClipboard } from '../../core/hooks/useCopyToClipboard.ts'
-import axios, { AxiosError } from 'axios';
+import { useCopyToClipboard } from '../../hooks/useCopyToClipboard.ts'
+import { AxiosError } from 'axios';
 import './style.css'
-import i18n from "../../locales/i18n";
-import { useApiGetInvitation } from "../../core/hooks/useApiGetInvitation.ts";
-import { ICourseResponse } from '../../core/services/api/courses/CoursesService.ts';
+import i18n from "../../../locales/i18n.ts";
+import { ICourseResponse } from '../../services/api/courses/CoursesService.ts';
+import { InvitationService } from '../../services/api/invitation/InvitationService.ts';
 
 interface ItemComponentProps {
   course: ICourseResponse;
@@ -31,33 +30,35 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = async () => {
     setOpen(true);
-    const invitationResponse = await getCourseInvitation(course.id, rawAccessToken)
-    if (invitationResponse) {
+    await InvitationService.getInvitation(course.id, rawAccessToken)
+      .then((response) => {
+        if (response) {
+          const expirationDate = new Date(response.expirationDate);
+          const today = new Date();
+          if (expirationDate > today && response.link !== null) {
+            setInviteLink(response.link);
+          } else if (expirationDate < today) {
+            setInviteLink(" ")
+          }
+        } else {
+          setInviteLink(" ")
+        }
+      }).catch((error: AxiosError<ProblemDetail>) => {
+        handleError(error)
+      });
 
-      const expirationDate = new Date(invitationResponse.expirationDate);
-      const today = new Date();
-
-      if (expirationDate > today && invitationResponse.link !== null) {
-        setInviteLink(invitationResponse.link);
-      } else if (expirationDate < today) {
-        setInviteLink(" ")
-      }
-
-    } else {
-      setInviteLink(" ")
-    }
   }
+
+
   const handleClose = () => {
     setErrorType("")
     setOpen(false)
   };
   const { handleSubmit, control, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
-  const { sendInvitation } = useApiSendInvitation();
   const [inviteLink, setInviteLink] = useState(" ");
   const [courseExpirationDate, setCourseExpirationDate] = useState<Date | undefined>(undefined);
   const [errorType, setErrorType] = useState('');
   const [value, copy] = useCopyToClipboard()
-  const { getCourseInvitation } = useApiGetInvitation()
 
   const baseUrl = import.meta.env.VITE_BASE_URL_WEB as string
   const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
@@ -67,19 +68,13 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
     })();
   }, [course?.endDate]);
 
-  async function submitCreateInvite(data: InviteForm) {
-    try {
-      const dataResponse = await sendInvitation(data.endDate.toISOString(), course.id, rawAccessToken);
-
-      if (dataResponse.link !== null)
-        setInviteLink(dataResponse.link);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
+  const submitCreateInvite = async (data: InviteForm) => {
+    await InvitationService.sendInvitation(data.endDate.toISOString(), course.id, rawAccessToken)
+      .then((response) => {
+        setInviteLink(response.link);
+      }).catch((error: AxiosError<ProblemDetail>) => {
         handleError(error)
-      } else {
-        setErrorType('unexpected')
-      }
-    }
+      })
   }
 
   const handleError = (error: AxiosError) => {

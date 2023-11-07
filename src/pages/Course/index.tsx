@@ -10,7 +10,7 @@ import { AxiosError } from "axios";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { CoursesService, ICourseResponse } from "../../core/services/api/courses/CoursesService.ts";
-import CreateInviteModal from "../../components/CreateInviteModal/index.tsx";
+import CreateInviteModal from "../../core/components/CreateInviteModal/index.tsx";
 import TestComponent from "./TestComponent.tsx";
 
 

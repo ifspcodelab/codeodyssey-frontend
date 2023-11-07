@@ -1,4 +1,4 @@
-import PageFooter from "../../components/PageFooter";
+import PageFooter from "../../core/components/PageFooter";
 import { useLocation } from "react-router-dom";
 import { Key, useEffect } from "react";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout";

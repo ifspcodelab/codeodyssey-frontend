@@ -8,11 +8,11 @@ import Button from '@mui/material/Button';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from "react-swipeable-views";
-import {autoPlay} from "react-swipeable-views-utils";
-import step1 from "../../assets/registration_tutorial_en/step1.png"
-import step2 from "../../assets/registration_tutorial_en/step2.png"
-import step3 from "../../assets/registration_tutorial_en/step3.png"
-import step4 from "../../assets/registration_tutorial_en/step4.png"
+import { autoPlay } from "react-swipeable-views-utils";
+import step1 from "../../../assets/registration_tutorial_en/step1.png"
+import step2 from "../../../assets/registration_tutorial_en/step2.png"
+import step3 from "../../../assets/registration_tutorial_en/step3.png"
+import step4 from "../../../assets/registration_tutorial_en/step4.png"
 import i18next from "i18next";
 
 
@@ -21,7 +21,7 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 const images = [
     {
         label: i18next.t('registration.tutorial.step1'),
-        imgPath:step1,
+        imgPath: step1,
     },
     {
         label: i18next.t('registration.tutorial.step2'),

@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
 import { ICourseResponse, CoursesService, } from '../../core/services/api/courses/CoursesService.ts';
-import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
+import SuccessrSnackBar from "../../core/components/SuccessSnackBar/index.tsx";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { ToolBar } from "../../core/components/tool-bar/ToolBar.tsx";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";

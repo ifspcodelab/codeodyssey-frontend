@@ -13,6 +13,12 @@ export function useErrorHandler() {
       problemDetail = error.response.data as ProblemDetail
       responseStatus = problemDetail.status
       console.log(error.response.data)
+      if(responseStatus == 403) {
+        if (problemDetail.detail == "Bad credentials") {
+            setErrorType('invalidLoginOrEmail');
+          setOpenError(true);
+          }
+      }  
       if (responseStatus == 400) {
         if (problemDetail.detail == "must be a future date") {
           setErrorType('invalidStartDate')
@@ -36,6 +42,16 @@ export function useErrorHandler() {
           setErrorType('slugNotFound')
           setOpenError(true);
         } 
+        if (problemDetail.title == "User Already exists" && problemDetail.detail == "Email already exists") {
+          setErrorType('emailAlreadyExists')
+          setOpenError(true);
+        }   
+      } else if (responseStatus == 404) { 
+        setErrorType('notFound');
+        setOpenError(true);
+      } else if (responseStatus === 422) {
+       setErrorType('resendEmailDelay');     
+       setOpenError(true);
       }
     } else if (error.message == "Network Error") {
       setErrorType('networkError')

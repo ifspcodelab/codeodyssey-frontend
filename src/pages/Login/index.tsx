@@ -2,20 +2,20 @@ import "./style.css";
 import Button from "@mui/material/Button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Trans, useTranslation } from "react-i18next";
-import i18n from "../../locales/i18n";
 import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import PageFooter from "../../components/PageFooter";
-import { useState } from "react";
+import PageFooter from "../../core/components/PageFooter/index.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { schema } from "./schema";
 import { LoginRequest, LoginResponse } from "../../core/models/login";
-import { useApiLogin } from "../../core/hooks/useApiLogin";
 import { Box, Grid, Link, Paper, TextField, Typography } from "@mui/material";
 import { AccessToken } from "../../core/models/AccessToken";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import { UserService } from "../../core/services/api/user/UserService.ts";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
+import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 
 
 function Login() {
@@ -27,16 +27,15 @@ function Login() {
   } = useForm({ resolver: yupResolver(schema) });
   const navigate = useNavigate();
 
-  const [loginError, setLoginError] = useState<string | null>(null);
 
-  const { login } = useApiLogin();
+  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
   const onSubmit = async (data: LoginRequest) => {
-    await login(data.email, data.password)
+    await UserService.login(data.email, data.password)
       .then((response) => {
         handleLoginResponse(response as LoginResponse);
       }).catch((error: AxiosError<ProblemDetail>) => {
-        handleLoginError(error);
+        handleError(error);
       });
   };
 
@@ -53,15 +52,6 @@ function Login() {
     return navigate("/", { state: { data: true } });
   };
 
-  const handleLoginError = (error: AxiosError<ProblemDetail>): void => {
-    if (error.response) {
-      const problemDetail = error.response.data;
-      if (problemDetail.detail == 'Bad credentials' && problemDetail.status == 403) setLoginError('Email or password is incorrect');
-    } else {
-      setLoginError(i18n.t("login.loginError"));
-      console.log('Something went wrong:\n', error);
-    }
-  }
 
   return (
     <>
@@ -126,10 +116,11 @@ function Login() {
               </Grid>
             </Grid>
 
-            {loginError && <p className="error">{loginError}</p>}
           </Grid>
         </Box>
+
       </form>
+      <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
       <PageFooter text={t("login.footer")} />
     </>
   );

@@ -17,9 +17,9 @@ import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
-import FileUpload from "../../components/Form/FileUpload.tsx";
-import InputField from '../../components/Form/InputField.tsx';
-import TextAreaField from "../../components/Form/TextAreaField.tsx";
+import FileUpload from "../../core/components/Form/FileUpload.tsx";
+import InputField from '../../core/components/Form/InputField.tsx';
+import TextAreaField from "../../core/components/Form/TextAreaField.tsx";
 import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { CoursesService, ICourseResponse } from "../../core/services/api/courses/CoursesService.ts";

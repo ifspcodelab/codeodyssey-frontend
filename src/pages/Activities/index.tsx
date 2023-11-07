@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { JwtService } from "../../core/auth/JwtService.ts";
-import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
+import SuccessrSnackBar from "../../core/components/SuccessSnackBar/index.tsx";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";

@@ -1,4 +1,4 @@
-import PageFooter from "../../components/PageFooter";
+import PageFooter from "../../core/components/PageFooter";
 import './style.css'
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form";
@@ -6,7 +6,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Trans, useTranslation } from "react-i18next";
 import { CreateUserResponse } from "../../core/models/CreateUserResponse";
 import { schema } from "./schema";
-import { useApiRegistration } from "../../core/hooks/useApiRegistration";
 import {
     Button,
     Checkbox,
@@ -19,79 +18,43 @@ import {
     Box,
     Paper,
 } from "@mui/material";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import React, { useState } from "react";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar";
-import Spinner from "../../components/Spinner";
-import SwipeableTextMobileStepper from "../../components/SwipeableTextMobileStepper";
+import Spinner from "../../core/components/spinner";
+import SwipeableTextMobileStepper from "../../core/components/SwipeableTextMobileStepper";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout";
+import { UserService } from "../../core/services/api/user/UserService";
+import { useErrorHandler } from "../../core/hooks/useErrorHandler";
 
 
 function Registration() {
     const { t } = useTranslation()
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
     const navigate = useNavigate()
-    const api = useApiRegistration()
-    const [open, setOpen] = useState(false);
-    const [errorType, setErrorType] = useState('');
     const [loading, setLoading] = useState(false);
     const [disableSubmitButton, setDisableSubmitButton] = useState(false);
     const [dialog, setDialog] = useState(false);
+    const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
     const toggleDialog = () => {
         setDialog(!dialog);
     };
 
     const onSubmit = async (data: CreateUserResponse) => {
-        try {
-            setDisableSubmitButton(true)
-            setLoading(true)
-            const response = await api.register(data.name.trim(), data.email.trim(), data.password)
-            if (response.name != "AxiosError") {
+        setDisableSubmitButton(true)
+        setLoading(true)
+        await UserService.register(data.name.trim(), data.email.trim(), data.password)
+            .then(() => {
                 setDisableSubmitButton(false)
                 setLoading(false)
                 navigate('/resend-email', { state: { data: data.email } })
-            }
-        } catch (error) {
-            setDisableSubmitButton(false)
-            setLoading(false)
-            if (axios.isAxiosError(error)) {
+            }).catch((error: AxiosError<ProblemDetail>) => {
+                setDisableSubmitButton(false)
+                setLoading(false)
                 handleError(error)
-            } else {
-                setErrorType('unexpected')
-                setOpen(true);
-            }
-        }
-    }
-
-    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway' || event === undefined) {
-            return;
-        }
-
-        setOpen(false);
+            });
     };
-
-    const handleError = (error: AxiosError) => {
-        let responseStatus: number
-        let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
-        if (error.response) {
-            problemDetail = error.response.data as ProblemDetail
-            responseStatus = problemDetail.status
-            if (responseStatus == 400) {
-                setErrorType('badRequest')
-                setOpen(true);
-            } else if (responseStatus == 409) {
-                if (error.response) problemDetail = error.response.data as ProblemDetail
-                if (problemDetail.title == "User Already exists" && problemDetail.detail == "Email already exists")
-                    setErrorType('emailAlreadyExists')
-                setOpen(true);
-            }
-        } else if (error.message == "Network Error") {
-            setErrorType('networkError')
-            setOpen(true);
-        }
-    }
 
     const handleNameInput = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         event.target.value = event.target.value
@@ -186,7 +149,7 @@ function Registration() {
                     </Grid>
                 </Box>
             </form>
-            <ErrorSnackBar open={open} handleClose={handleClose} errorType={errorType} />
+            <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
             <PageFooter text={t('registration.footer')} />
             <Button size='small' id="tutorialButton" variant="contained" onClick={toggleDialog}>
                 {!dialog ? t('registration.tutorial.open') : t('registration.tutorial.close')}

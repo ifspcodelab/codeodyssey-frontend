@@ -7,7 +7,7 @@ import { vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import { UserRole } from "../../core/models/UserRole";
-import CreateInviteModal from '../../components/CreateInviteModal/index.tsx';
+import CreateInviteModal from '../../core/components/CreateInviteModal/index.tsx';
 import { test } from 'vitest';
 import { useApiSendInvitation } from '../../core/hooks/useApiSendInvitation.ts';
 import { useApiGetInvitation } from '../../core/hooks/useApiGetInvitation.ts';

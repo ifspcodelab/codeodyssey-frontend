@@ -20,6 +20,7 @@ const ErrorSnackBar = (props: SnackBarProps) => {
         case 'invalidStartDate': { message = i18n.t("createactivity.exception.startdate"); break; }
         case 'notFound': { message = i18n.t("resendEmail.exception.notFound"); break; }
         case 'slugNotFound': { message = i18n.t("students.exception.notFound"); break; }
+        case 'invalidLoginOrEmail': { message = 'Email or password is incorrect'; break; }
         case 'resendEmailDelay': { message = i18n.t("resendEmail.exception.resendEmailDelay"); break; }
     }
 

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, Paper, TextField } from "@mui/material";
-import PageFooter from "../../components/PageFooter";
+import PageFooter from "../../core/components/PageFooter/index.tsx";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { schema } from "./schema.ts";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
