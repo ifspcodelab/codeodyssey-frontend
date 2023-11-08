@@ -1,30 +1,32 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import i18n from "../../locales/i18n";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import { JwtService } from "../../core/auth/JwtService.ts";
-import SuccessrSnackBar from "../../core/components/SuccessSnackBar/index.tsx";
-import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
-import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
-import { IActivityResponse, ActivitiesService, } from '../../core/services/api/activities/ActivitiesService.ts';
-import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
+
+import { IActivityResponse, ActivitiesService, } from '../../core/services/api/activities/ActivitiesService.ts';
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
+import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
+import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import { JwtService } from "../../core/auth/JwtService.ts";
+import i18n from "../../locales/i18n";
 
 const Activities: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
-  const { idCourse } = useParams()
   const success = queryParams.get('success');
+  const [openSuccess, setOpenSuccess] = useState(true);
+
+  const { idCourse } = useParams()
+  const rawAccessToken = new JwtService().getRawAccessToken() as string;
+
   const { t } = useTranslation();
 
-  const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const [activities, setActivities] = useState<IActivityResponse[]>([]);
-
-  const [openSuccess, setOpenSuccess] = useState(true);
-  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
   const [isLoading, setIsLoading] = useState(true);
+
+  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
   const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
@@ -49,13 +51,15 @@ const Activities: React.FC = () => {
 
   return (
     <>
-      <PageBaseLayout title={t('activities.title')}
-      > </PageBaseLayout>
+      <PageBaseLayout title={t('activities.title')}>
+
+      </PageBaseLayout>
 
       {success && <SuccessrSnackBar message={t('createactivity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
 
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table>
+
           <TableHead>
             <TableRow>
               <TableCell>Title</TableCell>
@@ -65,6 +69,7 @@ const Activities: React.FC = () => {
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {activities?.map(activity => (
               <TableRow key={activity.id}>
@@ -82,6 +87,7 @@ const Activities: React.FC = () => {
               </TableRow>
             ))}
           </TableBody>
+
           {activities.length === 0 && !isLoading && <caption>{t("activities.emptyList")}</caption>}
 
           <TableFooter>

@@ -1,21 +1,22 @@
-import PageHeader from "../../core/components/PageHeader";
+import { useState } from "react";
+import { Container, Link, Typography } from "@mui/material";
 import { Trans, useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom"
-import PageFooter from "../../core/components/PageFooter";
-import { Container, Link, Typography } from "@mui/material";
-import { useState } from "react";
-import Spinner from "../../core/components/spinner";
-import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar";
 import { AxiosError } from "axios";
-import ErrorPage from "../ErrorPage";
+
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar";
 import { UserService } from './../../core/services/api/user/UserService';
 import { useErrorHandler } from "../../core/hooks/useErrorHandler";
+import PageFooter from "../../core/components/page-footer";
+import PageHeader from "../../core/components/page-header";
+import Spinner from "../../core/components/spinner";
+import ErrorPage from "../ErrorPage";
 
-interface UseLocationState {
+interface IUseLocationState {
     data: string;
 }
 
-function ResendEmail() {
+const ResendEmail: React.FC = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ function ResendEmail() {
 
     const resendEmail = () => {
         setLoading(true);
-        const state = location.state as UseLocationState;
+        const state = location.state as IUseLocationState;
         UserService.resendConfirmationEmail(state.data)
             .then(() => {
                 setLoading(false);

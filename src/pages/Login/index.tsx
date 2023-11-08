@@ -1,32 +1,31 @@
-import "./style.css";
-import Button from "@mui/material/Button";
+import { Box, Grid, Link, Paper, TextField, Typography, Button } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Trans, useTranslation } from "react-i18next";
-import { AxiosError } from "axios";
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import PageFooter from "../../core/components/PageFooter/index.tsx";
-import { JwtService } from "../../core/auth/JwtService.ts";
-import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
-import { schema } from "./schema";
-import { LoginRequest, LoginResponse } from "../../core/models/login";
-import { Box, Grid, Link, Paper, TextField, Typography } from "@mui/material";
-import { AccessToken } from "../../core/models/AccessToken";
-import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
-import { UserService } from "../../core/services/api/user/UserService.ts";
+import { useForm } from "react-hook-form";
+import { AxiosError } from "axios";
+
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
+import { UserService } from "../../core/services/api/user/UserService.ts";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import { LoginRequest, LoginResponse } from "../../core/models/login";
+import PageFooter from "../../core/components/page-footer/index.tsx";
+import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
+import { AccessToken } from "../../core/models/AccessToken";
+import { JwtService } from "../../core/auth/JwtService.ts";
+import { schema } from "./schema";
+import "./style.css";
 
-
-function Login() {
+const Login: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
-  const navigate = useNavigate();
-
 
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
@@ -40,6 +39,7 @@ function Login() {
   };
 
   const authConsumer = AuthConsumer();
+
   const handleLoginResponse = (response: LoginResponse) => {
     const jwtService = new JwtService();
     jwtService.setAccessToken(response.accessToken);
@@ -51,7 +51,6 @@ function Login() {
     authConsumer.setRole(decodedAccessToken.role);
     return navigate("/", { state: { data: true } });
   };
-
 
   return (
     <>
@@ -120,6 +119,7 @@ function Login() {
         </Box>
 
       </form>
+
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
       <PageFooter text={t("login.footer")} />
     </>

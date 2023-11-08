@@ -7,4 +7,5 @@ export interface CourseResponse {
   startDate: Date,
   endDate: Date,
   professor: UserResponse;
+  createdAt: string,
 }

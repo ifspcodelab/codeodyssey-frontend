@@ -1,36 +1,24 @@
-import PageHeader from "../../core/components/PageHeader";
-import PageFooter from "../../core/components/PageFooter";
-import { useParams } from "react-router-dom"
-import { Container, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { AxiosError } from "axios";
-import Spinner from "../../core/components/spinner";
+import { Container, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import i18n from "../../locales/i18n";
-import { UserService } from "../../core/services/api/user/UserService";
+import { useParams } from "react-router-dom"
+import { AxiosError } from "axios";
 
-const Confirmation = () => {
+import { UserService } from "../../core/services/api/user/UserService";
+import PageHeader from "../../core/components/page-header";
+import PageFooter from "../../core/components/page-footer";
+import Spinner from "../../core/components/spinner";
+import i18n from "../../locales/i18n";
+
+const Confirmation: React.FC = () => {
     const { t } = useTranslation();
     const { token } = useParams();
+
     const [confirmationError, setConfirmationError] = useState<string | null>(null);
     const [email, setEmail] = useState<string | null>(null);
+
     const [loading, setLoading] = useState(false);
     const [requested, setRequested] = useState(false);
-
-    useEffect(() => {
-        if (!requested) {
-            setLoading(true);
-            UserService.confirmation(token)
-                .then((response) => {
-                    setEmail(response.email)
-                    setLoading(false);
-                }).catch((error: AxiosError) => {
-                    handleError(error);
-                    setLoading(false);
-                });
-        }
-        setRequested(true);
-    }, [requested, token]);
 
     function handleError(error: AxiosError) {
         let responseStatus: number
@@ -57,6 +45,22 @@ const Confirmation = () => {
             setConfirmationError(i18n.t('confirmation.error.network'))
         }
     }
+
+    useEffect(() => {
+        if (!requested) {
+            setLoading(true);
+            UserService.confirmation(token)
+                .then((response) => {
+                    setEmail(response.email)
+                    setLoading(false);
+                }).catch((error: AxiosError) => {
+                    handleError(error);
+                    setLoading(false);
+                });
+        }
+        setRequested(true);
+    }, [requested, token]);
+
 
     return (
         <Container maxWidth="md">

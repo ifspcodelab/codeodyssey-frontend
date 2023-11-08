@@ -1,7 +1,8 @@
-import PageFooter from "../../core/components/PageFooter";
-import { useLocation } from "react-router-dom";
 import { Key, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout";
+import PageFooter from "../../core/components/page-footer";
 
 interface Location {
     state: { data: boolean } | null;

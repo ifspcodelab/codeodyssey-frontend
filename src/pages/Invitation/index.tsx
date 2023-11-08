@@ -1,19 +1,21 @@
-import { useParams } from "react-router-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
-import PageHeader from "../../core/components/PageHeader";
 import { useTranslation } from "react-i18next";
-import PageFooter from "../../core/components/PageFooter";
-import { AxiosError } from "axios";
-import { EnrollmentResponse } from "../../core/models/invitations";
+import { useParams } from "react-router-dom";
 import { Container } from "@mui/material";
-import TextComponent from "./text-component";
-import Spinner from "../../core/components/spinner";
+import { AxiosError } from "axios";
+
 import { InvitationService } from "../../core/services/api/invitation/InvitationService";
+import { EnrollmentResponse } from "../../core/models/invitations";
+import PageHeader from "../../core/components/page-header";
+import PageFooter from "../../core/components/page-footer";
+import Spinner from "../../core/components/spinner";
+import TextComponent from "./text-component";
 
-
-function Invitation() {
+const Invitation: React.FC = () => {
     const { idInvitation: invitationId } = useParams();
+
     const { t } = useTranslation();
+
     const requestSentRef = useRef(false);
     const [loading, setLoading] = useState(false);
     const [messageType, setMessageType] = useState('');

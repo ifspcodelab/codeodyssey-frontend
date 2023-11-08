@@ -1,39 +1,54 @@
-import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useEffect, useState } from "react";
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { schema } from "./schema.ts";
-import React, { useEffect, useState } from "react";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import i18n from '../../locales/i18n.ts'
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom"
+import { AxiosError } from "axios";
+import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br'
 import 'dayjs/locale/en'
-import { CustomDate } from "../../core/models/CustomDate";
-import dayjs from 'dayjs';
-import { useTranslation } from "react-i18next";
+
+import { CoursesService, ICourseResponse } from "../../core/services/api/courses/CoursesService.ts";
+import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
+import TextAreaField from "../../core/components/form/TextAreaField.tsx";
+import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import FileUpload from "../../core/components/form/FileUpload.tsx";
+import InputField from '../../core/components/form/InputField.tsx';
 import { ActivityForm } from "../../core/models/ActivityForm.ts"
 import { JwtService } from "../../core/auth/JwtService.ts";
-import { useNavigate } from "react-router-dom"
-import { useParams } from "react-router-dom";
-import { AxiosError } from "axios";
-import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
-import FileUpload from "../../core/components/Form/FileUpload.tsx";
-import InputField from '../../core/components/Form/InputField.tsx';
-import TextAreaField from "../../core/components/Form/TextAreaField.tsx";
-import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
-import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
-import { CoursesService, ICourseResponse } from "../../core/services/api/courses/CoursesService.ts";
-import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import { CustomDate } from "../../core/models/CustomDate";
+import i18n from '../../locales/i18n.ts'
+import { schema } from "./schema.ts";
 
 const CreateActivity: React.FC = () => {
-  const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
-
   const navigate = useNavigate()
   const [course, setCourse] = useState<ICourseResponse>();
   const { idCourse } = useParams()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
+  const { t } = useTranslation();
 
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
+
+  const [fileType, setFileType] = useState("");
+  const [language, setLanguage] = React.useState('');
+
+  const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
+
+  const methods = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
+  const convertedEndDate: CustomDate = course?.endDate ? dayjs(new Date(course?.endDate)) as unknown as CustomDate : dayjs(new Date()) as unknown as CustomDate;
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setLanguage(event.target.value);
+  };
 
   const submitCreateActivity = async (data: ActivityForm) => {
     if ((course !== undefined) && (data.initialFile !== null) && (data.solutionFile !== null) && (data.testFile !== null)) {
@@ -47,13 +62,6 @@ const CreateActivity: React.FC = () => {
     }
   }
 
-  const methods = useForm({
-    resolver: yupResolver(schema),
-  });
-
-  const [fileType, setFileType] = useState("");
-  const [language, setLanguage] = React.useState('');
-
   useEffect(() => {
     if (language === ".java") {
       setFileType(".java")
@@ -61,13 +69,6 @@ const CreateActivity: React.FC = () => {
       setFileType(".js")
     }
   }, [fileType, language]);
-
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setLanguage(event.target.value);
-  };
-
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (idCourse !== undefined) {
@@ -78,18 +79,12 @@ const CreateActivity: React.FC = () => {
           handleError(error)
         })
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rawAccessToken])
-
-  const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
-
-  const convertedEndDate: CustomDate = course?.endDate ? dayjs(new Date(course?.endDate)) as unknown as CustomDate : dayjs(new Date()) as unknown as CustomDate;
 
 
   return (
     <>
-
       <PageBaseLayout title={t('createactivity.title')} >
 
       </PageBaseLayout>

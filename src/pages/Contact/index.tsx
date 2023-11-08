@@ -1,22 +1,23 @@
-import { useTranslation } from "react-i18next";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, Paper, TextField } from "@mui/material";
-import PageFooter from "../../core/components/PageFooter/index.tsx";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { schema } from "./schema.ts";
-import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useTranslation } from "react-i18next";
 
-interface ContactForm {
+import PageFooter from "../../core/components/page-footer/index.tsx";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import { schema } from "./schema.ts";
+
+interface IContactForm {
     name: string;
     email: string;
     message?: string;
 }
 
-function Contact() {
+const Contact: React.FC = () => {
     const { t } = useTranslation();
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
 
-    const onSubmit: SubmitHandler<ContactForm> = (data) => console.log(data)
+    const onSubmit: SubmitHandler<IContactForm> = (data) => console.log(data)
 
     return (
         <>
@@ -26,9 +27,8 @@ function Contact() {
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
+
                     <Grid container direction="column" padding={2} spacing={2}>
-
-
                         <Grid container item direction="row" spacing={2}>
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                                 <TextField

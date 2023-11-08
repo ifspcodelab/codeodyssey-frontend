@@ -1,40 +1,32 @@
-import PageFooter from "../../core/components/PageFooter";
-import './style.css'
-import { useNavigate } from "react-router-dom"
-import { useForm } from "react-hook-form";
+import React, { useState } from "react";
+import { Button, Checkbox, FormControlLabel, FormGroup, Grid, TextField, Link, Typography, Box, Paper } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Trans, useTranslation } from "react-i18next";
-import { CreateUserResponse } from "../../core/models/CreateUserResponse";
-import { schema } from "./schema";
-import {
-    Button,
-    Checkbox,
-    FormControlLabel,
-    FormGroup,
-    Grid,
-    TextField,
-    Link,
-    Typography,
-    Box,
-    Paper,
-} from "@mui/material";
+import { useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form";
 import { AxiosError } from "axios";
-import React, { useState } from "react";
+
+import SwipeableTextMobileStepper from "../../core/components/swipeable-text-mobile-stepper";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar";
-import Spinner from "../../core/components/spinner";
-import SwipeableTextMobileStepper from "../../core/components/SwipeableTextMobileStepper";
-import { PageBaseLayout } from "../../core/layout/PageBaseLayout";
+import { CreateUserResponse } from "../../core/models/CreateUserResponse";
 import { UserService } from "../../core/services/api/user/UserService";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout";
+import PageFooter from "../../core/components/page-footer";
+import Spinner from "../../core/components/spinner";
+import { schema } from "./schema";
+import './style.css'
 
-
-function Registration() {
+const Registration: React.FC = () => {
     const { t } = useTranslation()
-    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
     const navigate = useNavigate()
+
+    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
+
     const [loading, setLoading] = useState(false);
     const [disableSubmitButton, setDisableSubmitButton] = useState(false);
     const [dialog, setDialog] = useState(false);
+
     const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
     const toggleDialog = () => {
@@ -69,7 +61,6 @@ function Registration() {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
                     <Grid container direction="column" padding={2} spacing={2}>
-
 
                         <Grid container item direction="row" spacing={2}>
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
@@ -149,8 +140,11 @@ function Registration() {
                     </Grid>
                 </Box>
             </form>
+
             <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
+
             <PageFooter text={t('registration.footer')} />
+
             <Button size='small' id="tutorialButton" variant="contained" onClick={toggleDialog}>
                 {!dialog ? t('registration.tutorial.open') : t('registration.tutorial.close')}
             </Button>
