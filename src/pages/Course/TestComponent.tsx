@@ -1,8 +1,8 @@
 import { Card, CardContent, Typography } from '@mui/material'
-import { CourseResponse } from '../../core/models/CourseResponse';
+import { ICourseResponse } from '../../core/models/Course'
 
 interface ITestComponentProps {
-  course: CourseResponse
+  course: ICourseResponse
 }
 
 const TestComponent: React.FC<ITestComponentProps> = ({ course }) => {

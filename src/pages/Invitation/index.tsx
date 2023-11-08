@@ -5,7 +5,7 @@ import { Container } from "@mui/material";
 import { AxiosError } from "axios";
 
 import { InvitationService } from "../../core/services/api/invitation/InvitationService";
-import { EnrollmentResponse } from "../../core/models/invitations";
+import { IEnrollmentResponse } from "../../core/models/Invitation";
 import PageHeader from "../../core/components/page-header";
 import PageFooter from "../../core/components/page-footer";
 import Spinner from "../../core/components/spinner";
@@ -36,7 +36,7 @@ const Invitation: React.FC = () => {
         if (!requestSentRef.current) {
             setLoading(true);
             InvitationService.acceptInvitation(invitationId)
-                .then((enrollmentResponse: EnrollmentResponse) => {
+                .then((enrollmentResponse: IEnrollmentResponse) => {
                     setMessageType('accepted');
                     setCourseName(enrollmentResponse.invitation.course.name)
                     setLoading(false);

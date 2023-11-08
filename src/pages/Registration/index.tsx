@@ -8,10 +8,10 @@ import { AxiosError } from "axios";
 
 import SwipeableTextMobileStepper from "../../core/components/swipeable-text-mobile-stepper";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar";
-import { CreateUserResponse } from "../../core/models/CreateUserResponse";
 import { UserService } from "../../core/services/api/user/UserService";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout";
+import { IRegistrationRequest } from "../../core/models/User";
 import PageFooter from "../../core/components/page-footer";
 import Spinner from "../../core/components/spinner";
 import { schema } from "./schema";
@@ -33,7 +33,7 @@ const Registration: React.FC = () => {
         setDialog(!dialog);
     };
 
-    const onSubmit = async (data: CreateUserResponse) => {
+    const onSubmit = async (data: IRegistrationRequest) => {
         setDisableSubmitButton(true)
         setLoading(true)
         await UserService.register(data.name.trim(), data.email.trim(), data.password)

@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br'
 import 'dayjs/locale/en'
 
-import { CoursesService, ICourseResponse } from "../../core/services/api/courses/CoursesService.ts";
+import { CoursesService } from "../../core/services/api/courses/CoursesService.ts";
 import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import TextAreaField from "../../core/components/form/TextAreaField.tsx";
@@ -19,11 +19,12 @@ import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import FileUpload from "../../core/components/form/FileUpload.tsx";
 import InputField from '../../core/components/form/InputField.tsx';
-import { ActivityForm } from "../../core/models/ActivityForm.ts"
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { CustomDate } from "../../core/models/CustomDate";
 import i18n from '../../locales/i18n.ts'
 import { schema } from "./schema.ts";
+import { ICourseResponse } from "../../core/models/Course.ts";
+import { IActivityRequest } from "../../core/models/Activity.ts";
 
 const CreateActivity: React.FC = () => {
   const navigate = useNavigate()
@@ -37,7 +38,7 @@ const CreateActivity: React.FC = () => {
   const [fileType, setFileType] = useState("");
   const [language, setLanguage] = React.useState('');
 
-  const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
+  const onSubmit: SubmitHandler<IActivityRequest> = (data) => submitCreateActivity(data)
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -50,7 +51,7 @@ const CreateActivity: React.FC = () => {
     setLanguage(event.target.value);
   };
 
-  const submitCreateActivity = async (data: ActivityForm) => {
+  const submitCreateActivity = async (data: IActivityRequest) => {
     if ((course !== undefined) && (data.initialFile !== null) && (data.solutionFile !== null) && (data.testFile !== null)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await ActivitiesService.create(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken, course.id)

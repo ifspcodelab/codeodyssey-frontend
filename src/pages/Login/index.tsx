@@ -9,13 +9,13 @@ import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.t
 import { UserService } from "../../core/services/api/user/UserService.ts";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
-import { LoginRequest, LoginResponse } from "../../core/models/login";
 import PageFooter from "../../core/components/page-footer/index.tsx";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { AccessToken } from "../../core/models/AccessToken";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { schema } from "./schema";
 import "./style.css";
+import { ILoginRequest, ILoginResponse } from "../../core/models/User.ts";
 
 const Login: React.FC = () => {
   const { t } = useTranslation();
@@ -29,10 +29,10 @@ const Login: React.FC = () => {
 
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
-  const onSubmit = async (data: LoginRequest) => {
+  const onSubmit = async (data: ILoginRequest) => {
     await UserService.login(data.email, data.password)
       .then((response) => {
-        handleLoginResponse(response as LoginResponse);
+        handleLoginResponse(response as ILoginResponse);
       }).catch((error: AxiosError<ProblemDetail>) => {
         handleError(error);
       });
@@ -40,7 +40,7 @@ const Login: React.FC = () => {
 
   const authConsumer = AuthConsumer();
 
-  const handleLoginResponse = (response: LoginResponse) => {
+  const handleLoginResponse = (response: ILoginResponse) => {
     const jwtService = new JwtService();
     jwtService.setAccessToken(response.accessToken);
     jwtService.setRefreshToken(response.refreshToken);

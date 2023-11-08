@@ -5,10 +5,11 @@ import { useParams } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import { AxiosError } from "axios";
 
-import { IStudentResponse, StudentService } from "../../core/services/api/students/StudentsService.ts";
+import { StudentService } from "../../core/services/api/students/StudentsService.ts";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import { IStudentResponse } from "../../core/models/Student.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
 

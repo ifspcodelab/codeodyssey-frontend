@@ -1,24 +1,25 @@
 import * as React from 'react';
 import { useEffect, useState } from "react";
-import Box from '@mui/material/Box';
-import { Button, Grid, Modal } from "@mui/material";
-import Typography from '@mui/material/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { yupResolver } from "@hookform/resolvers/yup";
-import { schema } from "./schema.ts";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Button, Grid, Modal } from "@mui/material";
+import Typography from '@mui/material/Typography';
 import { useTranslation } from "react-i18next";
-import { InviteForm } from '../../models/InviteForm.ts'
-import { JwtService } from "../../auth/JwtService.ts";
-import dayjs from 'dayjs';
-import { useCopyToClipboard } from '../../hooks/useCopyToClipboard.ts'
+import Box from '@mui/material/Box';
 import { AxiosError } from 'axios';
-import './style.css'
-import i18n from "../../../locales/i18n.ts";
-import { ICourseResponse } from '../../services/api/courses/CoursesService.ts';
+import dayjs from 'dayjs';
+
 import { InvitationService } from '../../services/api/invitation/InvitationService.ts';
+import { useCopyToClipboard } from '../../hooks/useCopyToClipboard.ts'
+import { ICourseResponse } from '../../models/Course.ts';
+import { JwtService } from "../../auth/JwtService.ts";
+import i18n from "../../../locales/i18n.ts";
+import { schema } from "./schema.ts";
+import './style.css'
+import { IInvitationRequest } from '../../models/Invitation.ts';
 
 interface ItemComponentProps {
   course: ICourseResponse;
@@ -28,6 +29,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const { t } = useTranslation();
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const [open, setOpen] = React.useState(false);
+
   const handleOpen = async () => {
     setOpen(true);
     await InvitationService.getInvitation(course.id, rawAccessToken)
@@ -49,7 +51,6 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
 
   }
 
-
   const handleClose = () => {
     setErrorType("")
     setOpen(false)
@@ -61,17 +62,17 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const [value, copy] = useCopyToClipboard()
 
   const baseUrl = import.meta.env.VITE_BASE_URL_WEB as string
-  const onSubmit: SubmitHandler<InviteForm> = (data) => submitCreateInvite(data)
+  const onSubmit: SubmitHandler<IInvitationRequest> = (data) => submitCreateInvite(data)
   useEffect(() => {
     void (() => {
       setCourseExpirationDate(new Date(course?.endDate))
     })();
   }, [course?.endDate]);
 
-  const submitCreateInvite = async (data: InviteForm) => {
-    await InvitationService.sendInvitation(data.endDate.toISOString(), course.id, rawAccessToken)
+  const submitCreateInvite = async (data: IInvitationRequest) => {
+    await InvitationService.sendInvitation(data.expirationDate.toISOString(), course.id, rawAccessToken)
       .then((response) => {
-        setInviteLink(response.link);
+        setInviteLink(response?.link);
       }).catch((error: AxiosError<ProblemDetail>) => {
         handleError(error)
       })
@@ -122,7 +123,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
             <Grid item xs={12} textAlign="center" className="modal-form">
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
                 <Controller
-                  name={"endDate"}
+                  name={"expirationDate"}
                   control={control}
                   defaultValue={courseExpirationDate}
                   render={({ field: { ref, onChange, ...field } }) => (
@@ -137,7 +138,7 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
                       className="modal-date-picker"
                       slotProps={{
                         textField: {
-                          helperText: errors.endDate && <span>{errors.endDate.message}</span>
+                          helperText: errors.expirationDate && <span>{errors.expirationDate.message}</span>
                         },
                       }}
                     />

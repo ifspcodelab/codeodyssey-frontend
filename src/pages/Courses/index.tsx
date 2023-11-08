@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
 
-import { ICourseResponse, CoursesService, } from '../../core/services/api/courses/CoursesService.ts';
+import { CoursesService } from '../../core/services/api/courses/CoursesService.ts';
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
@@ -13,6 +13,7 @@ import { ToolBar } from "../../core/components/tool-bar/ToolBar.tsx";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import i18n from "../../locales/i18n";
+import { ICourseResponse } from "../../core/models/Course.ts";
 
 const Courses: React.FC = () => {
   const { t } = useTranslation();
