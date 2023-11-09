@@ -12,14 +12,14 @@ import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.t
 import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import FileUpload from "../../core/components/form/FileUpload.tsx";
+import { IActivityResponse } from "../../core/models/Activity.ts";
+import { IResolutionForm } from "../../core/models/Resolution.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
+import TabsComponent from "./TabsComponent.tsx";
 import i18n from "../../locales/i18n";
 import { schema } from "./schema.ts";
 import "./style.css";
-import TabsComponent from "./TabsComponent.tsx";
-import { IActivityResponse } from "../../core/models/Activity.ts";
-import { IResolutionForm } from "../../core/models/Resolution.ts";
 
 const Activity: React.FC = () => {
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();

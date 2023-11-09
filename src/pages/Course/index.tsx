@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
+import { Card, CardActions, CardContent, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom"
-import { Card, CardContent, Typography } from "@mui/material";
 import { AxiosError } from "axios";
 
 import { CoursesService } from "../../core/services/api/courses/CoursesService.ts";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import CreateInviteModal from "../../core/components/create-invite-modal/index.tsx";
-import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
-import { JwtService } from "../../core/auth/JwtService.ts";
 import { ICourseResponse } from "../../core/models/Course.ts";
+import { JwtService } from "../../core/auth/JwtService.ts";
 import TabsComponent from "./TabsComponent.tsx";
+import i18n from "../../locales/i18n.ts";
 
 const Course: React.FC = () => {
 
@@ -24,9 +25,7 @@ const Course: React.FC = () => {
 
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
-  // const handleChangeTab = (event, newValue) => {
-  //   navigate(`${newValue}`);
-  // };
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (idCourse !== undefined) {
@@ -39,31 +38,24 @@ const Course: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [USER_ID, rawAccessToken])
-  // const [selectedTab, setSelectedTab] = useState(0);
 
   return (
     <>
-      <PageBaseLayout title={course?.name !== undefined ? course?.name : "title"}
-      > </PageBaseLayout>
       <TabsComponent />
+
       <Card>
+
         <CardContent>
           <Typography variant="h5">{course?.name}</Typography>
-          <Typography variant="subtitle1">Professor: {course?.professor?.name}</Typography>
-          <Typography>Data de Início: {course?.startDate}</Typography>
-          <Typography>Data de Término: {course?.endDate}</Typography>
+          <Typography variant="subtitle1"> {t("course.professor")}: {course?.professor?.name}</Typography>
+          <Typography> {t("course.startDate")}: {course !== undefined && new Date(course?.startDate).toLocaleDateString(i18n.language)}</Typography>
+          <Typography> {t("course.endDate")}: {course !== undefined && new Date(course?.endDate).toLocaleDateString(i18n.language)}</Typography>
         </CardContent>
-      </Card>
-      {/* <div>
-        <Tabs value={selectedTab} onChange={handleChangeTab} centered>
-          <Tab label="Home" />
-          <Tab label="Ver Atividades" value="activities" />
-          {USER_ID === course?.professor?.id && <Tab label="Ver Alunos" value="students" />}
-        </Tabs>
-        {selectedTab === 0 && <TestComponent course={course} />}
-      </div> */}
+        {USER_ID === course?.professor?.id && course && <CardActions>
+          <CreateInviteModal course={course} />
+        </CardActions>}
 
-      {USER_ID === course?.professor?.id && course && <CreateInviteModal course={course} />}
+      </Card>
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>

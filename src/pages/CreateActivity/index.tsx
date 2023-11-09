@@ -25,11 +25,12 @@ import i18n from '../../locales/i18n.ts'
 import { schema } from "./schema.ts";
 import { ICourseResponse } from "../../core/models/Course.ts";
 import { IActivityRequest } from "../../core/models/Activity.ts";
+import { ToolDetails } from "../../core/components/tool-details/ToolDetails.tsx";
 
 const CreateActivity: React.FC = () => {
   const navigate = useNavigate()
   const [course, setCourse] = useState<ICourseResponse>();
-  const { idCourse } = useParams()
+  const { idCourse, slug } = useParams()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const { t } = useTranslation();
 
@@ -63,6 +64,14 @@ const CreateActivity: React.FC = () => {
     }
   }
 
+  const handleSave = async () => {
+    const isValid = await methods.trigger();
+    if (isValid) {
+      const formData = methods.getValues();
+      await submitCreateActivity(formData);
+    }
+  };
+
   useEffect(() => {
     if (language === ".java") {
       setFileType(".java")
@@ -86,8 +95,12 @@ const CreateActivity: React.FC = () => {
 
   return (
     <>
-      <PageBaseLayout title={t('createactivity.title')} >
-
+      <PageBaseLayout title={t('createactivity.title')} toolbar={
+        <ToolDetails
+          onClickSave={() => handleSave()}
+          onClickBack={() => { navigate(`/courses/${idCourse}/${slug}/create-activity`) }}
+        />
+      }>
       </PageBaseLayout>
 
       <FormProvider {...methods}>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
 
@@ -9,19 +9,24 @@ import { ActivitiesService, } from '../../core/services/api/activities/Activitie
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
-import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import i18n from "../../locales/i18n";
 import { IActivityResponse } from "../../core/models/Activity.ts";
 import TabsComponent from "../Course/TabsComponent.tsx";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import { ToolBar } from "../../core/components/tool-bar/ToolBar.tsx";
+import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 
 const Activities: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
   const success = queryParams.get('success');
   const [openSuccess, setOpenSuccess] = useState(true);
+  const navigate = useNavigate();
 
-  const { idCourse } = useParams()
+  const { idCourse, slug } = useParams()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
+  const authConsumer = AuthConsumer();
+  const USER_ROLE: string = authConsumer.role;
 
   const { t } = useTranslation();
 
@@ -53,10 +58,12 @@ const Activities: React.FC = () => {
 
   return (
     <>
-      <PageBaseLayout title={t('activities.title')}>
-
-      </PageBaseLayout>
       <TabsComponent />
+
+      {USER_ROLE === "PROFESSOR" &&
+        (<ToolBar onClickNewButton={() => navigate(`/courses/${idCourse}/${slug}/create-activity`)} />
+        )}
+
 
       {success && <SuccessrSnackBar message={t('createactivity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
 

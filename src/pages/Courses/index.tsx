@@ -98,7 +98,7 @@ const Courses: React.FC = () => {
             textOverflow="ellipses"
             variant={smDown ? 'h5' : mdDown ? 'h4' : 'h3'}
           >
-            Your Courses
+            Courses
           </Typography>
           <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
             <Table>

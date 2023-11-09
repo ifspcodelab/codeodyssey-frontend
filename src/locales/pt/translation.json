@@ -21,10 +21,11 @@
     }
   },
   "course": {
-    "text": "Informações sobre o curso",
+    "professor": "Professor",
+    "startDate": "Data de Início",
+    "endDate": "Data Final",
     "button": {
-      "create": "Criar Atividade",
-      "activities": "Ver Atividades"
+      "createInvite": "Criar Convite"
     }
   },
   "courses": {

@@ -4,8 +4,8 @@ export interface ICourseResponse {
   id: string,
   name: string,
   slug: string,
-  startDate: Date,
-  endDate: Date,
+  startDate: string,
+  endDate: string,
   professor: IUserResponse,
   createdAt: string,
 }

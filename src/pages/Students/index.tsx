@@ -8,7 +8,6 @@ import { AxiosError } from "axios";
 import { StudentService } from "../../core/services/api/students/StudentsService.ts";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
-import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { IStudentResponse } from "../../core/models/Student.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
@@ -42,8 +41,7 @@ const Students: React.FC = () => {
 
   return (
     <>
-      <PageBaseLayout title={t('students.title')}
-      > </PageBaseLayout>
+
       <TabsComponent />
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table>
