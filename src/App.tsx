@@ -5,6 +5,7 @@ import { SideBar } from "./core/components/side-bar/SideBar";
 import { DrawerProvider } from "./core/contexts/DrawerContext";
 
 function App() {
+
     return (
         <ThemeProvider theme={LightTheme}>
             <DrawerProvider>

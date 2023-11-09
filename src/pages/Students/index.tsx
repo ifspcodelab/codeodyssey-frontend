@@ -12,6 +12,7 @@ import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { IStudentResponse } from "../../core/models/Student.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
+import TabsComponent from "../Course/TabsComponent.tsx";
 
 const Students: React.FC = () => {
   const [students, setStudents] = useState<IStudentResponse[]>([]);
@@ -43,7 +44,7 @@ const Students: React.FC = () => {
     <>
       <PageBaseLayout title={t('students.title')}
       > </PageBaseLayout>
-
+      <TabsComponent />
       <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
         <Table>
 

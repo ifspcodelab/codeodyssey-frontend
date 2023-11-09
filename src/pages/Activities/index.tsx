@@ -5,13 +5,15 @@ import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
 
-import { IActivityResponse, ActivitiesService, } from '../../core/services/api/activities/ActivitiesService.ts';
+import { ActivitiesService, } from '../../core/services/api/activities/ActivitiesService.ts';
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import i18n from "../../locales/i18n";
+import { IActivityResponse } from "../../core/models/Activity.ts";
+import TabsComponent from "../Course/TabsComponent.tsx";
 
 const Activities: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
@@ -54,6 +56,7 @@ const Activities: React.FC = () => {
       <PageBaseLayout title={t('activities.title')}>
 
       </PageBaseLayout>
+      <TabsComponent />
 
       {success && <SuccessrSnackBar message={t('createactivity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
 
@@ -73,7 +76,7 @@ const Activities: React.FC = () => {
           <TableBody>
             {activities?.map(activity => (
               <TableRow key={activity.id}>
-                <TableCell><Link to={activity.id}>{activity.title}</Link></TableCell>
+                <TableCell><Link to={`${activity.id}`}>{activity.title}</Link></TableCell>
                 <TableCell> {activity.extension === '.java' && 'Java'}</TableCell>
                 <TableCell>{new Date(activity.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}  </TableCell>
                 <TableCell>{new Date(activity.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}</TableCell>
