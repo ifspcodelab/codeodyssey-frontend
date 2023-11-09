@@ -6,18 +6,20 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 
-import { ActivitiesService, IActivityResponse } from "../../core/services/api/activities/ActivitiesService.ts";
+import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
 import { ResolutionsService } from "../../core/services/api/resolutions/ResolutionsService.ts";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
-import { ResolutionForm } from "../../core/models/ResolutionForm.ts"
 import FileUpload from "../../core/components/form/FileUpload.tsx";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import i18n from "../../locales/i18n";
 import { schema } from "./schema.ts";
 import "./style.css";
+import TabsComponent from "./TabsComponent.tsx";
+import { IActivityResponse } from "../../core/models/Activity.ts";
+import { IResolutionForm } from "../../core/models/Resolution.ts";
 
 const Activity: React.FC = () => {
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
@@ -34,7 +36,7 @@ const Activity: React.FC = () => {
 
   const [openSuccess, setOpenSuccess] = useState(false);
 
-  const onSubmit: SubmitHandler<ResolutionForm> = (data) => submitResolutionActivity(data)
+  const onSubmit: SubmitHandler<IResolutionForm> = (data) => submitResolutionActivity(data)
 
   const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
@@ -47,7 +49,7 @@ const Activity: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
-  const submitResolutionActivity = async (data: ResolutionForm) => {
+  const submitResolutionActivity = async (data: IResolutionForm) => {
     if ((idCourse !== undefined) && (idActivity !== undefined)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await ResolutionsService.create(data.resolutionFile, rawAccessToken, idCourse, idActivity)
@@ -103,7 +105,10 @@ const Activity: React.FC = () => {
     <>
       {<SuccessrSnackBar message={t('activity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
 
+
       <h1>{activity?.title}</h1>
+
+      <TabsComponent />
 
       <Typography sx={{ fontSize: 14 }} gutterBottom>
         {activity?.description}

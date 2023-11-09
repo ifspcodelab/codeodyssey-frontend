@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"
-import { Button, Card, CardContent, Tab, Tabs, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom"
+import { Card, CardContent, Typography } from "@mui/material";
 import { AxiosError } from "axios";
 
 import { CoursesService } from "../../core/services/api/courses/CoursesService.ts";
@@ -15,9 +14,7 @@ import { ICourseResponse } from "../../core/models/Course.ts";
 import TabsComponent from "./TabsComponent.tsx";
 
 const Course: React.FC = () => {
-  const { t } = useTranslation();
 
-  const navigate = useNavigate()
   const authConsumer = AuthConsumer();
   const USER_ID: string = authConsumer.id;
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
@@ -66,7 +63,7 @@ const Course: React.FC = () => {
         {selectedTab === 0 && <TestComponent course={course} />}
       </div> */}
 
-      {/* {USER_ID === course?.professor?.id && course && <CreateInviteModal course={course} />} */}
+      {USER_ID === course?.professor?.id && course && <CreateInviteModal course={course} />}
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>

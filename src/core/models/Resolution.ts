@@ -1,3 +1,3 @@
-export interface IResolutionForm<T = unknown> {
+export interface IResolutionForm<T = any> {
   resolutionFile: T ;
 }
