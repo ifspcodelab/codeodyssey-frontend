@@ -21,17 +21,23 @@
     }
   },
   "course": {
+    "name": "Name",
     "professor": "Professor",
     "startDate": "Start Date",
     "endDate": "End Date",
+    "actions": "Actions",
     "button": {
+      "newCourse": "New Course",
       "createInvite": "Create Invite"
-    }
+    },
+    "courses": "Courses",
+    "enrollments": "Enrollments"
   },
   "courses": {
     "title": "My Courses",
     "text": "Courses that i'm participating",
     "button": {
+      "newCourse": "New Course",
       "invite": "Create Invite",
       "students": "Visualize Students"
     },
@@ -92,8 +98,13 @@
     "until": "until"
   },
   "activities": {
-    "title": "Activities",
-    "text": "Course's activities",
+    "activities": "Activities",
+    "title": "Title",
+    "language": "Language",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "actions": "Actions",
+    "button": "New Activity",
     "emptyList": "This course does not have any activities"
   },
   "students": {

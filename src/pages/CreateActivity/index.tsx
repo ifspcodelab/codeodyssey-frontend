@@ -3,9 +3,9 @@ import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Se
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useNavigate, useParams } from "react-router-dom"
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom"
 import { AxiosError } from "axios";
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br'
@@ -14,18 +14,18 @@ import 'dayjs/locale/en'
 import { CoursesService } from "../../core/services/api/courses/CoursesService.ts";
 import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
+import { ToolDetails } from "../../core/components/tool-details/ToolDetails.tsx";
 import TextAreaField from "../../core/components/form/TextAreaField.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import FileUpload from "../../core/components/form/FileUpload.tsx";
 import InputField from '../../core/components/form/InputField.tsx';
+import { IActivityRequest } from "../../core/models/Activity.ts";
+import { ICourseResponse } from "../../core/models/Course.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { CustomDate } from "../../core/models/CustomDate";
 import i18n from '../../locales/i18n.ts'
 import { schema } from "./schema.ts";
-import { ICourseResponse } from "../../core/models/Course.ts";
-import { IActivityRequest } from "../../core/models/Activity.ts";
-import { ToolDetails } from "../../core/components/tool-details/ToolDetails.tsx";
 
 const CreateActivity: React.FC = () => {
   const navigate = useNavigate()
@@ -98,7 +98,7 @@ const CreateActivity: React.FC = () => {
       <PageBaseLayout title={t('createactivity.title')} toolbar={
         <ToolDetails
           onClickSave={() => handleSave()}
-          onClickBack={() => { navigate(`/courses/${idCourse}/${slug}/create-activity`) }}
+          onClickBack={() => { navigate(`/courses/${idCourse}/${slug}/activities`) }}
         />
       }>
       </PageBaseLayout>

@@ -21,9 +21,11 @@
     }
   },
   "course": {
+    "name": "Nome",
     "professor": "Professor",
     "startDate": "Data de Início",
     "endDate": "Data Final",
+    "actions": "Ações",
     "button": {
       "createInvite": "Criar Convite"
     }
@@ -32,6 +34,7 @@
     "title": "Meus Cursos",
     "text": "Cursos que estou participando",
     "button": {
+      "newCourse": "Novo Curso",
       "invite": "Criar Convite",
       "students": "Visualizar Alunos"
     },
@@ -92,8 +95,13 @@
     "until": "até"
   },
   "activities": {
-    "title": "Atividades",
-    "text": "Atividades do curso",
+    "activities": "Atividades",
+    "title": "Título",
+    "language": "Linguagem",
+    "startDate": "Data de Início",
+    "endDate": "Data Final",
+    "actions": "Ações",
+    "button": "Nova Atividade",
     "emptyList": "Esse curso não possui nenhuma atividade"
   },
   "students": {

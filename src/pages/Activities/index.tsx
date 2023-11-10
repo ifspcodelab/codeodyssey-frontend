@@ -13,7 +13,6 @@ import { JwtService } from "../../core/auth/JwtService.ts";
 import i18n from "../../locales/i18n";
 import { IActivityResponse } from "../../core/models/Activity.ts";
 import TabsComponent from "../Course/TabsComponent.tsx";
-import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { ToolBar } from "../../core/components/tool-bar/ToolBar.tsx";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 
@@ -61,7 +60,7 @@ const Activities: React.FC = () => {
       <TabsComponent />
 
       {USER_ROLE === "PROFESSOR" &&
-        (<ToolBar onClickNewButton={() => navigate(`/courses/${idCourse}/${slug}/create-activity`)} />
+        (<ToolBar onClickNewButton={() => navigate(`/courses/${idCourse}/${slug}/create-activity`)} textNewButton={t('activities.button')} />
         )}
 
 
@@ -72,11 +71,11 @@ const Activities: React.FC = () => {
 
           <TableHead>
             <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell> {t("activity.language")}</TableCell>
-              <TableCell>Start Date</TableCell>
-              <TableCell>End Date</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>{t('activities.title')}</TableCell>
+              <TableCell>{t("activities.language")}</TableCell>
+              <TableCell>{t('activities.startDate')}</TableCell>
+              <TableCell>{t('activities.endDate')}</TableCell>
+              <TableCell>{t('activities.actions')}</TableCell>
             </TableRow>
           </TableHead>
 

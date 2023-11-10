@@ -84,8 +84,8 @@ const Courses: React.FC = () => {
     <>
       <PageBaseLayout title={t('courses.title')}
         toolbar={USER_ROLE === "PROFESSOR" &&
-          (<ToolBar onClickNewButton={() => navigate('/create-course')} />
-          )}>
+          (<ToolBar onClickNewButton={() => navigate('/create-course')} textNewButton={t('course.button.newCourse')} />
+          )} >
       </PageBaseLayout>
 
       {success && <SuccessrSnackBar message={t('createcourse.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
@@ -105,11 +105,11 @@ const Courses: React.FC = () => {
 
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Professor</TableCell>
-                  <TableCell>Start Date</TableCell>
-                  <TableCell>End Date</TableCell>
-                  <TableCell>Actions</TableCell>
+                  <TableCell>{t('course.name')}</TableCell>
+                  <TableCell>{t('course.professor')}</TableCell>
+                  <TableCell>{t('course.startDate')}</TableCell>
+                  <TableCell>{t('course.endDate')}</TableCell>
+                  <TableCell>{t('course.actions')}</TableCell>
                 </TableRow>
               </TableHead>
 
@@ -162,11 +162,11 @@ const Courses: React.FC = () => {
 
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Professor</TableCell>
-              <TableCell>Start Date</TableCell>
-              <TableCell>End Date</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>{t('course.name')}</TableCell>
+              <TableCell>{t('course.professor')}</TableCell>
+              <TableCell>{t('course.startDate')}</TableCell>
+              <TableCell>{t('course.endDate')}</TableCell>
+              <TableCell>{t('course.actions')}</TableCell>
             </TableRow>
           </TableHead>
 
