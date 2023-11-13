@@ -15,7 +15,6 @@ const TabsComponent: React.FC = () => {
       <Tabs value={selectedTab} onChange={handleChangeTab} centered>
         <Tab label="Home" value={0} component={Link} to={`/courses/${idCourse}/${slug}/activities/${idActivity}`} />
         <Tab label="Send Resolution" value={1} />
-        <Tab label="Results" value={2} component={Link} to={`/courses/${idCourse}/${slug}/activities/${idActivity}/results`} />
       </Tabs>
       {/* {selectedTab === 1 && <h1>q</h1>}
       {selectedTab === 2 && <h1>asdas</h1>} */}
