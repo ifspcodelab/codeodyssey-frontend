@@ -24,6 +24,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Confirmation from "./pages/Confirmation";
 import Activities from "./pages/Activities";
 import Activity from "./pages/Activity";
+import Result from './pages/Result/index.tsx';
 
 const router = createBrowserRouter([
     {
@@ -104,6 +105,10 @@ const router = createBrowserRouter([
             {
                 path: "confirmation/:token",
                 element: <Confirmation />
+            },
+            {
+                path: "result/",
+                element: <Result />
             },
         ],
     },
