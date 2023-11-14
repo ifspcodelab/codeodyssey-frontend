@@ -1,169 +1,6 @@
 {
-  "navbar": {
-    "register": "Cadastrar",
-    "login": "Login",
-    "logout": "Sair",
-    "courses": "Meus cursos",
-    "createCourse": "Criar curso",
-    "contact": "Contato"
-  },
-  "confirmation": {
-    "title": "Confirmação",
-    "text": "Confirmação do email",
-    "footer": "Texto do footer aqui",
-    "success": "O email \"{{email}}\" foi confirmado com sucesso",
-    "error": {
-      "badRequest": "Houve um problema com a requisição",
-      "network": "Houve um problema com a conexão",
-      "notFound": "Usuário não encontrado com esse token",
-      "exists": "O email já foi confirmado",
-      "expired": "O token de confirmação expirou"
-    }
-  },
-  "course": {
-    "name": "Nome",
-    "professor": "Professor",
-    "startDate": "Data de Início",
-    "endDate": "Data Final",
-    "actions": "Ações",
-    "button": {
-      "createInvite": "Criar Convite"
-    }
-  },
-  "courses": {
-    "title": "Meus Cursos",
-    "text": "Cursos que estou participando",
-    "button": {
-      "newCourse": "Novo Curso",
-      "invite": "Criar Convite",
-      "students": "Visualizar Alunos"
-    },
-    "intlDate": "{{date, datetime}}",
-    "until": "até",
-    "emptyList": "Você ainda não participa de nenhum curso"
-  },
-  "createactivity": {
-    "title": "Criar Atividade",
-    "text": "Definir uma atividade para o curso",
-    "successMessage": "Atividade criada com sucesso!",
-    "exception": {
-      "startdate": "Data de início inválida"
-    },
-    "form": {
-      "title": "Título",
-      "desc": "Descrição",
-      "language": "Linguagem",
-      "startDate": "Data de início",
-      "endDate": "Data de término",
-      "initialFile": "Arquivo inicial",
-      "testFile": "Arquivo de teste",
-      "solutionFile": "Arquivo de solução",
-      "evaluation": "Avaliação",
-      "evaluationField": {
-        "name": "Nome",
-        "weight": "Peso",
-        "delete": "Deletar",
-        "add": "Adicionar"
-      },
-      "validation": {
-        "initialfile": "O arquivo inicial é obrigatório",
-        "testfile": "O arquivo de teste é obrigatório",
-        "solutionfile": "O arquivo de solução é obrigatório"
-      },
-      "button": {
-        "publish": "Publicar Atividade"
-      }
-    }
-  },
-  "activity": {
-    "title": "Resolução",
-    "course": "Curso",
-    "date": "Data",
-    "initialfile": "Arquivo Inicial",
-    "language": "Linguagem",
-    "successMessage": "Resolução enviada com sucesso!",
-    "button": {
-      "resolution": "Enviar Resolução",
-      "download": "Baixar arquivo"
-    },
-    "form": {
-      "resolution": "Clique aqui para fazer upload do arquivo",
-      "validation": {
-        "resolutionfile": "O arquivo de resolução é obrigatório"
-      }
-    },
-    "until": "até"
-  },
-  "activities": {
-    "activities": "Atividades",
-    "title": "Título",
-    "language": "Linguagem",
-    "startDate": "Data de Início",
-    "endDate": "Data Final",
-    "actions": "Ações",
-    "button": "Nova Atividade",
-    "emptyList": "Esse curso não possui nenhuma atividade"
-  },
-  "students": {
-    "title": "Meus Alunos",
-    "text": "Alunos do curso",
-    "name": "Nome",
-    "email": "E-mail",
-    "emptyList": "Esse curso não possui alunos matriculados",
-    "emptyListQuestion": "Deseja convidar alunos?",
-    "exception": {
-      "notFound": "Curso não encontrado"
-    }
-  },
-  "invite": {
-    "title": "Criar convite",
-    "date": "Data de expiração",
-    "button": {
-      "create": "Criar convite",
-      "generate": "Gerar convite",
-      "copy": "Copiar"
-    },
-    "copied": "Link copiado",
-    "exception": {
-      "dateEarlier": "A data de expiração do convite é anterior à data de término do curso",
-      "datePast": "A data de expiração do convite está no passado"
-    }
-  },
-  "createcourse": {
-    "title": "Criar Curso",
-    "text": "Crie um curso preenchendo o formulário abaixo",
-    "successMessage": "Curso criado com sucesso!",
-    "form": {
-      "name": "Nome",
-      "slug": "Caminho",
-      "startDate": "Data de início",
-      "endDate": "Data final",
-      "submit": "Criar",
-      "cancel": "Cancelar",
-      "validation": {
-        "special": "O caminho não pode conter caracteres especiais",
-        "endDate": "A data final não pode ser anterior à data de início"
-      },
-      "confimationdialog": {
-        "title": "Tem certeza que deseja sair?",
-        "description": "as alterações não serão salvas",
-        "leave": "sair",
-        "continue": "continuar"
-      }
-    },
-    "exception": {
-      "slug": "Esse caminho já existe",
-      "badRequest": "Erro com a requisição",
-      "network": "Erro de conexão com o servidor",
-      "unexpected": "Um erro inesperado ocorreu"
-    }
-  },
-  "privacypolicy": {
-    "title": "Política de Privacidade"
-  },
   "registration": {
     "title": "Cadastro",
-    "text": "Por favor, preencha o formulário abaixo para usar a plataforma",
     "form": {
       "name": "Nome",
       "email": "Email",
@@ -200,8 +37,8 @@
   },
   "login": {
     "title": "Login",
-    "text": "Faça o Login ou Registre-se",
     "form": {
+      "title": "Conta",
       "email": "Email",
       "password": "Senha",
       "login": "Login",
@@ -232,23 +69,55 @@
     },
     "footer": "Footer do reenvio de email"
   },
-  "contact": {
-    "title": "Entre em Contato",
-    "text": "Utilize o formulário abaixo para entrar em contato conosco.",
+  "course": {
+    "name": "Nome",
+    "professor": "Professor",
+    "startDate": "Data de Início",
+    "endDate": "Data Final",
+    "actions": "Ações",
+    "button": {
+      "createInvite": "Criar Convite"
+    }
+  },
+  "courses": {
+    "title": "Meus Cursos",
+    "button": {
+      "newCourse": "Novo Curso"
+    },
+    "courses": "Courses",
+    "enrollments": "Enrollments",
+    "emptyList": "Você ainda não participa de nenhum curso"
+  },
+  "createcourse": {
+    "title": "Criar Curso",
+    "successMessage": "Curso criado com sucesso!",
     "form": {
       "name": "Nome",
-      "email": "E-mail",
-      "message": "Mensagem",
-      "submit": "Enviar"
-    },
-    "footer": "Texto do footer aqui"
+      "slug": "Caminho",
+      "startDate": "Data de início",
+      "endDate": "Data final",
+      "cancel": "Cancelar",
+      "button": {
+        "new": "Novo Curso"
+      },
+      "validation": {
+        "special": "O caminho não pode conter caracteres especiais",
+        "endDate": "A data final não pode ser anterior à data de início"
+      }
+    }
   },
-  "errorPage": {
-    "title": "Erro {{statusCode}}",
-    "subTitle": "Um erro inesperado ocorreu.",
-    "message": {
-      "notFound": "Página não encontrada.",
-      "badRequest": "Erro com a requisição."
+  "invite": {
+    "title": "Criar convite",
+    "date": "Data de expiração",
+    "button": {
+      "create": "Criar convite",
+      "generate": "Gerar convite",
+      "copy": "Copiar"
+    },
+    "copied": "Link copiado",
+    "exception": {
+      "dateEarlier": "A data de expiração do convite é anterior à data de término do curso",
+      "datePast": "A data de expiração do convite está no passado"
     }
   },
   "invitation": {
@@ -264,6 +133,105 @@
       "unauthorized": "Por favor, faça login para aceitar o convite"
     },
     "footer": "Texto do footer"
+  },
+  "students": {
+    "title": "Estudantes",
+    "avatar": "Avatar",
+    "name": "Nome",
+    "email": "E-mail",
+    "actions": "Ações",
+    "emptyList": "Esse curso não possui alunos matriculados"
+  },
+  "activity": {
+    "date": "Data",
+    "initialfile": "Arquivo Inicial",
+    "language": "Linguagem",
+    "successMessage": "Resolução enviada com sucesso!",
+    "button": {
+      "download": "Baixar arquivo"
+    },
+    "form": {
+      "resolution": "Clique aqui para fazer upload do arquivo",
+      "button": {
+        "resolution": "Enviar Resolução"
+      },
+      "validation": {
+        "resolutionfile": "O arquivo de resolução é obrigatório"
+      }
+    },
+    "until": "até"
+  },
+  "activities": {
+    "title": "Título",
+    "language": "Linguagem",
+    "startDate": "Data de Início",
+    "endDate": "Data Final",
+    "actions": "Ações",
+    "emptyList": "Esse curso não possui nenhuma atividade"
+  },
+  "createactivity": {
+    "title": "Criar Atividade",
+    "successMessage": "Atividade criada com sucesso!",
+    "exception": {
+      "startdate": "Data de início inválida"
+    },
+    "form": {
+      "title": "Título",
+      "desc": "Descrição",
+      "language": "Linguagem",
+      "startDate": "Data de início",
+      "endDate": "Data de término",
+      "initialFile": "Arquivo inicial",
+      "testFile": "Arquivo de teste",
+      "solutionFile": "Arquivo de solução",
+      "validation": {
+        "initialfile": "O arquivo inicial é obrigatório",
+        "testfile": "O arquivo de teste é obrigatório",
+        "solutionfile": "O arquivo de solução é obrigatório"
+      },
+      "button": {
+        "new": "Nova Atividade"
+      }
+    }
+  },
+  "contact": {
+    "title": "Contato",
+    "form": {
+      "name": "Nome",
+      "email": "E-mail",
+      "message": "Mensagem",
+      "submit": "Enviar"
+    },
+    "footer": "Texto do footer aqui"
+  },
+  "privacypolicy": {
+    "title": "Política de Privacidade"
+  },
+  "errorPage": {
+    "title": "Erro {{statusCode}}",
+    "subTitle": "Um erro inesperado ocorreu.",
+    "message": {
+      "notFound": "Página não encontrada.",
+      "badRequest": "Erro com a requisição."
+    }
+  },
+  "sidebar": {
+    "home": "Início",
+    "logout": "Sair",
+    "back": "Voltar"
+  },
+  "confirmation": {
+    "title": "Confirmação",
+    "text": "Confirmação do email",
+    "footer": "Texto do footer aqui",
+    "success": "O email \"{{email}}\" foi confirmado com sucesso",
+    "error": {
+      "badRequest": "Houve um problema com a requisição",
+      "network": "Houve um problema com a conexão",
+      "notFound": "Usuário não encontrado com esse token",
+      "exists": "O email já foi confirmado",
+      "expired": "O token de confirmação expirou"
+    }
   },
   "yup": {
     "invalid_field_length": "Esse campo deve ter pelo menos {{ min }} caracteres.",

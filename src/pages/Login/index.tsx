@@ -61,7 +61,7 @@ const Login: React.FC = () => {
         <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
           <Grid container direction="column" padding={2} spacing={2}>
             <Grid item>
-              <Typography variant='h6'>Account</Typography>
+              <Typography variant='h6'>{t("login.form.title")}</Typography>
             </Grid>
 
             <Grid container item direction="row" spacing={2}>

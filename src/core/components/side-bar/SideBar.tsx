@@ -4,7 +4,7 @@ import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { JwtService } from '../../auth/JwtService';
 import { AccessToken } from '../../models/AccessToken';
-
+import { useTranslation } from 'react-i18next';
 interface ISideBar {
   children: React.ReactNode
 }
@@ -21,11 +21,12 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }
 
   const resolvedPath = useResolvedPath(to)
   const match = useMatch({ path: resolvedPath.pathname, end: false })
+  const { t } = useTranslation();
 
   const handleClick = () => {
     navigate(to)
     onClick?.()
-    if (label === 'Logout') {
+    if (label === t("navbar.logout")) {
       handleLogout()
     }
   }

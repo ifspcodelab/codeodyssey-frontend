@@ -48,10 +48,10 @@ const Students: React.FC = () => {
 
           <TableHead>
             <TableRow>
-              <TableCell>Avatar</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>{t("students.avatar")}</TableCell>
+              <TableCell>{t("students.name")}</TableCell>
+              <TableCell>{t("students.email")}</TableCell>
+              <TableCell>{t("students.email")}</TableCell>
             </TableRow>
           </TableHead>
 

@@ -84,7 +84,7 @@ const Courses: React.FC = () => {
     <>
       <PageBaseLayout title={t('courses.title')}
         toolbar={USER_ROLE === "PROFESSOR" &&
-          (<ToolBar onClickNewButton={() => navigate('/create-course')} textNewButton={t('course.button.newCourse')} />
+          (<ToolBar onClickNewButton={() => navigate('/create-course')} textNewButton={t('courses.button.newCourse')} />
           )} >
       </PageBaseLayout>
 
@@ -98,7 +98,7 @@ const Courses: React.FC = () => {
             textOverflow="ellipses"
             variant={smDown ? 'h5' : mdDown ? 'h4' : 'h3'}
           >
-            Courses
+            {t('courses.courses')}
           </Typography>
           <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
             <Table>
@@ -154,7 +154,7 @@ const Courses: React.FC = () => {
         textOverflow="ellipses"
         variant={smDown ? 'h5' : mdDown ? 'h4' : 'h3'}
       >
-        Enrollments
+        {t('courses.enrollments')}
       </Typography>
 
       {<TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>

@@ -177,7 +177,7 @@ const Activity: React.FC = () => {
 
             <FileUpload fieldName="resolutionFile" fileType={fileType} />
 
-            <Button variant="outlined" type="submit">{t('activity.button.resolution')}</Button>
+            <Button variant="outlined" type="submit">{t('activity.form.button.resolution')}</Button>
           </form>
         </FormProvider>
 

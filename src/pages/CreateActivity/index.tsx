@@ -199,7 +199,7 @@ const CreateActivity: React.FC = () => {
               </Grid>
 
               <Grid item xs={12} textAlign="right">
-                <Button variant="outlined" type="submit">{t('createactivity.form.button.publish')}</Button>
+                <Button variant="outlined" type="submit">{t('createactivity.form.button.new')}</Button>
               </Grid>
             </Grid>
           </Box>

@@ -1,172 +1,6 @@
 {
-  "navbar": {
-    "register": "Register",
-    "login": "Login",
-    "logout": "Logout",
-    "courses": "My courses",
-    "createCourse": "Create course",
-    "contact": "Contact"
-  },
-  "confirmation": {
-    "title": "Confirmation",
-    "text": "Email's confirmation",
-    "footer": "Confirmation footer",
-    "success": "The email \"{{email}}\" was confirmed successfully",
-    "error": {
-      "badRequest": "There was a problem with the request",
-      "network": "There was a connection error",
-      "notFound": "No user found with given token",
-      "exists": "The email has already been confirmed",
-      "expired": "The confirmation token is expired"
-    }
-  },
-  "course": {
-    "name": "Name",
-    "professor": "Professor",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "actions": "Actions",
-    "button": {
-      "newCourse": "New Course",
-      "createInvite": "Create Invite"
-    },
-    "courses": "Courses",
-    "enrollments": "Enrollments"
-  },
-  "courses": {
-    "title": "My Courses",
-    "text": "Courses that i'm participating",
-    "button": {
-      "newCourse": "New Course",
-      "invite": "Create Invite",
-      "students": "Visualize Students"
-    },
-    "intlDate": "{{date, datetime}}",
-    "until": "until",
-    "emptyList": "You do not participate in any course yet"
-  },
-  "createactivity": {
-    "title": "Create Activity",
-    "text": "Define an activity for the course",
-    "successMessage": "Activity created successfully!",
-    "exception": {
-      "startdate": "Invalid Start Date"
-    },
-    "form": {
-      "title": "Title",
-      "desc": "Description",
-      "language": "Language",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "initialFile": "Initial File",
-      "testFile": "Test File",
-      "solutionFile": "Solution File",
-      "evaluation": "Evaluation",
-      "evaluationField": {
-        "name": "Name",
-        "weight": "Weight",
-        "delete": "Delete",
-        "add": "Add"
-      },
-      "validation": {
-        "initialfile": "The initial file is required",
-        "testfile": "The test file is required",
-        "solutionfile": "The solution file is required"
-      },
-      "button": {
-        "publish": "Publish Activity"
-      }
-    }
-  },
-  "activity": {
-    "title": "Resolution",
-    "course": "Course",
-    "date": "Date",
-    "initialfile": "Initial File",
-    "language": "Language",
-    "successMessage": "Resolution send successfully!",
-    "button": {
-      "resolution": "Send Resolution",
-      "download": "Download File"
-    },
-    "form": {
-      "resolution": "Click here to upload the file",
-      "validation": {
-        "resolutionfile": "The Resolution file is required"
-      }
-    },
-    "until": "until"
-  },
-  "activities": {
-    "activities": "Activities",
-    "title": "Title",
-    "language": "Language",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "actions": "Actions",
-    "button": "New Activity",
-    "emptyList": "This course does not have any activities"
-  },
-  "students": {
-    "title": "My Students",
-    "text": "Course students",
-    "name": "Name",
-    "email": "E-mail",
-    "emptyList": "This course has no students enrolled",
-    "emptyListQuestion": "Want to invite students?",
-    "exception": {
-      "notFound": "Course not found"
-    }
-  },
-  "invite": {
-    "title": "Create invite",
-    "date": "Expiration date",
-    "button": {
-      "create": "Create invite",
-      "generate": "Generate invite",
-      "copy": "Copy"
-    },
-    "copied": "Link copied",
-    "exception": {
-      "dateEarlier": "Invitation Expiration date is earlier than the course end date",
-      "datePast": "Invitation Expiration date is in the past"
-    }
-  },
-  "createcourse": {
-    "title": "Create Course",
-    "text": "Create a course by filling out the form below",
-    "successMessage": "Course created successfully!",
-    "form": {
-      "name": "Name",
-      "slug": "Slug",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "submit": "Create",
-      "cancel": "Cancel",
-      "validation": {
-        "special": "slug cannot contain special characters",
-        "endDate": "The end date cannot be earlier than start date"
-      },
-      "confimationdialog": {
-        "title": "Are you sure you want to quit?",
-        "description": "changes will not be saved",
-        "leave": "leave",
-        "continue": "continue"
-      }
-    },
-    "exception": {
-      "slug": "This slug already exists",
-      "badRequest": "Request error",
-      "network": "Network error",
-      "unexpected": "An unexpected error has occurred"
-    }
-  },
-  "privacypolicy": {
-    "title": "Privacy Policy"
-  },
   "registration": {
     "title": "Registration",
-    "text": "Please, fill out the form bellow to use the platform",
     "form": {
       "name": "Name",
       "email": "Email",
@@ -205,6 +39,7 @@
     "title": "Login",
     "text": "Sign in or Register",
     "form": {
+      "title": "Account",
       "email": "Email",
       "password": "Password",
       "login": "Login",
@@ -235,23 +70,55 @@
     },
     "footer": "Resend email footer"
   },
-  "contact": {
-    "title": "Contact",
-    "text": "Get in touch using the form below",
+  "course": {
+    "name": "Name",
+    "professor": "Professor",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "actions": "Actions",
+    "button": {
+      "invite": "Create Invite"
+    }
+  },
+  "courses": {
+    "title": "My Courses",
+    "button": {
+      "newCourse": "New Course"
+    },
+    "courses": "Courses",
+    "enrollments": "Enrollments",
+    "emptyList": "You do not participate in any course yet"
+  },
+  "createcourse": {
+    "title": "Create Course",
+    "successMessage": "Course created successfully!",
     "form": {
       "name": "Name",
-      "email": "Email",
-      "message": "Message",
-      "submit": "Send"
-    },
-    "footer": "Footer text here"
+      "slug": "Slug",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "cancel": "Cancel",
+      "button": {
+        "new": "New Course"
+      },
+      "validation": {
+        "special": "slug cannot contain special characters",
+        "endDate": "The end date cannot be earlier than start date"
+      }
+    }
   },
-  "errorPage": {
-    "title": "Error {{statusCode}}",
-    "subTitle": "An unexpected error has occurred.",
-    "message": {
-      "notFound": "Page not found.",
-      "badRequest": "Bad request."
+  "invite": {
+    "title": "Create invite",
+    "date": "Expiration date",
+    "button": {
+      "create": "Create invite",
+      "generate": "Generate invite",
+      "copy": "Copy"
+    },
+    "copied": "Link copied",
+    "exception": {
+      "dateEarlier": "Invitation Expiration date is earlier than the course end date",
+      "datePast": "Invitation Expiration date is in the past"
     }
   },
   "invitation": {
@@ -267,6 +134,105 @@
       "unauthorized": "Please, login to accept the invitation"
     },
     "footer": "Invitation footer"
+  },
+  "students": {
+    "title": "Students",
+    "avatar": "Avatar",
+    "name": "Name",
+    "email": "E-mail",
+    "actions": "Actions",
+    "emptyList": "This course has no students enrolled"
+  },
+  "activity": {
+    "date": "Date",
+    "initialfile": "Initial File",
+    "language": "Language",
+    "successMessage": "Resolution send successfully!",
+    "button": {
+      "download": "Download File"
+    },
+    "form": {
+      "resolution": "Click here to upload the file",
+      "button": {
+        "resolution": "Send Resolution"
+      },
+      "validation": {
+        "resolutionfile": "The Resolution file is required"
+      }
+    },
+    "until": "until"
+  },
+  "activities": {
+    "title": "Title",
+    "language": "Language",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "actions": "Actions",
+    "emptyList": "This course does not have any activities"
+  },
+  "createactivity": {
+    "title": "Create Activity",
+    "successMessage": "Activity created successfully!",
+    "exception": {
+      "startdate": "Invalid Start Date"
+    },
+    "form": {
+      "title": "Title",
+      "desc": "Description",
+      "language": "Language",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "initialFile": "Initial File",
+      "testFile": "Test File",
+      "solutionFile": "Solution File",
+      "validation": {
+        "initialfile": "The initial file is required",
+        "testfile": "The test file is required",
+        "solutionfile": "The solution file is required"
+      },
+      "button": {
+        "new": "New Activity"
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Send"
+    },
+    "footer": "Footer text here"
+  },
+  "privacypolicy": {
+    "title": "Privacy Policy"
+  },
+  "errorPage": {
+    "title": "Error {{statusCode}}",
+    "subTitle": "An unexpected error has occurred.",
+    "message": {
+      "notFound": "Page not found.",
+      "badRequest": "Bad request."
+    }
+  },
+  "sidebar": {
+    "home": "Home",
+    "logout": "Logout",
+    "back": "Back"
+  },
+  "confirmation": {
+    "title": "Confirmation",
+    "text": "Email's confirmation",
+    "footer": "Confirmation footer",
+    "success": "The email \"{{email}}\" was confirmed successfully",
+    "error": {
+      "badRequest": "There was a problem with the request",
+      "network": "There was a connection error",
+      "notFound": "No user found with given token",
+      "exists": "The email has already been confirmed",
+      "expired": "The confirmation token is expired"
+    }
   },
   "yup": {
     "invalid_field_length": "This field must have at least ${min} characters",
