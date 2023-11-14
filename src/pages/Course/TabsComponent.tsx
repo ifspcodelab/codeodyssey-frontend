@@ -1,14 +1,15 @@
-import { Tab, Tabs, } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
+import { Tab, Tabs, } from '@mui/material'
+import { AxiosError } from 'axios';
+
+import { CoursesService } from '../../core/services/api/courses/CoursesService';
+import ErrorSnackBar from '../../core/components/error-snack-bar/ErrorSnackBar';
+import { useErrorHandler } from '../../core/hooks/useErrorHandler';
+import { PageBaseLayout } from '../../core/layout/PageBaseLayout';
 import { AuthConsumer } from '../../core/auth/AuthContext';
 import { ICourseResponse } from '../../core/models/Course';
 import { JwtService } from '../../core/auth/JwtService';
-import { CoursesService } from '../../core/services/api/courses/CoursesService';
-import { AxiosError } from 'axios';
-import { useErrorHandler } from '../../core/hooks/useErrorHandler';
-import { PageBaseLayout } from '../../core/layout/PageBaseLayout';
-import ErrorSnackBar from '../../core/components/error-snack-bar/ErrorSnackBar';
 
 const TabsComponent: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -16,11 +17,13 @@ const TabsComponent: React.FC = () => {
   const location = useLocation()
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+    console.log(event)
     setSelectedTab(newValue);
   };
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
   const authConsumer = AuthConsumer();
+  const USER_ROLE: string = authConsumer.role;
   const USER_ID: string = authConsumer.id;
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const [course, setCourse] = useState<ICourseResponse>();
@@ -55,7 +58,7 @@ const TabsComponent: React.FC = () => {
 
       <Tabs value={selectedTab} onChange={handleChangeTab} centered>
         <Tab label="Home" value={0} component={Link} to={`/courses/${idCourse}/${slug}`} />
-        <Tab label="Students" value={1} component={Link} to={`/courses/${idCourse}/${slug}/students`} />
+        {USER_ROLE === 'PROFESSOR' && <Tab label="Students" value={1} component={Link} to={`/courses/${idCourse}/${slug}/students`} />}
         <Tab label="Activities" value={2} component={Link} to={`/courses/${idCourse}/${slug}/activities`} />
       </Tabs>
 

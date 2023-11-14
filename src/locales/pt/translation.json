@@ -84,8 +84,8 @@
     "button": {
       "newCourse": "Novo Curso"
     },
-    "courses": "Courses",
-    "enrollments": "Enrollments",
+    "courses": "Cursos",
+    "enrollments": "Inscrições",
     "emptyList": "Você ainda não participa de nenhum curso"
   },
   "createcourse": {

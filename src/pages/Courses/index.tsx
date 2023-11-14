@@ -11,9 +11,9 @@ import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { ToolBar } from "../../core/components/tool-bar/ToolBar.tsx";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
+import { ICourseResponse } from "../../core/models/Course.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import i18n from "../../locales/i18n";
-import { ICourseResponse } from "../../core/models/Course.ts";
 
 const Courses: React.FC = () => {
   const { t } = useTranslation();
@@ -84,7 +84,7 @@ const Courses: React.FC = () => {
     <>
       <PageBaseLayout title={t('courses.title')}
         toolbar={USER_ROLE === "PROFESSOR" &&
-          (<ToolBar onClickNewButton={() => navigate('/create-course')} textNewButton={t('courses.button.newCourse')} />
+          (<ToolBar onClickNewButton={() => navigate('new')} textNewButton={t('courses.button.newCourse')} />
           )} >
       </PageBaseLayout>
 
@@ -118,8 +118,8 @@ const Courses: React.FC = () => {
                   <TableRow key={course.id}>
                     <TableCell><Link to={course.id + "/" + course.slug}>{course.name}</Link></TableCell>
                     <TableCell>{course.professor.name}</TableCell>
-                    <TableCell>{new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}  </TableCell>
-                    <TableCell>{new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}</TableCell>
+                    <TableCell>{new Date(course.startDate).toLocaleDateString(i18n.language)}  </TableCell>
+                    <TableCell>{new Date(course.endDate).toLocaleDateString(i18n.language)}</TableCell>
                     <TableCell>
                       <IconButton size="small">
                         <Icon>edit</Icon>
@@ -176,8 +176,8 @@ const Courses: React.FC = () => {
                 <TableRow key={course.id}>
                   <TableCell><Link to={course.id + "/" + course.slug}>{course.name}</Link></TableCell>
                   <TableCell>{course.professor.name}</TableCell>
-                  <TableCell>{new Date(course.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}  </TableCell>
-                  <TableCell>{new Date(course.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}</TableCell>
+                  <TableCell>{new Date(course.startDate).toLocaleDateString(i18n.language)}  </TableCell>
+                  <TableCell>{new Date(course.endDate).toLocaleDateString(i18n.language)}</TableCell>
                   <TableCell>
                     <IconButton size="small">
                       <Icon>edit</Icon>

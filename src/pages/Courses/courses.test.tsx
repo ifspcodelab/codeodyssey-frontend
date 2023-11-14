@@ -1,14 +1,15 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import Courses from '../Courses';
-import { useApiGetCourses } from '../../core/hooks/useApiGetCourses.ts';
-import { AuthContext } from '../../core/auth/AuthContext.tsx';
-import { vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
+import { vi, test } from 'vitest';
+
+import { CoursesService } from '../../core/services/api/courses/CoursesService.ts';
+import { useApiGetCourses } from '../../core/hooks/useApiGetCourses.ts';
+import { AuthContext } from '../../core/auth/AuthContext.tsx';
+import Courses from '../Courses';
 import { UserRole } from "../../core/models/UserRole";
 import CreateInviteModal from '../../core/components/create-invite-modal/index.tsx';
-import { test } from 'vitest';
 import { useApiSendInvitation } from '../../core/hooks/useApiSendInvitation.ts';
 import { useApiGetInvitation } from '../../core/hooks/useApiGetInvitation.ts';
 
@@ -35,7 +36,7 @@ vi.mock('@mui/x-date-pickers/DatePicker', () => {
   };
 });
 
-(useApiGetCourses as jest.Mock).mockReturnValue({
+(CoursesService as jest.Mock).mockReturnValue({
   getCoursesStudent: mockGetCoursesStudent,
   getCoursesProfessor: mockGetCoursesProfessor,
 });

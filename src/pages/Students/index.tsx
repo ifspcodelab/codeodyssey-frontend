@@ -51,7 +51,7 @@ const Students: React.FC = () => {
               <TableCell>{t("students.avatar")}</TableCell>
               <TableCell>{t("students.name")}</TableCell>
               <TableCell>{t("students.email")}</TableCell>
-              <TableCell>{t("students.email")}</TableCell>
+              <TableCell>{t("students.actions")}</TableCell>
             </TableRow>
           </TableHead>
 

@@ -14,7 +14,6 @@ import 'dayjs/locale/pt-br'
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import { CoursesService } from "../../core/services/api/courses/CoursesService.ts";
 import { ToolDetails } from "../../core/components/tool-details/ToolDetails.tsx";
-import { CreateCourseResponse } from "../../core/models/CreateCourseResponse";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
@@ -22,6 +21,7 @@ import { JwtService } from "../../core/auth/JwtService.ts";
 import { CustomDate } from "../../core/models/CustomDate";
 import i18n from '../../locales/i18n.ts'
 import { schema } from "./schema.ts";
+import { ICourseRequest } from '../../core/models/Course.ts';
 
 function CreateCourse() {
   const { t } = useTranslation();
@@ -34,12 +34,12 @@ function CreateCourse() {
 
   const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
 
-  const onSubmit: SubmitHandler<CreateCourseResponse> = (data) => submitCreateCourse(data)
+  const onSubmit: SubmitHandler<ICourseRequest> = (data) => submitCreateCourse(data)
   const { register, handleSubmit, watch, getValues, trigger, control, formState: { errors } } = useForm({ resolver: yupResolver(schema) })
 
   const navigate = useNavigate()
 
-  const submitCreateCourse = async (data: CreateCourseResponse) => {
+  const submitCreateCourse = async (data: ICourseRequest) => {
     await CoursesService.create(data.name, data.slug, data.startDate.toISOString(), data.endDate.toISOString(), PROFESSOR_ID, rawAccessToken)
       .then(() => {
         navigate('/courses?success=true')

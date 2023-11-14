@@ -9,12 +9,12 @@ import { ActivitiesService, } from '../../core/services/api/activities/Activitie
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
-import { JwtService } from "../../core/auth/JwtService.ts";
-import i18n from "../../locales/i18n";
-import { IActivityResponse } from "../../core/models/Activity.ts";
-import TabsComponent from "../Course/TabsComponent.tsx";
 import { ToolBar } from "../../core/components/tool-bar/ToolBar.tsx";
+import { IActivityResponse } from "../../core/models/Activity.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
+import { JwtService } from "../../core/auth/JwtService.ts";
+import TabsComponent from "../Course/TabsComponent.tsx";
+import i18n from "../../locales/i18n";
 
 const Activities: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
@@ -60,7 +60,7 @@ const Activities: React.FC = () => {
       <TabsComponent />
 
       {USER_ROLE === "PROFESSOR" &&
-        (<ToolBar onClickNewButton={() => navigate(`/courses/${idCourse}/${slug}/create-activity`)} textNewButton={t('activities.button')} />
+        (<ToolBar onClickNewButton={() => navigate(`/courses/${idCourse}/${slug}/activities/new`)} textNewButton={t('createactivity.form.button.new')} />
         )}
 
 
@@ -84,8 +84,8 @@ const Activities: React.FC = () => {
               <TableRow key={activity.id}>
                 <TableCell><Link to={`${activity.id}`}>{activity.title}</Link></TableCell>
                 <TableCell> {activity.extension === '.java' && 'Java'}</TableCell>
-                <TableCell>{new Date(activity.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}  </TableCell>
-                <TableCell>{new Date(activity.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" })}</TableCell>
+                <TableCell>{new Date(activity.startDate).toLocaleDateString(i18n.language)}  </TableCell>
+                <TableCell>{new Date(activity.endDate).toLocaleDateString(i18n.language)}</TableCell>
                 <TableCell>
                   <IconButton size="small">
                     <Icon>edit</Icon>
