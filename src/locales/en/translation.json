@@ -196,6 +196,23 @@
       }
     }
   },
+  "resolution": {
+    "send": "Send",
+    "status": "Status",
+    "fileSended": "File Sended",
+    "tests": "Tests",
+    "testPass": "Pass",
+    "testError": "Error",
+    "errorInExecution": "Error in execution",
+    "button": {
+      "seeResult": "See Complete Result"
+    },
+    "statusMessage": {
+      "waiting": "Waiting for results",
+      "executedSuccess": "Executed Success",
+      "executedError": "Executed Error"
+    }
+  },
   "contact": {
     "title": "Contact",
     "form": {

@@ -195,6 +195,23 @@
       }
     }
   },
+  "resolution": {
+    "send": "Enviado",
+    "status": "Status",
+    "fileSended": "Arquivo enviado",
+    "tests": "Testes",
+    "testPass": "Passaram",
+    "testError": "Erros",
+    "errorInExecution": "Erro durante a execução",
+    "button": {
+      "seeResult": "Veja o resultado completo"
+    },
+    "statusMessage": {
+      "waiting": "Esperando pelos resultados",
+      "executedSuccess": "Executado com sucesso",
+      "executedError": "Erro ao executar"
+    }
+  },
   "contact": {
     "title": "Contato",
     "form": {

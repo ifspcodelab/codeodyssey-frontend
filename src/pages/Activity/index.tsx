@@ -9,17 +9,19 @@ import { AxiosError } from "axios";
 import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
 import { ResolutionsService } from "../../core/services/api/resolutions/ResolutionsService.ts";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
+import { CoursesService } from "../../core/services/api/courses/CoursesService.ts";
 import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import FileUpload from "../../core/components/Form/FileUpload.tsx";
 import { IActivityResponse } from "../../core/models/Activity.ts";
 import { IResolutionForm } from "../../core/models/Resolution.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
+import { ICourseResponse } from "../../core/models/Course.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
-import TabsComponent from "./TabsComponent.tsx";
 import i18n from "../../locales/i18n";
 import { schema } from "./schema.ts";
 import "./style.css";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 
 const Activity: React.FC = () => {
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
@@ -62,6 +64,7 @@ const Activity: React.FC = () => {
   const USER_ID: string = authConsumer.id;
 
   const [openSuccess, setOpenSuccess] = useState(false);
+  const [course, setCourse] = useState<ICourseResponse>();
 
   const onSubmit: SubmitHandler<IResolutionForm> = (data) => submitResolutionActivity(data)
 
@@ -88,8 +91,8 @@ const Activity: React.FC = () => {
     }
   }
 
-  const handleDecodeAndDownload = () => {
-    const base64String = activity?.initialFile;
+  const handleDecodeAndDownload = (file: string) => {
+    const base64String = file;
 
     if (typeof base64String === 'string') {
       const decodedString = atob(base64String);
@@ -121,6 +124,18 @@ const Activity: React.FC = () => {
   }, [rawAccessToken])
 
   useEffect(() => {
+    if (idCourse !== undefined) {
+      CoursesService.getById(idCourse, rawAccessToken)
+        .then((response) => {
+          setCourse(response as ICourseResponse);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [USER_ID, rawAccessToken])
+
+  useEffect(() => {
     if (activity?.extension === ".java") {
       setFileType(".java")
     } else if (activity?.extension === ".js") {
@@ -130,14 +145,27 @@ const Activity: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Executed Success':
+      case 'EXECUTED_SUCCESS':
         return 'green';
-      case 'Executed Error':
+      case 'EXECUTED_ERROR':
         return 'red';
       case 'semi-error':
         return 'blue';
-      case 'Waiting for result':
+      case 'WAITING_FOR_RESULTS':
         return 'yellow';
+      default:
+        return '#ccc';
+    }
+  };
+
+  const getStatusMessage = (status: string) => {
+    switch (status) {
+      case 'EXECUTED_SUCCESS':
+        return t('resolution.statusMessage.executedSuccess');
+      case 'EXECUTED_ERROR':
+        return t('resolution.statusMessage.executedError');
+      case 'WAITING_FOR_RESULTS':
+        return t('resolution.statusMessage.waiting');
       default:
         return '#ccc';
     }
@@ -155,23 +183,22 @@ const Activity: React.FC = () => {
     <>
       {<SuccessrSnackBar message={t('activity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
 
+      <PageBaseLayout title={activity?.title}>
+      </PageBaseLayout>
 
-      <h1>{activity?.title}</h1>
+      <Card>
 
-      <TabsComponent />
+        <CardContent>
+          <Typography variant="h5"> {activity?.description}</Typography>
+          <Typography variant="subtitle1"> <strong>  {t("activity.language")}</strong>: {activity?.extension === '.java' && 'Java'}</Typography>
+          <Typography> <strong>{t('activity.date')}</strong>: {activity?.startDate ? new Date(activity?.startDate).toLocaleDateString(i18n.language) : null} {t('activity.until')} {activity?.endDate ? new Date(activity?.endDate).toLocaleDateString(i18n.language) : null}</Typography>
+          <Typography><strong>{t('activity.initialfile')}</strong>: <button onClick={() => {
+            handleDecodeAndDownload(activity?.initialFile)
+          }}>{t('activity.button.download')}</button></Typography>
+        </CardContent>
+      </Card>
 
-      <Typography sx={{ fontSize: 14 }} gutterBottom>
-        {activity?.description}
-        <br />
-        {t("activity.language")}: {activity?.extension === '.java' && 'Java'}
-        <br />
-        {t('activity.date')}: {activity?.startDate ? new Date(activity?.startDate).toLocaleDateString(i18n.language) : null} {t('activity.until')} {activity?.endDate ? new Date(activity?.endDate).toLocaleDateString(i18n.language) : null}
-        <br />
-
-        <button onClick={handleDecodeAndDownload}>{t('activity.button.download')}</button>
-      </Typography>
-
-      {activity?.course?.professor?.id === USER_ID ? <span></span> : <Grid item xs={12}>
+      {course?.professor?.id === USER_ID ? <span></span> : <Grid item xs={12}>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
 
@@ -186,17 +213,19 @@ const Activity: React.FC = () => {
       {resolutions.map((resolution) => (
         <Card key={resolution.id} variant="outlined" sx={{ margin: '24px', border: '1px solid #ccc', borderColor: getStatusColor(resolution.status) }}>
           <CardContent>
-            <Typography><strong>Send</strong>: {formatDate(resolution.submit_date)}{' '}
+            <Typography><strong>{t('resolution.send')}</strong>: {formatDate(resolution.submit_date)}{' '}
               {formatTime(resolution.submit_date)}</Typography>
-            <Typography><strong>Status</strong> : {resolution.status}</Typography>
-            <Typography><strong>File sended</strong>: download file</Typography>
-            {resolution.status === "Executed Success" && <Typography><strong>Tests</strong>: 3 <span style={{ color: 'green' }}>Pass: 2 </span><span style={{ color: 'red' }}>Error: 1</span></Typography>}
-            {resolution.status === "Executed Error" && <Typography>
-              <span style={{ color: 'red' }}>Error in execution</span>
+            <Typography><strong>{t('resolution.status')}</strong> : {getStatusMessage(resolution.status)}</Typography>
+            <Typography><strong>{t('resolution.fileSended')}</strong>:<button onClick={() => {
+              handleDecodeAndDownload(activity?.initialFile) // resolution.resolution_file
+            }}>{t('activity.button.download')}</button></Typography>
+            {resolution.status === 'EXECUTED_SUCCESS' && <Typography><strong>{t('resolution.tests')}</strong>: 3 <span style={{ color: 'green' }}>{t('resolution.testPass')}: 2 </span><span style={{ color: 'red' }}>{t('resolution.testError')}: 1</span></Typography>}
+            {resolution.status === 'EXECUTED_ERROR' && <Typography>
+              <span style={{ color: 'red' }}>{t('resolution.errorInExecution')}</span>
             </Typography>}
           </CardContent>
-          {resolution.status !== "Waiting for result" && <CardActions>
-            <Button size="small">See Complete Result</Button>
+          {resolution.status !== 'WAITING_FOR_RESULTS' && <CardActions>
+            <Button size="small">{t('resolution.button.seeResult')}</Button>
           </CardActions>}
         </Card>
       ))}
