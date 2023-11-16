@@ -7,6 +7,7 @@ import { AxiosError } from "axios";
 
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import { UserService } from "../../core/services/api/user/UserService.ts";
+import { ILoginRequest, ILoginResponse } from "../../core/models/User.ts";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import PageFooter from "../../core/components/page-footer/index.tsx";
@@ -14,8 +15,6 @@ import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { AccessToken } from "../../core/models/AccessToken";
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { schema } from "./schema";
-import "./style.css";
-import { ILoginRequest, ILoginResponse } from "../../core/models/User.ts";
 
 const Login: React.FC = () => {
   const { t } = useTranslation();

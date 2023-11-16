@@ -43,13 +43,13 @@ const Course: React.FC = () => {
     <>
       <TabsComponent />
 
-      <Card>
+      <Card sx={{ display: "flex", justifyContent: "space-around" }}>
 
         <CardContent>
           <Typography variant="h5">{course?.name}</Typography>
-          <Typography variant="subtitle1"> {t("course.professor")}: {course?.professor?.name}</Typography>
-          <Typography> {t("course.startDate")}: {course !== undefined && new Date(course?.startDate).toLocaleDateString(i18n.language)}</Typography>
-          <Typography> {t("course.endDate")}: {course !== undefined && new Date(course?.endDate).toLocaleDateString(i18n.language)}</Typography>
+          <Typography variant="subtitle1"> <strong>{t("course.professor")}</strong>: {course?.professor?.name}</Typography>
+          <Typography> <strong>{t("course.startDate")}</strong>: {course !== undefined && new Date(course?.startDate).toLocaleDateString(i18n.language)}</Typography>
+          <Typography> <strong>{t("course.endDate")}</strong>: {course !== undefined && new Date(course?.endDate).toLocaleDateString(i18n.language)}</Typography>
         </CardContent>
         {USER_ID === course?.professor?.id && course && <CardActions>
           <CreateInviteModal course={course} />

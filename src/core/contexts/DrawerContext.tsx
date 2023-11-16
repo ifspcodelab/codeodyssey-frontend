@@ -54,22 +54,22 @@ export const DrawerProvider: React.FC<IDrawerProvider> = ({ children }) => {
         {
           icon: 'home',
           path: '/',
-          label: 'Home'
+          label: t("sidebar.home")
         },
         {
           icon: 'app_registration',
           path: '/registration',
-          label: t("navbar.register")
+          label: t("registration.title")
         },
         {
           icon: 'login',
           path: '/login',
-          label: t("navbar.login")
+          label: t("login.title")
         },
         {
           icon: 'call',
           path: '/contact',
-          label: t("navbar.contact")
+          label: t("contact.title")
         }
       ])
     } else if (token) {
@@ -77,22 +77,22 @@ export const DrawerProvider: React.FC<IDrawerProvider> = ({ children }) => {
         {
           icon: 'home',
           path: '/',
-          label: 'Home'
+          label: t("sidebar.home")
         },
         {
           icon: 'code',
           path: '/courses',
-          label: t("navbar.courses")
+          label: t("courses.courses")
         },
         {
           icon: 'call',
           path: '/contact',
-          label: t("navbar.contact")
+          label: t("contact.title")
         },
         {
           icon: 'logout',
           path: '/',
-          label: t("navbar.logout")
+          label: t("sidebar.logout")
         }
       ])
     }

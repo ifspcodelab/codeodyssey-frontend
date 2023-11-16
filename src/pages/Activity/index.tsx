@@ -11,7 +11,7 @@ import { ResolutionsService } from "../../core/services/api/resolutions/Resoluti
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
-import FileUpload from "../../core/components/form/FileUpload.tsx";
+import FileUpload from "../../core/components/Form/FileUpload.tsx";
 import { IActivityResponse } from "../../core/models/Activity.ts";
 import { IResolutionForm } from "../../core/models/Resolution.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
@@ -33,7 +33,7 @@ const Activity: React.FC = () => {
       id: 1,
       activity_id: 101,
       student_id: 201,
-      status: 'Waiting for result',
+      status: 'WAITING_FOR_RESULTS',
       submit_date: '2023-11-10T15:00:00',
       resolution_file: 'link_do_arquivo1.pdf',
     },
@@ -41,7 +41,7 @@ const Activity: React.FC = () => {
       id: 2,
       activity_id: 102,
       student_id: 202,
-      status: 'Executed Success',
+      status: 'EXECUTED_SUCCESS',
       submit_date: '2023-11-11T14:30:00',
       resolution_file: 'link_do_arquivo2.pdf',
     },
@@ -49,7 +49,7 @@ const Activity: React.FC = () => {
       id: 3,
       activity_id: 103,
       student_id: 203,
-      status: 'Executed Error',
+      status: 'EXECUTED_ERROR',
       submit_date: '2023-11-11T14:30:00',
       resolution_file: 'link_do_arquivo2.pdf',
     },

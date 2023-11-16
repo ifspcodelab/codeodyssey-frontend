@@ -70,6 +70,7 @@
     "footer": "Footer do reenvio de email"
   },
   "course": {
+    "title": "Curso",
     "name": "Nome",
     "professor": "Professor",
     "startDate": "Data de Início",
@@ -218,6 +219,7 @@
   "sidebar": {
     "home": "Início",
     "logout": "Sair",
+    "save": "Salvar",
     "back": "Voltar"
   },
   "confirmation": {

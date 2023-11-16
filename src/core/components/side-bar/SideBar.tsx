@@ -26,7 +26,7 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }
   const handleClick = () => {
     navigate(to)
     onClick?.()
-    if (label === t("navbar.logout")) {
+    if (label === t("sidebar.logout")) {
       handleLogout()
     }
   }

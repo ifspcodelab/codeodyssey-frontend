@@ -17,11 +17,11 @@ import { ToolDetails } from "../../core/components/tool-details/ToolDetails.tsx"
 import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
+import { ICourseRequest } from '../../core/models/Course.ts';
 import { JwtService } from "../../core/auth/JwtService.ts";
 import { CustomDate } from "../../core/models/CustomDate";
 import i18n from '../../locales/i18n.ts'
 import { schema } from "./schema.ts";
-import { ICourseRequest } from '../../core/models/Course.ts';
 
 function CreateCourse() {
   const { t } = useTranslation();
@@ -71,7 +71,7 @@ function CreateCourse() {
           <Grid container direction="column" padding={2} spacing={2}>
 
             <Grid item>
-              <Typography variant='h6'>Course</Typography>
+              <Typography variant='h6'>{t("course.title")}</Typography>
             </Grid>
 
             <Grid container item direction="row" spacing={2}>

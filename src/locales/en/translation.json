@@ -71,6 +71,7 @@
     "footer": "Resend email footer"
   },
   "course": {
+    "title": "Course",
     "name": "Name",
     "professor": "Professor",
     "startDate": "Start Date",
@@ -219,6 +220,7 @@
   "sidebar": {
     "home": "Home",
     "logout": "Logout",
+    "save": "Save",
     "back": "Back"
   },
   "confirmation": {

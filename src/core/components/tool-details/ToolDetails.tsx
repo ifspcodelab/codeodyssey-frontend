@@ -1,6 +1,7 @@
 import { Box, Button, Divider, Icon, Paper, useTheme } from "@mui/material"
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface IToolDetails {
   textNewButton?: string,
@@ -18,6 +19,7 @@ interface IToolDetails {
 }
 
 export const ToolDetails: React.FC<IToolDetails> = ({
+
   textNewButton = 'Novo',
 
   showNewButton = false,
@@ -32,6 +34,7 @@ export const ToolDetails: React.FC<IToolDetails> = ({
   onClickSave,
   onClickSaveAndBack
 }) => {
+  const { t } = useTranslation();
 
   const theme = useTheme()
 
@@ -44,7 +47,7 @@ export const ToolDetails: React.FC<IToolDetails> = ({
         disableElevation
         onClick={onClickSave}
         startIcon={<Icon>save</Icon>}
-      >Salvar</Button>)}
+      >{t("sidebar.save")}</Button>)}
       {showSaveAndBackButton && (<Button
         variant="outlined"
         color="primary"
@@ -75,7 +78,7 @@ export const ToolDetails: React.FC<IToolDetails> = ({
         disableElevation
         onClick={onClickBack}
         startIcon={<Icon>arrow_back</Icon>}
-      >Voltar</Button>)}
+      >{t("sidebar.back")}</Button>)}
 
     </Box>
   )
