@@ -198,7 +198,7 @@ const Activity: React.FC = () => {
         </CardContent>
       </Card>
 
-      {course?.professor?.id === USER_ID ? <span></span> : <Grid item xs={12}>
+      {course?.professor?.id !== USER_ID && <Grid item xs={12}>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
 
@@ -210,13 +210,13 @@ const Activity: React.FC = () => {
 
       </Grid>}
 
-      {resolutions.map((resolution) => (
+      {course?.professor?.id !== USER_ID && resolutions.map((resolution) => (
         <Card key={resolution.id} variant="outlined" sx={{ margin: '24px', border: '1px solid #ccc', borderColor: getStatusColor(resolution.status) }}>
           <CardContent>
             <Typography><strong>{t('resolution.send')}</strong>: {formatDate(resolution.submit_date)}{' '}
               {formatTime(resolution.submit_date)}</Typography>
             <Typography><strong>{t('resolution.status')}</strong> : {getStatusMessage(resolution.status)}</Typography>
-            <Typography><strong>{t('resolution.fileSended')}</strong>:<button onClick={() => {
+            <Typography><strong>{t('resolution.fileSended')}</strong>: <button onClick={() => {
               handleDecodeAndDownload(activity?.initialFile) // resolution.resolution_file
             }}>{t('activity.button.download')}</button></Typography>
             {resolution.status === 'EXECUTED_SUCCESS' && <Typography><strong>{t('resolution.tests')}</strong>: 3 <span style={{ color: 'green' }}>{t('resolution.testPass')}: 2 </span><span style={{ color: 'red' }}>{t('resolution.testError')}: 1</span></Typography>}
