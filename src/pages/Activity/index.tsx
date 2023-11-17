@@ -8,13 +8,13 @@ import { AxiosError } from "axios";
 
 import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
 import { ResolutionsService } from "../../core/services/api/resolutions/ResolutionsService.ts";
+import { IResolutionForm, IResolutionResponse } from "../../core/models/Resolution.ts";
 import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
 import { CoursesService } from "../../core/services/api/courses/CoursesService.ts";
 import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
 import FileUpload from "../../core/components/Form/FileUpload.tsx";
 import { IActivityResponse } from "../../core/models/Activity.ts";
-import { IResolutionForm } from "../../core/models/Resolution.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { ICourseResponse } from "../../core/models/Course.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
@@ -27,35 +27,9 @@ const Activity: React.FC = () => {
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
   const [activity, setActivity] = useState<IActivityResponse>();
+  const [resolutions, setResolutions] = useState<IResolutionResponse[]>();
   const { idCourse, idActivity } = useParams()
   const [fileType, setFileType] = useState("");
-
-  const resolutions = [
-    {
-      id: 1,
-      activity_id: 101,
-      student_id: 201,
-      status: 'WAITING_FOR_RESULTS',
-      submit_date: '2023-11-10T15:00:00',
-      resolution_file: 'link_do_arquivo1.pdf',
-    },
-    {
-      id: 2,
-      activity_id: 102,
-      student_id: 202,
-      status: 'EXECUTED_SUCCESS',
-      submit_date: '2023-11-11T14:30:00',
-      resolution_file: 'link_do_arquivo2.pdf',
-    },
-    {
-      id: 3,
-      activity_id: 103,
-      student_id: 203,
-      status: 'EXECUTED_ERROR',
-      submit_date: '2023-11-11T14:30:00',
-      resolution_file: 'link_do_arquivo2.pdf',
-    },
-  ];
 
   const { t } = useTranslation();
 
@@ -116,6 +90,18 @@ const Activity: React.FC = () => {
       ActivitiesService.getById(idCourse, idActivity, rawAccessToken)
         .then((response) => {
           setActivity(response as IActivityResponse);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rawAccessToken])
+
+  useEffect(() => {
+    if ((idCourse !== undefined) && (idActivity !== undefined)) {
+      ResolutionsService.getAllResolutions(idCourse, idActivity, rawAccessToken)
+        .then((response) => {
+          setResolutions(response as IResolutionResponse[])
         }).catch((error: AxiosError<ProblemDetail>) => {
           handleError(error)
         })
@@ -210,14 +196,14 @@ const Activity: React.FC = () => {
 
       </Grid>}
 
-      {course?.professor?.id !== USER_ID && resolutions.map((resolution) => (
+      {course?.professor?.id !== USER_ID && resolutions?.map((resolution) => (
         <Card key={resolution.id} variant="outlined" sx={{ margin: '24px', border: '1px solid #ccc', borderColor: getStatusColor(resolution.status) }}>
           <CardContent>
-            <Typography><strong>{t('resolution.send')}</strong>: {formatDate(resolution.submit_date)}{' '}
-              {formatTime(resolution.submit_date)}</Typography>
+            <Typography><strong>{t('resolution.send')}</strong>: {formatDate(resolution.submitDate)}{' '}
+              {formatTime(resolution.submitDate)}</Typography>
             <Typography><strong>{t('resolution.status')}</strong> : {getStatusMessage(resolution.status)}</Typography>
             <Typography><strong>{t('resolution.fileSended')}</strong>: <button onClick={() => {
-              handleDecodeAndDownload(activity?.initialFile) // resolution.resolution_file
+              handleDecodeAndDownload(resolution.activity?.initialFile)
             }}>{t('activity.button.download')}</button></Typography>
             {resolution.status === 'EXECUTED_SUCCESS' && <Typography><strong>{t('resolution.tests')}</strong>: 3 <span style={{ color: 'green' }}>{t('resolution.testPass')}: 2 </span><span style={{ color: 'red' }}>{t('resolution.testError')}: 1</span></Typography>}
             {resolution.status === 'EXECUTED_ERROR' && <Typography>
