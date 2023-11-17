@@ -213,6 +213,17 @@
       "executedError": "Executed Error"
     }
   },
+  "result": {
+    "title": "Result",
+    "time": "Total Time",
+    "error": "Error",
+    "testsPassed": "Tests Passed",
+    "test": {
+      "name": "Test Name",
+      "error": "Error",
+      "time": "Time"
+    }
+  },
   "contact": {
     "title": "Contact",
     "form": {

@@ -212,6 +212,17 @@
       "executedError": "Erro ao executar"
     }
   },
+  "result": {
+    "title": "Resultado",
+    "time": "Tempo Total",
+    "error": "Erro",
+    "testsPassed": "Testes passados",
+    "test": {
+      "name": "Nome",
+      "error": "Erro",
+      "time": "Tempo"
+    }
+  },
   "contact": {
     "title": "Contato",
     "form": {

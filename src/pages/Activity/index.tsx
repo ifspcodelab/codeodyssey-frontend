@@ -108,7 +108,7 @@ const Activity: React.FC = () => {
         })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rawAccessToken])
+  }, [idActivity, idCourse, rawAccessToken])
 
   useEffect(() => {
     if (idCourse !== undefined) {
