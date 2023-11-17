@@ -72,7 +72,9 @@ const CreateInviteModal: React.FC<ItemComponentProps> = ({ course }) => {
   const submitCreateInvite = async (data: IInvitationRequest) => {
     await InvitationService.sendInvitation(data.expirationDate.toISOString(), course.id, rawAccessToken)
       .then((response) => {
-        setInviteLink(response?.link);
+        if ('link' in response) {
+          setInviteLink(response?.link);
+        }
       }).catch((error: AxiosError<ProblemDetail>) => {
         handleError(error)
       })

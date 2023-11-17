@@ -1,6 +1,6 @@
 import {api} from "../../axios";
 import { JwtService } from "../../../auth/JwtService";
-import { IEnrollmentResponse, IInvitationRequest, IInvitationResponse } from "../../../models/Invitation";
+import { IEnrollmentResponse, IInvitationResponse } from "../../../models/Invitation";
 
 const jwtService = new JwtService();
 

@@ -13,7 +13,7 @@ export interface IInvitationResponse {
   id: string,
   course: ICourseResponse;
   expirationDate: string;
-  link: string | null,
+  link: string ,
   createdAt: string,
 }
 

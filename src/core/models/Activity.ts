@@ -10,7 +10,7 @@ export interface IActivityResponse {
   extension: string,
 }
 
-export interface IActivityRequest<T = unknown> {
+export interface IActivityRequest<T = any> {
   title: string,
   description: string,
   startDate: Date,
