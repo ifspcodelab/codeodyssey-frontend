@@ -94,7 +94,7 @@ const router = createBrowserRouter([
                 element: <Confirmation />
             },
             {
-                path: "result",
+                path: "courses/:idCourse/:slug/activities/:idActivity/resolutions/:idResolution",
                 element: <Result />
             },
             {

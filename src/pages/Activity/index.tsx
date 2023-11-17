@@ -3,7 +3,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 
 import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
@@ -13,6 +13,7 @@ import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.t
 import { CoursesService } from "../../core/services/api/courses/CoursesService.ts";
 import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
 import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 import FileUpload from "../../core/components/Form/FileUpload.tsx";
 import { IActivityResponse } from "../../core/models/Activity.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
@@ -21,7 +22,6 @@ import { JwtService } from "../../core/auth/JwtService.ts";
 import i18n from "../../locales/i18n";
 import { schema } from "./schema.ts";
 import "./style.css";
-import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
 
 const Activity: React.FC = () => {
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
@@ -211,7 +211,8 @@ const Activity: React.FC = () => {
             </Typography>}
           </CardContent>
           {resolution.status !== 'WAITING_FOR_RESULTS' && <CardActions>
-            <Button size="small">{t('resolution.button.seeResult')}</Button>
+
+            <Button size="small"><Link to={"resolutions/" + resolution.id}>{t('resolution.button.seeResult')}</Link></Button>
           </CardActions>}
         </Card>
       ))}

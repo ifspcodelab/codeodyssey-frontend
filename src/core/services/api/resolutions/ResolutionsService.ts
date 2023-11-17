@@ -8,6 +8,7 @@ const create = async (resolutionFile: string, rawAccessToken: string, courseId: 
 
   return response.data;
 };
+
 const getAllResolutions = async (courseId: string, activityId: string, rawAccessToken: string, ): Promise<IResolutionResponse[] | ProblemDetail> => {
   api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
 
@@ -16,7 +17,16 @@ const getAllResolutions = async (courseId: string, activityId: string, rawAccess
   return response.data;
 };
 
+const getById = async (courseId: string, activityId: string, resolutionId: string, rawAccessToken: string, ): Promise<IResolutionResponse | ProblemDetail> => {
+  api.defaults.headers['Authorization'] = 'Bearer ' + rawAccessToken;
+
+  const response = await api.get<IResolutionResponse | ProblemDetail>('/courses/' + courseId + '/activities/' + activityId + '/resolutions/' + resolutionId);
+
+  return response.data;
+};
+
 export const ResolutionsService = {
   create,
-  getAllResolutions
+  getAllResolutions,
+  getById
 };
