@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
+import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 
 import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
@@ -19,6 +19,7 @@ import { IActivityResponse } from "../../core/models/Activity.ts";
 import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { ICourseResponse } from "../../core/models/Course.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
+import Resolutions from "../Resolutions/index.tsx";
 import i18n from "../../locales/i18n";
 import { schema } from "./schema.ts";
 import "./style.css";
@@ -129,57 +130,20 @@ const Activity: React.FC = () => {
     }
   }, [fileType, activity]);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'EXECUTED_SUCCESS':
-        return 'green';
-      case 'EXECUTED_ERROR':
-        return 'red';
-      case 'semi-error':
-        return 'blue';
-      case 'WAITING_FOR_RESULTS':
-        return 'yellow';
-      default:
-        return '#ccc';
-    }
-  };
-
-  const getStatusMessage = (status: string) => {
-    switch (status) {
-      case 'EXECUTED_SUCCESS':
-        return t('resolution.statusMessage.executedSuccess');
-      case 'EXECUTED_ERROR':
-        return t('resolution.statusMessage.executedError');
-      case 'WAITING_FOR_RESULTS':
-        return t('resolution.statusMessage.waiting');
-      default:
-        return '#ccc';
-    }
-  };
-
-  const formatDate = (dateString: string | number | Date) => {
-    return new Date(dateString).toLocaleDateString(i18n.language);
-  };
-
-  const formatTime = (dateString: string | number | Date) => {
-    return new Date(dateString).toLocaleTimeString(i18n.language);
-  };
-
   return (
     <>
       {<SuccessrSnackBar message={t('activity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
 
-      <PageBaseLayout title={activity?.title}>
+      <PageBaseLayout title={activity?.title || ""}>
       </PageBaseLayout>
 
       <Card>
-
         <CardContent>
           <Typography variant="h5"> {activity?.description}</Typography>
           <Typography variant="subtitle1"> <strong>  {t("activity.language")}</strong>: {activity?.extension === '.java' && 'Java'}</Typography>
           <Typography> <strong>{t('activity.date')}</strong>: {activity?.startDate ? new Date(activity?.startDate).toLocaleDateString(i18n.language) : null} {t('activity.until')} {activity?.endDate ? new Date(activity?.endDate).toLocaleDateString(i18n.language) : null}</Typography>
           <Typography><strong>{t('activity.initialfile')}</strong>: <button onClick={() => {
-            handleDecodeAndDownload(activity?.initialFile)
+            activity?.initialFile !== undefined && handleDecodeAndDownload(activity?.initialFile)
           }}>{t('activity.button.download')}</button></Typography>
         </CardContent>
       </Card>
@@ -193,29 +157,9 @@ const Activity: React.FC = () => {
             <Button variant="outlined" type="submit">{t('activity.form.button.resolution')}</Button>
           </form>
         </FormProvider>
-
       </Grid>}
 
-      {course?.professor?.id !== USER_ID && resolutions?.map((resolution) => (
-        <Card key={resolution.id} variant="outlined" sx={{ margin: '24px', border: '1px solid #ccc', borderColor: getStatusColor(resolution.status) }}>
-          <CardContent>
-            <Typography><strong>{t('resolution.send')}</strong>: {formatDate(resolution.submitDate)}{' '}
-              {formatTime(resolution.submitDate)}</Typography>
-            <Typography><strong>{t('resolution.status')}</strong> : {getStatusMessage(resolution.status)}</Typography>
-            <Typography><strong>{t('resolution.fileSended')}</strong>: <button onClick={() => {
-              handleDecodeAndDownload(resolution.activity?.initialFile)
-            }}>{t('activity.button.download')}</button></Typography>
-            {resolution.status === 'EXECUTED_SUCCESS' && <Typography><strong>{t('resolution.tests')}</strong>: 3 <span style={{ color: 'green' }}>{t('resolution.testPass')}: 2 </span><span style={{ color: 'red' }}>{t('resolution.testError')}: 1</span></Typography>}
-            {resolution.status === 'EXECUTED_ERROR' && <Typography>
-              <span style={{ color: 'red' }}>{t('resolution.errorInExecution')}</span>
-            </Typography>}
-          </CardContent>
-          {resolution.status !== 'WAITING_FOR_RESULTS' && <CardActions>
-
-            <Button size="small"><Link to={"resolutions/" + resolution.id}>{t('resolution.button.seeResult')}</Link></Button>
-          </CardActions>}
-        </Card>
-      ))}
+      {course?.professor?.id !== USER_ID && resolutions !== undefined && <Resolutions resolutions={resolutions} fileType={fileType} />}
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>
