@@ -81,7 +81,7 @@ const resolutions = [
 
 ]
 
-function renderActivities() {
+function renderResolutions() {
   return render(
     <BrowserRouter>
       <Resolutions resolutions={resolutions} fileType={'.java'} />
@@ -91,7 +91,7 @@ function renderActivities() {
 
 describe("Resolutions", () => {
   test("Should be able to render the card component on the screen", async () => {
-    const { findAllByText } = renderActivities()
+    const { findAllByText } = renderResolutions()
 
     const sendElements = await findAllByText(/Send/);
     expect(sendElements.length).toBeGreaterThan(0);
@@ -107,7 +107,7 @@ describe("Resolutions", () => {
   })
 
   test("Should be able to render Resolution with status Executed Success", () => {
-    const { getByText } = renderActivities()
+    const { getByText } = renderResolutions()
 
     expect(getByText(/10\/12\/2023/)).toBeInTheDocument();
     expect(getByText(/3:30:00 PM/)).toBeInTheDocument();
@@ -118,7 +118,7 @@ describe("Resolutions", () => {
   })
 
   test("Should be able to render Resolution with status Executed Error", () => {
-    const { getByText } = renderActivities()
+    const { getByText } = renderResolutions()
 
     expect(getByText(/10\/11\/2023/)).toBeInTheDocument();
     expect(getByText(/1:30:00 PM/)).toBeInTheDocument();
@@ -127,7 +127,7 @@ describe("Resolutions", () => {
   })
 
   test("Should be able to render Resolution with status Waiting for results", () => {
-    const { getByText } = renderActivities()
+    const { getByText } = renderResolutions()
 
     expect(getByText(/10\/10\/2023/)).toBeInTheDocument();
     expect(getByText(/12:30:00 PM/)).toBeInTheDocument();
