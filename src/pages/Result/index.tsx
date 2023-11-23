@@ -5,15 +5,23 @@ import { useParams } from "react-router-dom";
 import { AxiosError } from 'axios';
 
 import { ResultsService } from '../../core/services/api/results/ResultsService';
+import ErrorSnackBar from '../../core/components/error-snack-bar/ErrorSnackBar';
+import { useErrorHandler } from '../../core/hooks/useErrorHandler';
 import { PageBaseLayout } from '../../core/layout/PageBaseLayout'
 import { IResultResponse } from '../../core/models/Result';
 import { JwtService } from '../../core/auth/JwtService';
 
 const Result: React.FC = () => {
 
+  const { t } = useTranslation();
+
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
   const [result, setResult] = useState<IResultResponse>()
   const { idActivity, idResolution } = useParams()
+
+  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
+
+  const successTestCases = result?.testCases.filter((testCase) => testCase?.success)
 
   useEffect(() => {
     if ((idResolution !== undefined) && (idActivity !== undefined)) {
@@ -21,14 +29,10 @@ const Result: React.FC = () => {
         .then((response) => {
           setResult(response as IResultResponse)
         }).catch((error: AxiosError<ProblemDetail>) => {
-          console.log("erro")
+          handleError(error)
         })
     }
   }, [rawAccessToken])
-
-  const { t } = useTranslation();
-
-  const successTestCases = result?.testCases.filter((testCase) => testCase?.success)
 
   return (
     <>
@@ -49,6 +53,9 @@ const Result: React.FC = () => {
           </CardContent>
         </Card>
       ))}
+
+      <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
+
     </>
   )
 }
