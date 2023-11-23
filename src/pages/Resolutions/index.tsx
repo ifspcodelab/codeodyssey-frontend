@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { IResolutionResponse } from "../../core/models/Resolution";
 import { Link } from "react-router-dom";
 import i18n from "../../locales/i18n";
-import TestPassOrError from "../../core/components/TestPassOrError";
+import ResolutionCardTestBar from "../../core/components/resolution-card-test-bar/index";
 
 
 
@@ -83,7 +83,7 @@ const Resolutions: React.FC<IResolutionsProps> = ({ resolutions, fileType }) => 
             handleDecodeAndDownload(resolution.activity?.initialFile)
           }}>{t('activity.button.download')}</button></Typography>
 
-          {resolution.status === 'EXECUTED_SUCCESS' && <TestPassOrError resolutionId={resolution.id} activityId={resolution.activity.id} />}
+          {resolution.status === 'EXECUTED_SUCCESS' && <ResolutionCardTestBar resolutionId={resolution.id} activityId={resolution.activity.id} />}
 
           {resolution.status === 'EXECUTED_ERROR' && <Typography>
             <span style={{ color: 'red' }}>{t('resolution.errorInExecution')}</span>

@@ -3,18 +3,18 @@ import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
 import { AxiosError } from "axios";
 
-import { ResultsService } from "../services/api/results/ResultsService";
-import { useErrorHandler } from "../hooks/useErrorHandler";
-import ErrorSnackBar from "./error-snack-bar/ErrorSnackBar";
-import { IResultResponse } from "../models/Result";
-import { JwtService } from "../auth/JwtService";
+import { ResultsService } from "../../services/api/results/ResultsService";
+import { useErrorHandler } from "../../hooks/useErrorHandler";
+import ErrorSnackBar from "../error-snack-bar/ErrorSnackBar";
+import { IResultResponse } from "../../models/Result";
+import { JwtService } from "../../auth/JwtService";
 
 interface IComponentTestProps {
   resolutionId: string;
   activityId: string;
 }
 
-const TestPassOrError: React.FC<IComponentTestProps> = ({ resolutionId, activityId }) => {
+const ResolutionCardTestBar: React.FC<IComponentTestProps> = ({ resolutionId, activityId }) => {
   const { t } = useTranslation();
 
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
@@ -59,4 +59,4 @@ const TestPassOrError: React.FC<IComponentTestProps> = ({ resolutionId, activity
   )
 }
 
-export default TestPassOrError
+export default ResolutionCardTestBar
