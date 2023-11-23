@@ -12,16 +12,17 @@ const ErrorSnackBar = (props: SnackBarProps) => {
     let message = '';
 
     switch (props.errorType) {
-        case 'badRequest': { message = i18n.t("registration.exception.badRequest"); break; }
+        case 'invalid': { message = i18n.t("exception.badRequest"); break; }
+        case 'invalidStartDate': { message = i18n.t("exception.startdate"); break; }
+        case 'invalidLoginOrEmail': { message = i18n.t("exception.loginOrEmail"); break; }
+        case 'unauthorized': { message = i18n.t("exception.unauthorized"); break; }
+        case 'notFound': { message = i18n.t("exception.notFound"); break; }
+        case 'courselAlreadyExists': { message = i18n.t("exception.courseAlreadyExists"); break }
         case 'emailAlreadyExists': { message = i18n.t("registration.exception.email"); break; }
-        case 'courselAlreadyExists': { message = i18n.t("createcourse.exception.slug"); break }
-        case 'networkError': { message = i18n.t("registration.exception.network"); break; }
+        case 'slugNotFound': { message = i18n.t("exception.courseNotFound"); break; }
         case 'unexpected': { message = i18n.t("registration.exception.unexpected"); break; }
-        case 'invalidStartDate': { message = i18n.t("createactivity.exception.startdate"); break; }
-        case 'notFound': { message = i18n.t("resendEmail.exception.notFound"); break; }
-        case 'slugNotFound': { message = i18n.t("students.exception.notFound"); break; }
-        case 'invalidLoginOrEmail': { message = 'Email or password is incorrect'; break; }
         case 'resendEmailDelay': { message = i18n.t("resendEmail.exception.resendEmailDelay"); break; }
+        case 'networkError': { message = i18n.t("registration.exception.network"); break; }
     }
 
     return (

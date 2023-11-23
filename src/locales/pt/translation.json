@@ -263,6 +263,15 @@
       "expired": "O token de confirmação expirou"
     }
   },
+  "exception": {
+    "badRequest": "Erro na requisição",
+    "startdate": "A data de início deve ser uma data futura",
+    "loginOrEmail": "Email ou senha incorreto",
+    "unauthorized": "Acesso não autorizado",
+    "notFound": "Não encontrado",
+    "courseAlreadyExists": "Um curso com esse caminho já existe",
+    "courseNotFound": "Curso não encontrado"
+  },
   "yup": {
     "invalid_field_length": "Esse campo deve ter pelo menos {{ min }} caracteres.",
     "invalid_number_length": "Esse campo deve ser maior que {{ min }} caracteres.",

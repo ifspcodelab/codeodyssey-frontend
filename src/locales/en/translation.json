@@ -264,6 +264,15 @@
       "expired": "The confirmation token is expired"
     }
   },
+  "exception": {
+    "badRequest": "Request error",
+    "startdate": "Start date must be a future date",
+    "loginOrEmail": "Email or password is incorrect",
+    "unauthorized": "Unauthorized access",
+    "notFound": "Not found",
+    "courseAlreadyExists": "A course with this slug already exists",
+    "courseNotFound": "Course not found"
+  },
   "yup": {
     "invalid_field_length": "This field must have at least ${min} characters",
     "invalid_number_length": "This field should be bigger than ${min}.",
