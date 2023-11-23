@@ -70,6 +70,8 @@ const Resolutions: React.FC<IResolutionsProps> = ({ resolutions, fileType }) => 
     return new Date(dateString).toLocaleTimeString(i18n.language);
   };
 
+  console.log(resolutions)
+
   return (
     resolutions?.map((resolution) => (
       <Card key={resolution.id} variant="outlined" sx={{ margin: '24px', border: '1px solid #ccc', borderColor: getStatusColor(resolution.status) }}>
