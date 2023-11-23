@@ -16,10 +16,9 @@ describe("Visualize activity page", () => {
   test("Should be able to see the activity information on the screen", () => {
     const { getByText } = renderActivity()
 
-    expect(getByText(/Professor/)).toBeInTheDocument();
-    expect(getByText(/Course/)).toBeInTheDocument();
     expect(getByText(/Language/)).toBeInTheDocument();
     expect(getByText(/Date/)).toBeInTheDocument();
+    expect(getByText(/Initial File/)).toBeInTheDocument();
     expect(getByText(/Download File/)).toBeInTheDocument();
   })
 

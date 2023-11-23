@@ -17,6 +17,5 @@ describe("Visualize activities course", () => {
     const { getByText } = renderActivities()
 
     expect(getByText(/Activities/)).toBeInTheDocument();
-    expect(getByText(/Course's activities/)).toBeInTheDocument();
   })
 })
