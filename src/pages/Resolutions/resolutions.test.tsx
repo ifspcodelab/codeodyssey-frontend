@@ -34,7 +34,7 @@ const resolutions = [
     id: "123e4567-e89b-12d3-a456-426655440002",
     resolutionFile: "cGFja2FnZSBjb20uZXhhbXBsZS5oZWxsb3dvcmxkLmhlbGxvLndvcmxkOwoKaW1wb3J0IG9yZy5zcHJpbmdmcmFtZXdvcmsuYm9vdC5TcHJpbmdBcHBsaWNhdGlvbjsKaW1wb3J0IG9yZy5zcHJpbmdmcmFtZXdvcmsuYm9vdC5hdXRvY29uZmlndXJlLlNwcmluZ0Jvb3RBcHBsaWNhdGlvbjsKCkBTcHJpbmdCb290QXBwbGljYXRpb24KcHVibGljIGNsYXNzIEhlbGxvV29ybGRBcHBsaWNhdGlvbiB7CgoJcHVibGljIHN0YXRpYyB2b2lkIG1haW4oU3RyaW5nW10gYXJncykgewoJCVNwcmluZ0FwcGxpY2F0aW9uLnJ1bihIZWxsb1dvcmxkQXBwbGljYXRpb24uY2xhc3MsIGFyZ3MpOwoJCVN5c3RlbS5vdXQucHJpbnRsbigiSGVsbG8gd29ybGQiKTsKCX0KCgoKfQo=",
     status: ResolutionStatus.EXECUTED_SUCCESS,
-    submitDate: "2023-10-10T15:30:00Z",
+    submitDate: "2023-10-12T17:30:00Z",
     student: {
       createdAt: "2023-11-07T18:16:11.268703Z",
       email: "peterparker@email.com",
@@ -58,7 +58,7 @@ const resolutions = [
     id: "123e4567-e89b-12d3-a456-426655440003",
     resolutionFile: "cGFja2FnZSBjb20uZXhhbXBsZS5oZWxsb3dvcmxkLmhlbGxvLndvcmxkOwoKaW1wb3J0IG9yZy5zcHJpbmdmcmFtZXdvcmsuYm9vdC5TcHJpbmdBcHBsaWNhdGlvbjsKaW1wb3J0IG9yZy5zcHJpbmdmcmFtZXdvcmsuYm9vdC5hdXRvY29uZmlndXJlLlNwcmluZ0Jvb3RBcHBsaWNhdGlvbjsKCkBTcHJpbmdCb290QXBwbGljYXRpb24KcHVibGljIGNsYXNzIEhlbGxvV29ybGRBcHBsaWNhdGlvbiB7CgoJcHVibGljIHN0YXRpYyB2b2lkIG1haW4oU3RyaW5nW10gYXJncykgewoJCVNwcmluZ0FwcGxpY2F0aW9uLnJ1bihIZWxsb1dvcmxkQXBwbGljYXRpb24uY2xhc3MsIGFyZ3MpOwoJCVN5c3RlbS5vdXQucHJpbnRsbigiSGVsbG8gd29ybGQiKTsKCX0KCgoKfQo=",
     status: ResolutionStatus.EXECUTED_ERROR,
-    submitDate: "2023-10-10T15:30:00Z",
+    submitDate: "2023-10-11T16:30:00Z",
     student: {
       createdAt: "2023-11-07T18:16:11.268703Z",
       email: "peterparker@email.com",
@@ -104,5 +104,16 @@ describe("Resolutions", () => {
 
     const downloadFileElement = await findAllByText(/Download File/);
     expect(downloadFileElement.length).toBeGreaterThan(0);
+  })
+
+  test("Should be able to render Resolution with status Executed Success", () => {
+    const { getByText } = renderActivities()
+
+    expect(getByText(/10\/10\/2023/)).toBeInTheDocument();
+    expect(getByText(/12:30:00 PM/)).toBeInTheDocument();
+    expect(getByText(/Executed Success/)).toBeInTheDocument();
+    expect(getByText(/Tests/)).toBeInTheDocument();
+    expect(getByText(/Pass/)).toBeInTheDocument();
+    expect(getByText("Error: 0")).toBeInTheDocument();
   })
 })
