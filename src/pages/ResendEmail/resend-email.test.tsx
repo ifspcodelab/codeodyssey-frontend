@@ -136,7 +136,7 @@ describe("Resend Email", () => {
         fireEvent.click(resendButton);
 
         await waitFor(() => {
-            expect(getByText("No user found with given email")).toBeInTheDocument();
+            expect(getByText("Not found")).toBeInTheDocument();
         });
     });
 });
