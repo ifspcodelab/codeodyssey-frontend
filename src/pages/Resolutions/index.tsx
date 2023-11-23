@@ -4,6 +4,9 @@ import { useTranslation } from "react-i18next";
 import { IResolutionResponse } from "../../core/models/Resolution";
 import { Link } from "react-router-dom";
 import i18n from "../../locales/i18n";
+import TestPassOrError from "../../core/components/TestPassOrError";
+
+
 
 interface IResolutionsProps {
   resolutions: IResolutionResponse[];
@@ -77,11 +80,14 @@ const Resolutions: React.FC<IResolutionsProps> = ({ resolutions, fileType }) => 
           <Typography><strong>{t('resolution.fileSended')}</strong>: <button onClick={() => {
             handleDecodeAndDownload(resolution.activity?.initialFile)
           }}>{t('activity.button.download')}</button></Typography>
-          {resolution.status === 'EXECUTED_SUCCESS' && <Typography><strong>{t('resolution.tests')}</strong>: 3 <span style={{ color: 'green' }}>{t('resolution.testPass')}: 2 </span><span style={{ color: 'red' }}>{t('resolution.testError')}: 1</span></Typography>}
+
+          {resolution.status === 'EXECUTED_SUCCESS' && <TestPassOrError resolutionId={resolution.id} activityId={resolution.activity.id} />}
+
           {resolution.status === 'EXECUTED_ERROR' && <Typography>
             <span style={{ color: 'red' }}>{t('resolution.errorInExecution')}</span>
           </Typography>}
         </CardContent>
+
         {resolution.status !== 'WAITING_FOR_RESULTS' && <CardActions>
 
           <Button size="small"><Link to={"resolutions/" + resolution.id}>{t('resolution.button.seeResult')}</Link></Button>

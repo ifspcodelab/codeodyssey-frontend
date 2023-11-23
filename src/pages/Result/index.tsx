@@ -19,7 +19,6 @@ const Result: React.FC = () => {
     if ((idResolution !== undefined) && (idActivity !== undefined)) {
       ResultsService.getById(idActivity, idResolution, rawAccessToken)
         .then((response) => {
-          console.log(response)
           setResult(response as IResultResponse)
         }).catch((error: AxiosError<ProblemDetail>) => {
           console.log("erro")

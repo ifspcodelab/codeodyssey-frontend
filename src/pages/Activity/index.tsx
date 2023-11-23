@@ -24,6 +24,7 @@ import i18n from "../../locales/i18n";
 import { schema } from "./schema.ts";
 import "./style.css";
 
+
 const Activity: React.FC = () => {
   const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
@@ -109,6 +110,8 @@ const Activity: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idActivity, idCourse, rawAccessToken])
+
+
 
   useEffect(() => {
     if (idCourse !== undefined) {
