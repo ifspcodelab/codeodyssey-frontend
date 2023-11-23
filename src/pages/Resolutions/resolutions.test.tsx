@@ -125,4 +125,12 @@ describe("Resolutions", () => {
     expect(getByText(/Executed Error/)).toBeInTheDocument();
     expect(getByText(/Error in execution/)).toBeInTheDocument();
   })
+
+  test("Should be able to render Resolution with status Waiting for results", () => {
+    const { getByText } = renderActivities()
+
+    expect(getByText(/10\/10\/2023/)).toBeInTheDocument();
+    expect(getByText(/12:30:00 PM/)).toBeInTheDocument();
+    expect(getByText(/Waiting for results/)).toBeInTheDocument();
+  })
 })
