@@ -34,7 +34,7 @@ const resolutions = [
     id: "123e4567-e89b-12d3-a456-426655440002",
     resolutionFile: "cGFja2FnZSBjb20uZXhhbXBsZS5oZWxsb3dvcmxkLmhlbGxvLndvcmxkOwoKaW1wb3J0IG9yZy5zcHJpbmdmcmFtZXdvcmsuYm9vdC5TcHJpbmdBcHBsaWNhdGlvbjsKaW1wb3J0IG9yZy5zcHJpbmdmcmFtZXdvcmsuYm9vdC5hdXRvY29uZmlndXJlLlNwcmluZ0Jvb3RBcHBsaWNhdGlvbjsKCkBTcHJpbmdCb290QXBwbGljYXRpb24KcHVibGljIGNsYXNzIEhlbGxvV29ybGRBcHBsaWNhdGlvbiB7CgoJcHVibGljIHN0YXRpYyB2b2lkIG1haW4oU3RyaW5nW10gYXJncykgewoJCVNwcmluZ0FwcGxpY2F0aW9uLnJ1bihIZWxsb1dvcmxkQXBwbGljYXRpb24uY2xhc3MsIGFyZ3MpOwoJCVN5c3RlbS5vdXQucHJpbnRsbigiSGVsbG8gd29ybGQiKTsKCX0KCgoKfQo=",
     status: ResolutionStatus.EXECUTED_SUCCESS,
-    submitDate: "2023-10-12T17:30:00Z",
+    submitDate: "2023-10-12T18:30:00Z",
     student: {
       createdAt: "2023-11-07T18:16:11.268703Z",
       email: "peterparker@email.com",
@@ -109,11 +109,20 @@ describe("Resolutions", () => {
   test("Should be able to render Resolution with status Executed Success", () => {
     const { getByText } = renderActivities()
 
-    expect(getByText(/10\/10\/2023/)).toBeInTheDocument();
-    expect(getByText(/12:30:00 PM/)).toBeInTheDocument();
+    expect(getByText(/10\/12\/2023/)).toBeInTheDocument();
+    expect(getByText(/3:30:00 PM/)).toBeInTheDocument();
     expect(getByText(/Executed Success/)).toBeInTheDocument();
     expect(getByText(/Tests/)).toBeInTheDocument();
     expect(getByText(/Pass/)).toBeInTheDocument();
     expect(getByText("Error: 0")).toBeInTheDocument();
+  })
+
+  test("Should be able to render Resolution with status Executed Error", () => {
+    const { getByText } = renderActivities()
+
+    expect(getByText(/10\/11\/2023/)).toBeInTheDocument();
+    expect(getByText(/1:30:00 PM/)).toBeInTheDocument();
+    expect(getByText(/Executed Error/)).toBeInTheDocument();
+    expect(getByText(/Error in execution/)).toBeInTheDocument();
   })
 })
