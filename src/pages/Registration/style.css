@@ -1,33 +1,33 @@
 #emailMessage {
-    margin: 10px 0 0 10px;
-    font-style: italic;
-    color: #777;
+  margin: 10px 0 0 10px;
+  font-style: italic;
+  color: #777;
 }
 
 #registration-menu {
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto 15px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto 15px;
 }
 
 #registration-menu * {
-    margin: 10px auto;
+  margin: 10px auto;
 }
 
 .formContainer {
-    height: 100%;
+  height: 100%;
 }
 
 #tutorialButton {
-    position: absolute;
-    top: 89%;
-    right: 0;
+  position: absolute;
+  top: 89%;
+  right: 0;
 }
 
 #swipeable {
-    position: absolute;
-    top: 40%;
-    right: 5%;
-    border: 1px solid #ccc;
-    z-index: 1;
+  position: absolute;
+  top: 40%;
+  right: 5%;
+  border: 1px solid #ccc;
+  z-index: 1;
 }

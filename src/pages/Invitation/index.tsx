@@ -1,20 +1,21 @@
-import {useParams} from "react-router-dom";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {useApiAcceptInvitation} from "../../core/hooks/useApiAcceptInvitation";
-import PageHeader from "../../components/PageHeader";
-import {useTranslation} from "react-i18next";
-import PageFooter from "../../components/PageFooter";
-import {AxiosError} from "axios";
-import {EnrollmentResponse} from "../../core/models/invitations";
-import {Container} from "@mui/material";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { Container } from "@mui/material";
+import { AxiosError } from "axios";
+
+import { InvitationService } from "../../core/services/api/invitation/InvitationService";
+import { IEnrollmentResponse } from "../../core/models/Invitation";
+import PageHeader from "../../core/components/page-header";
+import PageFooter from "../../core/components/page-footer";
+import Spinner from "../../core/components/spinner";
 import TextComponent from "./text-component";
-import Spinner from "../../components/Spinner";
 
-
-function Invitation() {
+const Invitation: React.FC = () => {
     const { idInvitation: invitationId } = useParams();
-    const { acceptInvitation } = useApiAcceptInvitation();
+
     const { t } = useTranslation();
+
     const requestSentRef = useRef(false);
     const [loading, setLoading] = useState(false);
     const [messageType, setMessageType] = useState('');
@@ -34,25 +35,25 @@ function Invitation() {
     useEffect(() => {
         if (!requestSentRef.current) {
             setLoading(true);
-            acceptInvitation(invitationId)
-                .then((enrollmentResponse: EnrollmentResponse) => {
+            InvitationService.acceptInvitation(invitationId)
+                .then((enrollmentResponse: IEnrollmentResponse) => {
                     setMessageType('accepted');
                     setCourseName(enrollmentResponse.invitation.course.name)
                     setLoading(false);
                 }).catch((error: AxiosError) => {
-                handleErrors(error);
-                setLoading(false);
-            });
+                    handleErrors(error);
+                    setLoading(false);
+                });
         }
         requestSentRef.current = true;
-    }, [acceptInvitation, handleErrors, invitationId])
+    }, [handleErrors, invitationId])
 
     return (
         <Container maxWidth="sm">
-            <PageHeader title={t("invitation.title")} text={t("invitation.text")}/>
+            <PageHeader title={t("invitation.title")} text={t("invitation.text")} />
             <TextComponent messageType={messageType} courseName={courseName} />
-            {loading && <Spinner size={20}/>}
-            <PageFooter text={t("invitation.footer")}/>
+            {loading && <Spinner size={20} />}
+            <PageFooter text={t("invitation.footer")} />
         </Container>
     );
 }

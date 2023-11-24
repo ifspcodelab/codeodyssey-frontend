@@ -1,91 +1,76 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Container, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import PageHeader from "../../components/PageHeader";
-import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { schema } from "./schema.ts";
 import React, { useEffect, useState } from "react";
+import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent } from "@mui/material";
+import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import i18n from '../../locales/i18n.ts'
+import { useNavigate, useParams } from "react-router-dom"
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useTranslation } from "react-i18next";
+import { AxiosError } from "axios";
+import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br'
 import 'dayjs/locale/en'
-import { CustomDate } from "../../core/models/CustomDate";
-import dayjs from 'dayjs';
-import { useTranslation } from "react-i18next";
-import { ActivityForm } from "../../core/models/ActivityForm.ts"
-import { useApiCreateActivity } from "../../core/hooks/useApiCreateActivity";
+
+import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
+import { CoursesService } from "../../core/services/api/courses/CoursesService.ts";
+import { ToolDetails } from "../../core/components/tool-details/ToolDetails.tsx";
+import TextAreaField from "../../core/components/Form/TextAreaField.tsx";
+import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import FileUpload from "../../core/components/Form/FileUpload.tsx";
+import InputField from '../../core/components/Form/InputField.tsx';
+import { IActivityRequest } from "../../core/models/Activity.ts";
+import { ICourseResponse } from "../../core/models/Course.ts";
 import { JwtService } from "../../core/auth/JwtService.ts";
-import { useNavigate } from "react-router-dom"
-import { useParams } from "react-router-dom";
-import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
-import { CourseResponse } from "../../core/models/CourseResponse";
-import axios, { AxiosError } from "axios";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
-import FileUpload from "../../components/Form/FileUpload.tsx";
-import InputField from '../../components/Form/InputField.tsx';
-import TextAreaField from "../../components/Form/TextAreaField.tsx";
+import { CustomDate } from "../../core/models/CustomDate";
+import i18n from '../../locales/i18n.ts'
+import { schema } from "./schema.ts";
 
-function CreateActivity() {
-  const onSubmit: SubmitHandler<ActivityForm> = (data) => submitCreateActivity(data)
-
-  const { createActivity } = useApiCreateActivity();
+const CreateActivity: React.FC = () => {
   const navigate = useNavigate()
-  const [course, setCourse] = useState<CourseResponse>();
-  const { getCourse } = useApiGetCourse()
-  const { idCourse } = useParams()
+  const [course, setCourse] = useState<ICourseResponse>();
+  const { idCourse, slug } = useParams()
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
-  const [errorType, setErrorType] = useState('');
-  const [openError, setOpenError] = useState(false);
+  const { t } = useTranslation();
 
+  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
 
-  const handleError = (error: AxiosError) => {
-    let responseStatus: number
-    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
-    if (error.response) {
-      problemDetail = error.response.data as ProblemDetail
-      responseStatus = problemDetail.status
-      if (responseStatus == 400) {
-        if (error.response) problemDetail = error.response.data as ProblemDetail
-        if (problemDetail.detail == "must be a future date")
-          setErrorType('invalidStartDate')
-        setOpenError(true);
+  const [fileType, setFileType] = useState("");
+  const [language, setLanguage] = React.useState('');
 
-      }
-    } else if (error.message == "Network Error") {
-      setErrorType('networkError')
-      setOpenError(true);
-    }
-  }
-
-  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway' || event === undefined) {
-      return;
-    }
-    setOpenError(false);
-  };
-
-  async function submitCreateActivity(data: ActivityForm) {
-    try {
-      if ((course !== undefined) && (data.initialFile !== null) && (data.solutionFile !== null) && (data.testFile !== null)) {
-        await createActivity(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken, course.id)
-        navigate(`/courses/${course.id}/${course.slug}/activities?success=true`)
-      }
-    }
-    catch (error) {
-      if (axios.isAxiosError(error)) {
-        handleError(error)
-      } else {
-        setErrorType('unexpected')
-      }
-    }
-  }
+  const onSubmit: SubmitHandler<IActivityRequest> = (data) => submitCreateActivity(data)
 
   const methods = useForm({
     resolver: yupResolver(schema),
   });
 
-  const [fileType, setFileType] = useState("");
-  const [language, setLanguage] = React.useState('');
+  const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
+  const convertedEndDate: CustomDate = course?.endDate ? dayjs(new Date(course?.endDate)) as unknown as CustomDate : dayjs(new Date()) as unknown as CustomDate;
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setLanguage(event.target.value);
+  };
+
+  const submitCreateActivity = async (data: IActivityRequest) => {
+    if ((course !== undefined) && (data.initialFile !== null) && (data.solutionFile !== null) && (data.testFile !== null)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      await ActivitiesService.create(data.title, data.description, data.startDate.toISOString(), data.endDate.toISOString(), data.initialFile, data.solutionFile, data.testFile, data.extension, rawAccessToken, course.id)
+        .then(() => {
+          navigate(`/courses/${course.id}/${course.slug}/activities?success=true`)
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
+    }
+  }
+
+  const handleSave = async () => {
+    const isValid = await methods.trigger();
+    if (isValid) {
+      const formData = methods.getValues();
+      await submitCreateActivity(formData);
+    }
+  };
 
   useEffect(() => {
     if (language === ".java") {
@@ -95,101 +80,79 @@ function CreateActivity() {
     }
   }, [fileType, language]);
 
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setLanguage(event.target.value);
-  };
-
-  const { t } = useTranslation();
-
   useEffect(() => {
-    void (async () => {
-      if ((idCourse !== undefined)) {
-        try {
-          const courseResponse = await getCourse(idCourse, rawAccessToken);
-          setCourse(courseResponse)
-        }
-        catch (error) {
-          if (axios.isAxiosError(error)) {
-            handleError(error)
-          } else {
-            setErrorType('unexpected')
-          }
-        }
-      }
-    })();
-    // eslint-disable-next-line
-  }, []);
-
-  const convertedDate: CustomDate = dayjs(new Date()) as unknown as CustomDate;
-
-  const convertedEndDate: CustomDate = course?.endDate ? dayjs(new Date(course?.endDate)) as unknown as CustomDate : dayjs(new Date()) as unknown as CustomDate;
+    if (idCourse !== undefined) {
+      CoursesService.getById(idCourse, rawAccessToken)
+        .then((response) => {
+          setCourse(response as ICourseResponse);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rawAccessToken])
 
 
   return (
     <>
-      <Container maxWidth="md">
-        <PageHeader title={t('createactivity.title')} text={t('createactivity.text')} />
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <Grid container spacing={1} rowSpacing={2}>
+      <PageBaseLayout title={t('createactivity.title')} toolbar={
+        <ToolDetails
+          onClickSave={() => handleSave()}
+          onClickBack={() => { navigate(`/courses/${idCourse}/${slug}/activities`) }}
+        />
+      }>
+      </PageBaseLayout>
 
-              <Grid item xs={12}>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <Box margin={1} display="flex" flexDirection="column" component={Paper} variant="outlined">
+            <Grid container>
+              <Grid item xs={6}>
                 <InputField fieldName="title" labelName="createactivity.form.title" />
-              </Grid>
 
-              <Grid item xs={12}>
                 <TextAreaField fieldName="description" labelName="createactivity.form.desc" minRows={2} maxRows={5} />
-              </Grid>
 
-              <Grid item xs={12} textAlign="right" display="flex" alignItems="spaceBetween">
-                <Grid item xs={4}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
-                    <Controller
-                      name={"startDate"}
-                      control={methods.control}
-                      defaultValue={convertedDate}
-                      render={({ field: { ref, onChange, value, ...field } }) => (
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
+                  <Controller
+                    name={"startDate"}
+                    control={methods.control}
+                    defaultValue={convertedDate}
+                    render={({ field: { ref, onChange, value, ...field } }) => (
 
-                        <DatePicker
-                          {...field}
-                          inputRef={ref}
-                          label={t('createactivity.form.startDate')}
-                          disablePast value={value ?? " "}
-                          maxDate={convertedEndDate}
-                          onChange={onChange as never}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
-                </Grid>
+                      <DatePicker
+                        {...field}
+                        inputRef={ref}
+                        label={t('createactivity.form.startDate')}
+                        disablePast value={value ?? " "}
+                        maxDate={convertedEndDate}
+                        onChange={onChange as never}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
 
-                <Grid >
-                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
-                    <Controller
-                      name={"endDate"}
-                      control={methods.control}
-                      defaultValue={undefined}
-                      render={({ field: { ref, onChange, value, ...field } }) => (
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language == "pt" ? "pt-br" : "en"} >
+                  <Controller
+                    name={"endDate"}
+                    control={methods.control}
+                    defaultValue={undefined}
+                    render={({ field: { ref, onChange, value, ...field } }) => (
 
-                        <DatePicker
-                          {...field}
-                          inputRef={ref}
-                          minDate={methods.watch().startDate}
-                          maxDate={convertedEndDate}
-                          label={t('createactivity.form.endDate')}
-                          value={value ? value : null}
-                          onChange={onChange as never}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
-                </Grid>
-              </Grid>
+                      <DatePicker
+                        {...field}
+                        inputRef={ref}
+                        minDate={methods.watch().startDate}
+                        maxDate={convertedEndDate}
+                        label={t('createactivity.form.endDate')}
+                        value={value ? value : null}
+                        onChange={onChange as never}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
 
-              <Grid item xs={12}>
                 <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                  <InputLabel id="language-label">Language</InputLabel>
+                  <InputLabel id="language-label">{t('createactivity.form.language')}</InputLabel>
                   <Select
                     {...methods.register("extension")}
                     labelId="language-label"
@@ -202,22 +165,20 @@ function CreateActivity() {
                     <MenuItem value={".js"}>Javascript</MenuItem>
                   </Select>
                 </FormControl>
+
               </Grid>
 
-              {language ? <>
+              <Grid item xs={6}>
                 <FileUpload fieldName="initialFile" fileType={fileType} />
                 <FileUpload fieldName="testFile" fileType={fileType} />
                 <FileUpload fieldName="solutionFile" fileType={fileType} />
-              </> : <span></span>}
-
-              <Grid item xs={12} textAlign="right">
-                <Button variant="outlined" type="submit">{t('createactivity.form.button.publish')}</Button>
               </Grid>
-            </Grid>
-          </form>
-        </FormProvider>
 
-      </Container>
+            </Grid>
+          </Box>
+        </form>
+      </FormProvider>
+
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>
   );

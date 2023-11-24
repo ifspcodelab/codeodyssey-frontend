@@ -24,6 +24,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Confirmation from "./pages/Confirmation";
 import Activities from "./pages/Activities";
 import Activity from "./pages/Activity";
+import Result from './pages/Result/index.tsx';
 
 const router = createBrowserRouter([
     {
@@ -36,22 +37,22 @@ const router = createBrowserRouter([
                 element: <Home />
             },
             {
-                path: "create-course",
+                path: "courses",
+                element: <Courses />
+            },
+            {
+                path: "courses/new",
                 element:
                     <PrivateRoute userRole={UserRole.PROFESSOR}>
                         <CreateCourse />
                     </PrivateRoute>
             },
             {
-                path: "courses/:idCourse/:slug/create-activity",
+                path: "courses/:idCourse/:slug/activities/new",
                 element:
                     <PrivateRoute userRole={UserRole.PROFESSOR}>
                         <CreateActivity />
                     </PrivateRoute>
-            },
-            {
-                path: "courses",
-                element: <Courses />
             },
             {
                 path: "registration",
@@ -70,10 +71,6 @@ const router = createBrowserRouter([
                 element: <Course />
             },
             {
-                path: "courses",
-                element: <Courses />
-            },
-            {
                 path: "courses/:idCourse/:slug/activities",
                 element: <Activities />
             },
@@ -82,20 +79,11 @@ const router = createBrowserRouter([
                 element: <Activity />
             },
             {
-                path: "terms-of-use",
-                element: <TermsOfUse />
-            },
-            {
-                path: "privacy-policy",
-                element: <PrivacyPolicy />
-            },
-            {
-                path: "contact",
-                element: <Contact />
-            },
-            {
                 path: "courses/:idCourse/:slug/students",
-                element: <Students />
+                element:
+                    <PrivateRoute userRole={UserRole.PROFESSOR}>
+                        <Students />
+                    </PrivateRoute>
             },
             {
                 path: "invitations/:idInvitation",
@@ -105,6 +93,22 @@ const router = createBrowserRouter([
                 path: "confirmation/:token",
                 element: <Confirmation />
             },
+            {
+                path: "courses/:idCourse/:slug/activities/:idActivity/resolutions/:idResolution",
+                element: <Result />
+            },
+            {
+                path: "contact",
+                element: <Contact />
+            },
+            {
+                path: "privacy-policy",
+                element: <PrivacyPolicy />
+            },
+            {
+                path: "terms-of-use",
+                element: <TermsOfUse />
+            }
         ],
     },
 ]);

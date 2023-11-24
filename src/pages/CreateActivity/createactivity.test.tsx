@@ -28,10 +28,10 @@ describe("Create Activity Form", () => {
     expect(getByText(/Create Activity/)).toBeInTheDocument();
   })
 
-  test("Should be able to render the publish button", async () => {
+  test("Should be able to render the save button", async () => {
     const { getByText } = renderCreateActivity()
 
-    const createButton = await waitFor(() => getByText(/Publish Activity/));
+    const createButton = await waitFor(() => getByText(/Save/));
     expect(createButton).toBeInTheDocument();
   })
 

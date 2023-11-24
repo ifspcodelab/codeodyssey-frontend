@@ -1,30 +1,48 @@
-import { Button, Grid, Typography } from "@mui/material";
-import { useApiGetActivity } from "../../core/hooks/useApiGetActivity.ts";
-import { useApiSendResolution } from "../../core/hooks/useApiSendResolution.ts";
-import { JwtService } from "../../core/auth/JwtService.ts";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
-import { ResolutionForm } from "../../core/models/ResolutionForm.ts"
+import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { schema } from "./schema.ts";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import i18n from "../../locales/i18n";
-import SuccessrSnackBar from "../../components/SuccessSnackBar/index.tsx";
-import axios, { AxiosError } from "axios";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
-import { ActivityResponse } from './../../core/models/ActivityResponse';
-import "./style.css";
-import FileUpload from "../../components/Form/FileUpload.tsx";
+import { useParams } from "react-router-dom";
+import { AxiosError } from "axios";
 
-function Activity() {
-  const { getActivity } = useApiGetActivity()
-  const { sendResolution } = useApiSendResolution()
-  const rawAccessToken = new JwtService().getRawAccessToken() as string;
+import { ActivitiesService } from "../../core/services/api/activities/ActivitiesService.ts";
+import { ResolutionsService } from "../../core/services/api/resolutions/ResolutionsService.ts";
+import { IResolutionForm, IResolutionResponse } from "../../core/models/Resolution.ts";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
+import { CoursesService } from "../../core/services/api/courses/CoursesService.ts";
+import SuccessrSnackBar from "../../core/components/success-snack-bar/index.tsx";
+import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout.tsx";
+import FileUpload from "../../core/components/Form/FileUpload.tsx";
+import { IActivityResponse } from "../../core/models/Activity.ts";
+import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
+import { ICourseResponse } from "../../core/models/Course.ts";
+import { JwtService } from "../../core/auth/JwtService.ts";
+import Resolutions from "../Resolutions/index.tsx";
+import i18n from "../../locales/i18n";
+import { schema } from "./schema.ts";
+import "./style.css";
+
+
+const Activity: React.FC = () => {
+  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
+
+  const [activity, setActivity] = useState<IActivityResponse>();
+  const [resolutions, setResolutions] = useState<IResolutionResponse[]>();
   const { idCourse, idActivity } = useParams()
-  const [activity, setActivity] = useState<ActivityResponse>();
+  const [fileType, setFileType] = useState("");
+
+  const { t } = useTranslation();
+
+  const rawAccessToken = new JwtService().getRawAccessToken() as string;
+  const authConsumer = AuthConsumer();
+  const USER_ID: string = authConsumer.id;
+
   const [openSuccess, setOpenSuccess] = useState(false);
+  const [course, setCourse] = useState<ICourseResponse>();
+
+  const onSubmit: SubmitHandler<IResolutionForm> = (data) => submitResolutionActivity(data)
 
   const handleCloseSuccess = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway' || event === undefined) {
@@ -33,82 +51,25 @@ function Activity() {
     setOpenSuccess(false);
   };
 
-  const [fileType, setFileType] = useState("");
-
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    void (async () => {
-      if ((idCourse !== undefined) && (idActivity !== undefined)) {
-        try {
-          const activityResponse = await getActivity(idCourse, idActivity, rawAccessToken);
-          setActivity(activityResponse)
-        } catch (error) {
-          if (axios.isAxiosError(error)) {
-            handleError(error)
-          } else {
-            setErrorType('unexpected')
-          }
-        }
-      }
-    })();
-    // eslint-disable-next-line
-  }, []);
-
-  const [errorType, setErrorType] = useState('');
-  const [openError, setOpenError] = useState(false);
-  const authConsumer = AuthConsumer();
-
-  const USER_ID: string = authConsumer.id;
-
-  const onSubmit: SubmitHandler<ResolutionForm> = (data) => submitResolutionActivity(data)
-
-
   const methods = useForm({
     resolver: yupResolver(schema),
   });
 
-  const handleError = (error: AxiosError) => {
-    let responseStatus: number
-    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
-    if (error.response) {
-      problemDetail = error.response.data as ProblemDetail
-      responseStatus = problemDetail.status
-      if (responseStatus == 400) {
-        setErrorType('badRequest')
-        setOpenError(true);
-      }
-    } else if (error.message == "Network Error") {
-      setErrorType('networkError')
-      setOpenError(true);
+  const submitResolutionActivity = async (data: IResolutionForm) => {
+    if ((idCourse !== undefined) && (idActivity !== undefined)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      await ResolutionsService.create(data.resolutionFile, rawAccessToken, idCourse, idActivity)
+        .then(() => {
+          setOpenSuccess(true)
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
     }
   }
 
-  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway' || event === undefined) {
-      return;
-    }
-    setOpenError(false);
-  };
+  const handleDecodeAndDownload = (file: string) => {
+    const base64String = file;
 
-  async function submitResolutionActivity(data: ResolutionForm) {
-    try {
-      if ((idCourse !== undefined) && (idActivity !== undefined)) {
-        await sendResolution(data.resolutionFile, rawAccessToken, idCourse, idActivity);
-        setOpenSuccess(true)
-      }
-    }
-    catch (error) {
-      if (axios.isAxiosError(error)) {
-        handleError(error)
-      } else {
-        setErrorType('unexpected')
-      }
-    }
-  }
-
-  const handleDecodeAndDownload = () => {
-    const base64String = activity?.initialFile;
     if (typeof base64String === 'string') {
       const decodedString = atob(base64String);
       const blob = new Blob([decodedString], { type: 'text/plain' });
@@ -124,8 +85,45 @@ function Activity() {
 
       window.URL.revokeObjectURL(blobUrl);
     }
-
   }
+
+  useEffect(() => {
+    if ((idCourse !== undefined) && (idActivity !== undefined)) {
+      ActivitiesService.getById(idCourse, idActivity, rawAccessToken)
+        .then((response) => {
+          setActivity(response as IActivityResponse);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rawAccessToken])
+
+  useEffect(() => {
+    if ((idCourse !== undefined) && (idActivity !== undefined)) {
+      ResolutionsService.getAllResolutions(idCourse, idActivity, rawAccessToken)
+        .then((response) => {
+          setResolutions(response as IResolutionResponse[])
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idActivity, idCourse, rawAccessToken])
+
+
+
+  useEffect(() => {
+    if (idCourse !== undefined) {
+      CoursesService.getById(idCourse, rawAccessToken)
+        .then((response) => {
+          setCourse(response as ICourseResponse);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [USER_ID, rawAccessToken])
 
   useEffect(() => {
     if (activity?.extension === ".java") {
@@ -139,29 +137,32 @@ function Activity() {
     <>
       {<SuccessrSnackBar message={t('activity.successMessage')} open={openSuccess} handleClose={handleCloseSuccess} />}
 
-      <h1>{activity?.title}</h1>
-      <Typography sx={{ fontSize: 14 }} gutterBottom>
-        {activity?.description}
-        <br />
-        {t("activity.language")}: {activity?.extension === '.java' && 'Java'}
-        <br />
-        {t('activity.date')}: {activity?.startDate ? new Date(activity?.startDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null} {t('activity.until')} {activity?.course?.endDate ? new Date(activity?.course?.endDate).toLocaleDateString(i18n.language, { timeZone: "Europe/London" }) : null}
-        <br />
+      <PageBaseLayout title={activity?.title || ""}>
+      </PageBaseLayout>
 
-        <button onClick={handleDecodeAndDownload}>{t('activity.button.download')}</button>
-      </Typography>
+      <Card>
+        <CardContent>
+          <Typography variant="h5"> {activity?.description}</Typography>
+          <Typography variant="subtitle1"> <strong>  {t("activity.language")}</strong>: {activity?.extension === '.java' && 'Java'}</Typography>
+          <Typography> <strong>{t('activity.date')}</strong>: {activity?.startDate ? new Date(activity?.startDate).toLocaleDateString(i18n.language) : null} {t('activity.until')} {activity?.endDate ? new Date(activity?.endDate).toLocaleDateString(i18n.language) : null}</Typography>
+          <Typography><strong>{t('activity.initialfile')}</strong>: <button onClick={() => {
+            activity?.initialFile !== undefined && handleDecodeAndDownload(activity?.initialFile)
+          }}>{t('activity.button.download')}</button></Typography>
+        </CardContent>
+      </Card>
 
-      {activity?.course?.professor?.id === USER_ID ? <span></span> : <Grid item xs={12}>
+      {course?.professor?.id !== USER_ID && <Grid item xs={12}>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
 
             <FileUpload fieldName="resolutionFile" fileType={fileType} />
 
-            <Button variant="outlined" type="submit">{t('activity.button.resolution')}</Button>
+            <Button variant="outlined" type="submit">{t('activity.form.button.resolution')}</Button>
           </form>
         </FormProvider>
-
       </Grid>}
+
+      {course?.professor?.id !== USER_ID && resolutions !== undefined && <Resolutions resolutions={resolutions} fileType={fileType} />}
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>

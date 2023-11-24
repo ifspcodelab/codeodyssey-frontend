@@ -1,10 +1,10 @@
-import {describe, test, vi} from "vitest";
-import {render, waitFor, fireEvent} from "@testing-library/react";
+import { describe, test, vi } from "vitest";
+import { render, waitFor, fireEvent } from "@testing-library/react";
 import ResendEmail from "./index";
-import {BrowserRouter} from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
-import {rest} from "msw";
-import {setupServer} from "msw/node";
+import { rest } from "msw";
+import { setupServer } from "msw/node";
 
 interface UseLocationType {
     state: {
@@ -13,7 +13,7 @@ interface UseLocationType {
 }
 
 const MSW_URL = "http://localhost/users/resend-email";
-const mockUseLocation = vi.fn().mockImplementation(() => {return { state: {data: "johndoe@email.com"}}})
+const mockUseLocation = vi.fn().mockImplementation(() => { return { state: { data: "johndoe@email.com" } } })
 
 vi.mock("react-router-dom", async () => {
     const actual = await vi.importActual("react-router-dom") as object;
@@ -27,7 +27,7 @@ function renderResendEmail() {
     return render(
         // <RouterProvider router={router}/>
         <BrowserRouter>
-            <ResendEmail/>
+            <ResendEmail />
         </BrowserRouter>
     );
 }
@@ -60,18 +60,18 @@ afterEach(() => server.resetHandlers())
 
 describe("Resend Email", () => {
     test("Should be able to see page elements on the screen", () => {
-        const {getByRole} = renderResendEmail();
+        const { getByRole } = renderResendEmail();
 
-        expect(getByRole("heading", { name: "Resend email"})).toBeInTheDocument();
-        expect(getByRole("heading", { name: "In case you didn't receive the email, you can resend it by clicking the link below after one minute has passed."})).toBeInTheDocument();
-        expect(getByRole("heading", { name: "The system has sent a confirmation email to johndoe@email.com. Check your email."})).toBeInTheDocument();
-        expect(getByRole("button", { name: "here"})).toBeInTheDocument();
+        expect(getByRole("heading", { name: "Resend email" })).toBeInTheDocument();
+        expect(getByRole("heading", { name: "In case you didn't receive the email, you can resend it by clicking the link below after one minute has passed." })).toBeInTheDocument();
+        expect(getByRole("heading", { name: "The system has sent a confirmation email to johndoe@email.com. Check your email." })).toBeInTheDocument();
+        expect(getByRole("button", { name: "here" })).toBeInTheDocument();
     });
 
     test("Should show successfull message when user clicks on the resend button", async () => {
-        const {getByRole, getByText} = renderResendEmail();
+        const { getByRole, getByText } = renderResendEmail();
 
-        const resendButton = getByRole("button", { name: "here"});
+        const resendButton = getByRole("button", { name: "here" });
 
         fireEvent.click(resendButton);
 
@@ -99,9 +99,9 @@ describe("Resend Email", () => {
             })
         )
 
-        const {getByRole, getByText} = renderResendEmail();
+        const { getByRole, getByText } = renderResendEmail();
 
-        const resendButton = getByRole("button", { name: "here"});
+        const resendButton = getByRole("button", { name: "here" });
 
         fireEvent.click(resendButton);
 
@@ -129,14 +129,14 @@ describe("Resend Email", () => {
             })
         );
 
-        const {getByRole, getByText} = renderResendEmail();
+        const { getByRole, getByText } = renderResendEmail();
 
-        const resendButton = getByRole("button", { name: "here"});
+        const resendButton = getByRole("button", { name: "here" });
 
         fireEvent.click(resendButton);
 
         await waitFor(() => {
-            expect(getByText("No user found with given email")).toBeInTheDocument();
+            expect(getByText("Not found")).toBeInTheDocument();
         });
     });
 });

@@ -1,12 +1,12 @@
 import "@testing-library/jest-dom";
 import { render, fireEvent, waitFor } from "@testing-library/react";
-import {describe, test, vi} from "vitest";
+import { describe, test, vi } from "vitest";
 import Registration from "./index";
-import {BrowserRouter, Router} from "react-router-dom";
-import {schema} from "./schema";
+import { BrowserRouter, Router } from "react-router-dom";
+import { schema } from "./schema";
 import { createMemoryHistory } from 'history';
-import {setupServer} from "msw/node";
-import {rest} from "msw";
+import { setupServer } from "msw/node";
+import { rest } from "msw";
 import userEvent from "@testing-library/user-event";
 
 const MSW_URL = "http://localhost/users";
@@ -40,18 +40,18 @@ afterEach(() => server.resetHandlers())
 function renderRegistration() {
     return render(
         <BrowserRouter>
-            <Registration/>
+            <Registration />
         </BrowserRouter>
     );
 }
 
 describe("Registration", () => {
 
-   test("Should be able to see the Page Header title on the screen", () => {
-       const { getByText } = renderRegistration();
+    test("Should be able to see the Page Header title on the screen", () => {
+        const { getByText } = renderRegistration();
 
-       expect(getByText("Registration")).toBeInTheDocument();
-   })
+        expect(getByText("Registration")).toBeInTheDocument();
+    })
 
     test("Should be able to see all the form fields", () => {
         const { getByLabelText } = renderRegistration();
@@ -71,37 +71,37 @@ describe("Registration", () => {
     test("Should be able to see the submit button text", () => {
         const { getByRole } = renderRegistration();
 
-        expect(getByRole("button", {name: "Register"})).toBeInTheDocument();
+        expect(getByRole("button", { name: "Register" })).toBeInTheDocument();
     })
 
     test("Should name be validated", async () => {
         await expect(schema.validateAt('name', {})).rejects.toMatch(/name is a required field/)
-        await expect(schema.validateAt('name', {name: "inv"})).rejects.toMatch(/name must be at least 5 characters/)
-        await expect(schema.validateAt('name', {name: "invalid nameinvalid nameinvalid nameinvalid nameinvalid nameinvalid nameinvalid nameinvalid nameinval"})).rejects.toMatch(/name must be at most 100 characters/)
-        await expect(schema.validateAt('name', {name: "valid name"})).resolves.toBeTruthy()
+        await expect(schema.validateAt('name', { name: "inv" })).rejects.toMatch(/name must be at least 5 characters/)
+        await expect(schema.validateAt('name', { name: "invalid nameinvalid nameinvalid nameinvalid nameinvalid nameinvalid nameinvalid nameinvalid nameinval" })).rejects.toMatch(/name must be at most 100 characters/)
+        await expect(schema.validateAt('name', { name: "valid name" })).resolves.toBeTruthy()
     })
 
     test("Should email be validated", async () => {
         await expect(schema.validateAt('email', {})).rejects.toMatch(/email is a required field/)
-        await expect(schema.validateAt('email', {email: "email"})).rejects.toMatch(/email must be a valid email/)
-        await expect(schema.validateAt('email', {email: "email@emailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemaile.com"})).rejects.toMatch(/email must be a valid email/)
-        await expect(schema.validateAt('email', {email: 'ema`i´l\'"@email'})).rejects.toMatch(/email must be a valid email/)
-        await expect(schema.validateAt('email', {email: "email@email"})).resolves.toBeTruthy()
+        await expect(schema.validateAt('email', { email: "email" })).rejects.toMatch(/email must be a valid email/)
+        await expect(schema.validateAt('email', { email: "email@emailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemaile.com" })).rejects.toMatch(/email must be a valid email/)
+        await expect(schema.validateAt('email', { email: 'ema`i´l\'"@email' })).rejects.toMatch(/email must be a valid email/)
+        await expect(schema.validateAt('email', { email: "email@email" })).resolves.toBeTruthy()
     })
 
     test("Should password be validated", async () => {
         await expect(schema.validateAt('password', {})).rejects.toMatch(/password is a required field/)
-        await expect(schema.validateAt('password', {password: "1A$a"})).rejects.toMatch(/password must be at least 8 characters/)
-        await expect(schema.validateAt('password', {password: "invalidpassword"})).rejects.toMatch(/Password must have at least one digit/)
-        await expect(schema.validateAt('password', {password: "invalidpassword1"})).rejects.toMatch(/Password must have at least one uppercase letter/)
-        await expect(schema.validateAt('password', {password: "invalidpassword1A"})).rejects.toMatch(/Password must have at least one special character/)
-        await expect(schema.validateAt('password', {password: "invalidpassword1Ainvalidpassword1Ainvalidpassword1Ainvalidpasswor"})).rejects.toMatch(/password must be at most 64 characters/)
-        await expect(schema.validateAt('password', {password: "ValidPassword@1"})).resolves.toBeTruthy()
+        await expect(schema.validateAt('password', { password: "1A$a" })).rejects.toMatch(/password must be at least 8 characters/)
+        await expect(schema.validateAt('password', { password: "invalidpassword" })).rejects.toMatch(/Password must have at least one digit/)
+        await expect(schema.validateAt('password', { password: "invalidpassword1" })).rejects.toMatch(/Password must have at least one uppercase letter/)
+        await expect(schema.validateAt('password', { password: "invalidpassword1A" })).rejects.toMatch(/Password must have at least one special character/)
+        await expect(schema.validateAt('password', { password: "invalidpassword1Ainvalidpassword1Ainvalidpassword1Ainvalidpasswor" })).rejects.toMatch(/password must be at most 64 characters/)
+        await expect(schema.validateAt('password', { password: "ValidPassword@1" })).resolves.toBeTruthy()
     })
 
     test("Should terms be validated", async () => {
-        await expect(schema.validateAt('terms', {terms: false})).rejects.toMatch(/You must agree with the terms and privacy policy/)
-        await expect(schema.validateAt('terms', {terms: true})).resolves.toBeTruthy()
+        await expect(schema.validateAt('terms', { terms: false })).rejects.toMatch(/You must agree with the terms and privacy policy/)
+        await expect(schema.validateAt('terms', { terms: true })).resolves.toBeTruthy()
     })
 
     test("Should be able to send registration request", () => {
@@ -129,7 +129,7 @@ describe("Registration", () => {
         fireEvent.change(inputName, { target: { value: 'John Doe' } });
         fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
         fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
-        fireEvent.change(inputTerms, { target: {value: true}})
+        fireEvent.change(inputTerms, { target: { value: true } })
 
         expect(inputName.value).toEqual('John Doe');
         expect(inputEmail.value).toEqual('johndoe@email.com');
@@ -140,13 +140,13 @@ describe("Registration", () => {
 
         await waitFor(() => {
             void userEvent.click(getByTestId("registerButton"))
-            expect(history.push).toHaveBeenLastCalledWith( {
-                    "hash": "",
-                    "pathname": "/resend-email",
-                    "search": "",
-                },
+            expect(history.push).toHaveBeenLastCalledWith({
+                "hash": "",
+                "pathname": "/resend-email",
+                "search": "",
+            },
                 {
-                     "data": "johndoe@email.com",
+                    "data": "johndoe@email.com",
                 },
                 {
                     "state": {
@@ -160,14 +160,14 @@ describe("Registration", () => {
     test("Should send to login page after clicking the login button", () => {
         const { getByRole } = renderRegistration();
 
-        const loginLink = getByRole("link", {name: "Login."})
+        const loginLink = getByRole("link", { name: "Login." })
 
         expect(loginLink).toBeInTheDocument()
         expect(loginLink).toHaveAttribute("href", "/login")
     })
 
     test("Should show immutability message", () => {
-        const {getByText} = renderRegistration();
+        const { getByText } = renderRegistration();
 
         const immutabilityMessage = getByText(/Won't be possible to change email/i)
 
@@ -191,7 +191,7 @@ describe("Registration", () => {
             })
         )
 
-        const {getByText, getByLabelText, getByTestId} = renderRegistration();
+        const { getByText, getByLabelText, getByTestId } = renderRegistration();
 
         const inputName = getByLabelText('Name') as HTMLInputElement;
         const inputEmail = getByLabelText('Email') as HTMLInputElement;
@@ -201,7 +201,7 @@ describe("Registration", () => {
         fireEvent.change(inputName, { target: { value: 'John Doe' } });
         fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
         fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
-        fireEvent.change(inputTerms, { target: {value: true}})
+        fireEvent.change(inputTerms, { target: { value: true } })
 
         fireEvent.click(inputTerms)
 
@@ -213,13 +213,13 @@ describe("Registration", () => {
 
     test("Should show network error message on form submission", async () => {
         server.use(
-            rest.post(MSW_URL,  (req, res, ctx) => {
-                    console.log(req, ctx); // for build purposes
-                    return res.networkError('Failed to connect');
-                }
+            rest.post(MSW_URL, (req, res, ctx) => {
+                console.log(req, ctx); // for build purposes
+                return res.networkError('Failed to connect');
+            }
             ))
 
-        const {getByText, getByLabelText, getByTestId} = renderRegistration();
+        const { getByText, getByLabelText, getByTestId } = renderRegistration();
 
         const inputName = getByLabelText('Name') as HTMLInputElement;
         const inputEmail = getByLabelText('Email') as HTMLInputElement;
@@ -229,7 +229,7 @@ describe("Registration", () => {
         fireEvent.change(inputName, { target: { value: 'John Doe' } });
         fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
         fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
-        fireEvent.change(inputTerms, { target: {value: true}});
+        fireEvent.change(inputTerms, { target: { value: true } });
 
         fireEvent.click(inputTerms);
 
@@ -242,9 +242,9 @@ describe("Registration", () => {
     test("Should check if terms and privacy links have their respective href and target values", () => {
         const { getByRole } = renderRegistration();
 
-        const registrationHeading = getByRole("heading", {name: "Registration"})
-        const termsLink = getByRole("link", {name: "Terms of Use"})
-        const privacyLink = getByRole("link", {name: "Privacy Policy"})
+        const registrationHeading = getByRole("heading", { name: "Registration" })
+        const termsLink = getByRole("link", { name: "Terms of Use" })
+        const privacyLink = getByRole("link", { name: "Privacy Policy" })
 
         expect(registrationHeading).toBeInTheDocument()
         expect(termsLink).toBeInTheDocument()

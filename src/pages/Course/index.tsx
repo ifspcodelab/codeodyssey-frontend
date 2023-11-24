@@ -1,87 +1,61 @@
-import { useTranslation } from "react-i18next";
-import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom"
-import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
 import { useEffect, useState } from "react";
-import { useApiGetCourse } from "../../core/hooks/useApiGetCourse.ts";
-import { JwtService } from "../../core/auth/JwtService.ts";
-import { useParams } from "react-router-dom";
-import { CourseResponse } from "../../core/models/CourseResponse";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
-import axios, { AxiosError } from "axios";
+import { Card, CardActions, CardContent, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom"
+import { AxiosError } from "axios";
 
-function Course() {
-  const { t } = useTranslation();
-  const navigate = useNavigate()
+import { CoursesService } from "../../core/services/api/courses/CoursesService.ts";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
+import CreateInviteModal from "../../core/components/create-invite-modal/index.tsx";
+import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
+import { ICourseResponse } from "../../core/models/Course.ts";
+import { JwtService } from "../../core/auth/JwtService.ts";
+import TabsComponent from "./TabsComponent.tsx";
+import i18n from "../../locales/i18n.ts";
+
+const Course: React.FC = () => {
+
   const authConsumer = AuthConsumer();
   const USER_ID: string = authConsumer.id;
-  const [course, setCourse] = useState<CourseResponse>();
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
-  const { getCourse } = useApiGetCourse()
   const { idCourse } = useParams()
-  const [errorType, setErrorType] = useState('');
-  const [openError, setOpenError] = useState(false);
 
-  const handleError = (error: AxiosError) => {
-    let responseStatus: number
-    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
-    if (error.response) {
-      problemDetail = error.response.data as ProblemDetail
-      responseStatus = problemDetail.status
-      if (responseStatus == 400) {
-        setErrorType('badRequest')
-        setOpenError(true);
-      }
-    } else if (error.message == "Network Error") {
-      setErrorType('networkError')
-      setOpenError(true);
-    }
-  }
+  const [course, setCourse] = useState<ICourseResponse>();
 
-  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway' || event === undefined) {
-      return;
-    }
-    setOpenError(false);
-  };
+  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
-    void (async () => {
-      if (idCourse !== undefined) {
-        try {
-          const courseResponse = await getCourse(idCourse, rawAccessToken);
-          setCourse(courseResponse)
-        } catch (error) {
-          if (axios.isAxiosError(error)) {
-            handleError(error)
-          } else {
-            setErrorType('unexpected')
-          }
-        }
-      }
-    })();
-    // eslint-disable-next-line
-  }, []);
+    if (idCourse !== undefined) {
+      CoursesService.getById(idCourse, rawAccessToken)
+        .then((response) => {
+          setCourse(response as ICourseResponse);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [USER_ID, rawAccessToken])
 
   return (
     <>
-      <h1>{course?.name}</h1>
-      {course?.professor?.id === USER_ID ? <><Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-        onClick={() => {
-          navigate('create-activity');
-        }}
-      >{t('course.button.create')}</Button><Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-        onClick={() => {
-          navigate('students');
-        }}
-      >{t("courses.button.students")}</Button></> : <span></span>}
-      <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-        onClick={() => {
-          navigate('activities');
-        }}
-      >{t('course.button.activities')}</Button>
+      <TabsComponent />
 
+      <Card>
 
+        <CardContent>
+          <Typography variant="h5">{course?.name}</Typography>
+          <Typography variant="subtitle1"> <strong>{t("course.professor")}</strong>: {course?.professor?.name}</Typography>
+          <Typography> <strong>{t("course.startDate")}</strong>: {course !== undefined && new Date(course?.startDate).toLocaleDateString(i18n.language)}</Typography>
+          <Typography> <strong>{t("course.endDate")}</strong>: {course !== undefined && new Date(course?.endDate).toLocaleDateString(i18n.language)}</Typography>
+        </CardContent>
+        {USER_ID === course?.professor?.id && course && <CardActions>
+          <CreateInviteModal course={course} />
+        </CardActions>}
+
+      </Card>
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>

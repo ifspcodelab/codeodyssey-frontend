@@ -1,130 +1,96 @@
-import { useApiGetStudents } from "../../core/hooks/useApiGetStudents.ts";
 import { useEffect, useState } from "react";
-import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { JwtService } from "../../core/auth/JwtService.ts";
-import { useParams } from "react-router-dom";
-import { StudentResponse } from "../../core/models/StudentResponse";
+import { Icon, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import PageHeader from "../../components/PageHeader";
-import Spinner from "../../components/Spinner";
-import { useNavigate } from "react-router-dom"
-import axios, { AxiosError } from "axios";
-import ErrorSnackBar from "../../components/ErrorSnackBar/ErrorSnackBar";
-import './style.css'
+import { useParams } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
-import { CardContent } from "@mui/material";
-function Students() {
-  const [students, setStudents] = useState<StudentResponse[] | ProblemDetail>([]);
-  const { getStudents } = useApiGetStudents()
-  const authConsumer = AuthConsumer();
+import { AxiosError } from "axios";
+
+import { StudentService } from "../../core/services/api/students/StudentsService.ts";
+import ErrorSnackBar from "../../core/components/error-snack-bar/ErrorSnackBar.tsx";
+import { useErrorHandler } from "../../core/hooks/useErrorHandler.ts";
+import { IStudentResponse } from "../../core/models/Student.ts";
+import { AuthConsumer } from "../../core/auth/AuthContext.tsx";
+import { JwtService } from "../../core/auth/JwtService.ts";
+import TabsComponent from "../Course/TabsComponent.tsx";
+
+const Students: React.FC = () => {
+  const [students, setStudents] = useState<IStudentResponse[]>([]);
+
   const rawAccessToken = new JwtService().getRawAccessToken() as string;
+  const authConsumer = AuthConsumer();
+  const USER_ID: string = authConsumer.id;
   const { slug } = useParams()
   const { t } = useTranslation();
-  const USER_ID: string = authConsumer.id;
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate()
-  const [errorType, setErrorType] = useState('');
-  const [openError, setOpenError] = useState(false);
+
+  const { handleError, openError, errorType, handleCloseError } = useErrorHandler();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    void (async () => {
-      if (typeof slug === 'string') {
-        try {
-          const studentsResponse = await getStudents(USER_ID, slug, rawAccessToken)
-          setStudents(studentsResponse)
-          setLoading(false)
-        } catch (error) {
-          if (axios.isAxiosError(error)) {
-            handleError(error)
-          } else {
-            setErrorType('unexpected')
-          }
-        }
-      } else {
-        setErrorType('unexpected')
-      }
-
-    })();
-    // eslint-disable-next-line
-  }, [rawAccessToken]);
-
-  const handleError = (error: AxiosError) => {
-    let responseStatus: number
-    let problemDetail: ProblemDetail = { title: '', detail: '', instance: '', status: 0, type: '' }
-    if (error.response) {
-      problemDetail = error.response.data as ProblemDetail
-      responseStatus = problemDetail.status
-      if (responseStatus == 400) {
-        setErrorType('badRequest')
-        setOpenError(true);
-      } else if (responseStatus == 409) {
-        setErrorType('slugNotFound')
-        setOpenError(true);
-      }
-    } else if (error.message == "Network Error") {
-      setErrorType('networkError')
-      setOpenError(true);
+    if (typeof slug === 'string') {
+      setIsLoading(true)
+      StudentService.getAll(USER_ID, slug, rawAccessToken)
+        .then((response) => {
+          setIsLoading(false)
+          setStudents(response as IStudentResponse[]);
+        }).catch((error: AxiosError<ProblemDetail>) => {
+          handleError(error)
+        })
     }
-  }
-
-  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway' || event === undefined) {
-      return;
-    }
-
-    setOpenError(false);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [USER_ID, rawAccessToken, slug])
 
   return (
     <>
-      <PageHeader title={t('students.title')} text={t('students.text')} />
-      <div>
-        {
-          (Array.isArray(students) && students.length) ? (
-            students.map((student: StudentResponse) => (
-              <Card key={student.id} variant="outlined" sx={{ minWidth: 275, display: "flex", mb: 1.5, borderColor: "primary.main", margin: 2 }}>
-                <CardContent className="cardContentStudents">
+
+      <TabsComponent />
+      <TableContainer component={Paper} variant="outlined" sx={{ m: 1, width: 'auto' }}>
+        <Table>
+
+          <TableHead>
+            <TableRow>
+              <TableCell>{t("students.avatar")}</TableCell>
+              <TableCell>{t("students.name")}</TableCell>
+              <TableCell>{t("students.email")}</TableCell>
+              <TableCell>{t("students.actions")}</TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {students?.map(student => (
+              <TableRow key={student.id}>
+                <TableCell>
                   <Avatar>
                     {student.name.charAt(0)}
                   </Avatar>
-                  <div>
-                    <Typography variant="h6" component="div" className="studentName">
-                      {student.name}
-                    </Typography>
-                    <Typography sx={{ fontSize: 14 }} gutterBottom>
-                      {student.email}
-                    </Typography>
-                  </div>
+                </TableCell>
+                <TableCell>{student.name}</TableCell>
+                <TableCell>{student.email}</TableCell>
+                <TableCell>
+                  <IconButton size="small">
+                    <Icon>edit</Icon>
+                  </IconButton>
+                  <IconButton size="small">
+                    <Icon>delete</Icon>
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
 
-                </CardContent>
-              </Card>
-            ))
-          ) : loading ? (
-            <Spinner size={150} />
-          ) : (
-            <>
-              <Typography>
-                {t("students.emptyList")}
-              </Typography><Typography>
-                {t("students.emptyListQuestion")}
-              </Typography>
-              <CardActions className="cardActions">
-                <Button variant="contained" size="medium" sx={{ p: 1, m: 1, width: 200 }}
-                  onClick={() => {
-                    navigate('/courses')
-                  }}
-                >{t("courses.button.invite")}</Button>
-              </CardActions>
-            </>
-          )
-        }
+          {students.length === 0 && !isLoading && <caption>{t("students.emptyList")}</caption>}
 
+          <TableFooter>
+            {isLoading && (
+              <TableRow>
+                <TableCell colSpan={4}>
+                  <LinearProgress variant='indeterminate' />
+                </TableCell>
+              </TableRow>
+            )}
+          </TableFooter>
 
-      </div>
+        </Table>
+      </TableContainer>
 
       <ErrorSnackBar open={openError} handleClose={handleCloseError} errorType={errorType} />
     </>

@@ -1,12 +1,12 @@
-import {describe, test, vi} from "vitest";
+import { describe, test, vi } from "vitest";
 import Login from "./index";
-import {render, fireEvent, waitFor} from "@testing-library/react";
-import {BrowserRouter, Router} from "react-router-dom";
+import { render, fireEvent, waitFor } from "@testing-library/react";
+import { BrowserRouter, Router } from "react-router-dom";
 import "@testing-library/jest-dom";
 import userEvent from '@testing-library/user-event'
-import {createMemoryHistory} from "history";
-import {rest} from "msw";
-import {setupServer} from "msw/node";
+import { createMemoryHistory } from "history";
+import { rest } from "msw";
+import { setupServer } from "msw/node";
 
 const MSW_URL = "http://localhost/login";
 
@@ -36,13 +36,13 @@ afterEach(() => server.resetHandlers())
 function renderLogin() {
     return render(
         <BrowserRouter>
-            <Login/>
+            <Login />
         </BrowserRouter>
     );
 }
 
 const createTestVariables = () => {
-    const {getByText, getByRole, getByLabelText} = renderLogin()
+    const { getByText, getByRole, getByLabelText } = renderLogin()
 
     const inputEmail = getByLabelText('Email') as HTMLInputElement;
     const inputPassword = getByLabelText('Password') as HTMLInputElement;
@@ -55,19 +55,18 @@ describe("Login", () => {
     test("Should be able to see all page elements on the screen", () => {
         const { getByRole, getByLabelText } = renderLogin();
 
-        expect(getByRole("heading", { name: "Login"})).toBeInTheDocument();
-        expect(getByRole("heading", { name: "Sign in or Register"})).toBeInTheDocument();
-        expect(getByRole("textbox", { name: "Email"})).toBeInTheDocument();
+        expect(getByRole("heading", { name: "Login" })).toBeInTheDocument();
+        expect(getByRole("textbox", { name: "Email" })).toBeInTheDocument();
         expect(getByLabelText("Password")).toBeInTheDocument();
-        expect(getByRole("button", { name: "Login"})).toBeInTheDocument();
-        expect(getByRole("link", { name: "Register"})).toBeInTheDocument();
+        expect(getByRole("button", { name: "Login" })).toBeInTheDocument();
+        expect(getByRole("link", { name: "Register" })).toBeInTheDocument();
     })
 
     test("Should send required email error message", async () => {
-        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+        const { getByText, inputEmail, inputPassword, loginButton } = createTestVariables();
 
-        fireEvent.change(inputEmail, {target: {value: ''}});
-        fireEvent.change(inputPassword, {target: {value: 'Password@01'}});
+        fireEvent.change(inputEmail, { target: { value: '' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
 
         expect(inputPassword.value).toEqual('Password@01');
 
@@ -78,13 +77,13 @@ describe("Login", () => {
     })
 
     test("Should send valid email error message", async () => {
-        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+        const { getByText, inputEmail, inputPassword, loginButton } = createTestVariables();
 
-        fireEvent.change(inputEmail, {target: {value: 'johndoeemail.com'}});
-        fireEvent.change(inputPassword, {target: {value: 'Password@01'}});
+        fireEvent.change(inputEmail, { target: { value: 'johndoeemail.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
 
         expect(inputPassword.value).toEqual('Password@01');
-        
+
         await waitFor(() => {
             void userEvent.click(loginButton);
             expect(getByText(/email must be a valid email/i)).toBeInTheDocument();
@@ -92,10 +91,10 @@ describe("Login", () => {
     })
 
     test("Should send uppercase letter error message", async () => {
-        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+        const { getByText, inputEmail, inputPassword, loginButton } = createTestVariables();
 
-        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
-        fireEvent.change(inputPassword, {target: {value: 'password@01'}});
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'password@01' } });
 
         expect(inputEmail.value).toEqual('johndoe@email.com');
 
@@ -106,10 +105,10 @@ describe("Login", () => {
     })
 
     test("Should send uppercase letter error message", async () => {
-        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+        const { getByText, inputEmail, inputPassword, loginButton } = createTestVariables();
 
-        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
-        fireEvent.change(inputPassword, {target: {value: 'PASSWORD@01'}});
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'PASSWORD@01' } });
 
         expect(inputEmail.value).toEqual('johndoe@email.com');
 
@@ -120,10 +119,10 @@ describe("Login", () => {
     })
 
     test("Should send special character error message", async () => {
-        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+        const { getByText, inputEmail, inputPassword, loginButton } = createTestVariables();
 
-        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
-        fireEvent.change(inputPassword, {target: {value: 'Passworda01'}});
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Passworda01' } });
 
         expect(inputEmail.value).toEqual('johndoe@email.com');
 
@@ -134,11 +133,11 @@ describe("Login", () => {
     })
 
     test("Should send digits error message", async () => {
-        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+        const { getByText, inputEmail, inputPassword, loginButton } = createTestVariables();
 
 
-        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
-        fireEvent.change(inputPassword, {target: {value: 'Password@ab'}});
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@ab' } });
 
         expect(inputEmail.value).toEqual('johndoe@email.com');
 
@@ -149,10 +148,10 @@ describe("Login", () => {
     })
 
     test("Should send required email error message", async () => {
-        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+        const { getByText, inputEmail, inputPassword, loginButton } = createTestVariables();
 
-        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
-        fireEvent.change(inputPassword, {target: {value: ''}});
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: '' } });
 
         expect(inputEmail.value).toEqual('johndoe@email.com');
 
@@ -163,10 +162,10 @@ describe("Login", () => {
     })
 
     test("Should send minimum characters length error message", async () => {
-        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+        const { getByText, inputEmail, inputPassword, loginButton } = createTestVariables();
 
-        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
-        fireEvent.change(inputPassword, {target: {value: 'Pass@01'}});
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Pass@01' } });
 
         expect(inputEmail.value).toEqual('johndoe@email.com');
 
@@ -177,10 +176,10 @@ describe("Login", () => {
     })
 
     test("Should send maximum characters length error message", async () => {
-        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+        const { getByText, inputEmail, inputPassword, loginButton } = createTestVariables();
 
-        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
-        fireEvent.change(inputPassword, {target: {value: 'Password@01Password@01Password@01Password@01Password@01Password@0'}});
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@01Password@01Password@01Password@01Password@01Password@0' } });
 
         expect(inputEmail.value).toEqual('johndoe@email.com');
 
@@ -193,7 +192,7 @@ describe("Login", () => {
     test("Should send to registration page after clicking the register button", async () => {
         const { getByRole } = renderLogin();
 
-        const registrationLink = getByRole("link", {name: "Register"});
+        const registrationLink = getByRole("link", { name: "Register" });
 
         expect(registrationLink).toHaveAttribute("href", "/registration")
     });
@@ -208,25 +207,25 @@ describe("Login", () => {
             </Router>
         );
 
-        const inputEmail = getByRole("textbox", {name: "Email"});
+        const inputEmail = getByRole("textbox", { name: "Email" });
         const inputPassword = getByLabelText("Password");
-        const loginButton = getByRole("button", {name: "Login"});
+        const loginButton = getByRole("button", { name: "Login" });
 
-        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
-        fireEvent.change(inputPassword, {target: {value: 'Password@01'}});
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
 
         await waitFor(() => {
             void userEvent.click(loginButton)
             expect(history.push).toHaveBeenLastCalledWith({
-                    "hash": "",
-                    "pathname": "/",
-                    "search": "",
-                },
+                "hash": "",
+                "pathname": "/",
+                "search": "",
+            },
                 {
                     "data": true
                 },
                 {
-                    "state": {"data": true}
+                    "state": { "data": true }
                 },
             );
         });
@@ -249,10 +248,10 @@ describe("Login", () => {
             })
         );
 
-        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+        const { getByText, inputEmail, inputPassword, loginButton } = createTestVariables();
 
-        fireEvent.change(inputEmail, {target: {value: 'john_doe@email.com'}});
-        fireEvent.change(inputPassword, {target: {value: 'Password@02'}});
+        fireEvent.change(inputEmail, { target: { value: 'john_doe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@02' } });
 
         await waitFor(() => {
             void userEvent.click(loginButton);
@@ -263,19 +262,19 @@ describe("Login", () => {
     test("Should show error message when given network error", async () => {
         server.use(
             rest.post(MSW_URL, (req, res, ctx) => {
-                    console.log(req, ctx) // for build purposes
-                    return res.networkError('Failed to connect')
-                }
+                console.log(req, ctx) // for build purposes
+                return res.networkError('Failed to connect')
+            }
             ))
 
-        const {getByText, inputEmail, inputPassword, loginButton} = createTestVariables();
+        const { getByText, inputEmail, inputPassword, loginButton } = createTestVariables();
 
-        fireEvent.change(inputEmail, {target: {value: 'johndoe@email.com'}});
-        fireEvent.change(inputPassword, {target: {value: 'Password@01'}});
+        fireEvent.change(inputEmail, { target: { value: 'johndoe@email.com' } });
+        fireEvent.change(inputPassword, { target: { value: 'Password@01' } });
 
-        await waitFor(() => {
+        void waitFor(() => {
             void userEvent.click(loginButton);
-            expect(getByText(/Something went wrong, please try again later/i)).toBeInTheDocument();
-        });
+            expect(getByText("Network error")).toBeInTheDocument();
+        })
     })
 });

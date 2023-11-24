@@ -1,9 +1,9 @@
-import {describe, test} from "vitest";
+import { describe, test } from "vitest";
 import Invitation from "./index";
-import {BrowserRouter} from "react-router-dom";
-import {render, waitFor} from "@testing-library/react";
-import {rest} from "msw";
-import {setupServer} from "msw/node";
+import { BrowserRouter } from "react-router-dom";
+import { render, waitFor } from "@testing-library/react";
+import { rest } from "msw";
+import { setupServer } from "msw/node";
 import "@testing-library/jest-dom";
 
 
@@ -17,7 +17,7 @@ export const restHandlers = [
             ctx.json(
                 {
                     "id": "1434a8a4-a558-4c47-b513-d39bb996b96c",
-                    "invitation":  {
+                    "invitation": {
                         "id": "09246a18-cf5e-4b7d-960f-b5248ad51b16",
                         "link": null,
                         "expirationDate": "2023-09-30",
@@ -40,10 +40,10 @@ export const restHandlers = [
                     },
                     "student": {
                         "id": "82f66168-1013-4dc1-a7bd-31da68a31dc9",
-                            "name": "John Doe Jr",
-                            "email": "johnjr@doe.com",
-                            "role": "STUDENT",
-                            "createdAt": "2023-09-01T19:01:00.815498Z"
+                        "name": "John Doe Jr",
+                        "email": "johnjr@doe.com",
+                        "role": "STUDENT",
+                        "createdAt": "2023-09-01T19:01:00.815498Z"
                     },
                     "createdAt": "2023-09-12T17:22:26.474552600Z"
                 }
@@ -54,7 +54,7 @@ export const restHandlers = [
 
 const server = setupServer(...restHandlers)
 
-beforeAll(() => {void server.listen({ onUnhandledRequest: 'error' })})
+beforeAll(() => { void server.listen({ onUnhandledRequest: 'error' }) })
 
 afterAll(() => void server.close())
 
@@ -63,7 +63,7 @@ afterEach(() => server.resetHandlers())
 const renderInvitation = () => {
     return render(
         <BrowserRouter>
-            <Invitation/>
+            <Invitation />
         </BrowserRouter>
     );
 }
@@ -72,8 +72,8 @@ describe("Invitation", () => {
     test("Should be able to see all page elements on the screen", () => {
         const { getByRole } = renderInvitation();
 
-        expect(getByRole("heading", { name: "Invitation"})).toBeInTheDocument();
-        expect(getByRole("heading", { name: "Course's invitation"})).toBeInTheDocument();
+        expect(getByRole("heading", { name: "Invitation" })).toBeInTheDocument();
+        expect(getByRole("heading", { name: "Course's invitation" })).toBeInTheDocument();
     });
 
     test("Should return success message when invitation is accepted", async () => {

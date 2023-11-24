@@ -1,7 +1,11 @@
+import { PageBaseLayout } from "../../core/layout/PageBaseLayout";
+
 function TermsOfUse() {
     return (
         <>
-            <h1>Terms Of Use</h1>
+            <PageBaseLayout title={'Terms of Use'}>
+
+            </PageBaseLayout>
         </>
     );
 }
