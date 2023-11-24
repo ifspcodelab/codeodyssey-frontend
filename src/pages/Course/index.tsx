@@ -43,7 +43,7 @@ const Course: React.FC = () => {
     <>
       <TabsComponent />
 
-      <Card sx={{ display: "flex", justifyContent: "space-around" }}>
+      <Card>
 
         <CardContent>
           <Typography variant="h5">{course?.name}</Typography>
