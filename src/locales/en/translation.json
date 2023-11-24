@@ -271,7 +271,8 @@
     "unauthorized": "Unauthorized access",
     "notFound": "Not found",
     "courseAlreadyExists": "A course with this slug already exists",
-    "courseNotFound": "Course not found"
+    "courseNotFound": "Course not found",
+    "waitingForResults": "There is a resolution in progress, please wait"
   },
   "yup": {
     "invalid_field_length": "This field must have at least ${min} characters",

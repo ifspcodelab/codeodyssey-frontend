@@ -270,7 +270,8 @@
     "unauthorized": "Acesso não autorizado",
     "notFound": "Não encontrado",
     "courseAlreadyExists": "Um curso com esse caminho já existe",
-    "courseNotFound": "Curso não encontrado"
+    "courseNotFound": "Curso não encontrado",
+    "waitingForResults": "Existe uma resolução em processamento, aguarde"
   },
   "yup": {
     "invalid_field_length": "Esse campo deve ter pelo menos {{ min }} caracteres.",

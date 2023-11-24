@@ -40,6 +40,8 @@ export function useErrorHandler() {
             setErrorType('slugNotFound')
           } else if (problemDetail.title === "Resolution Submit date later than its activity end date") {
             setErrorType('unexpected')
+          } else if (problemDetail.detail === "WAITING_FOR_RESULTS") {
+            setErrorType('waitingForResults')
           }
           break;
         case 422: 
