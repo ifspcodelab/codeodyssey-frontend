@@ -80,7 +80,7 @@ const Resolutions: React.FC<IResolutionsProps> = ({ resolutions, fileType }) => 
             {formatTime(resolution.submitDate)}</Typography>
           <Typography><strong>{t('resolution.status')}</strong> : {getStatusMessage(resolution.status)}</Typography>
           <Typography><strong>{t('resolution.fileSended')}</strong>: <button onClick={() => {
-            handleDecodeAndDownload(resolution.activity?.initialFile)
+            handleDecodeAndDownload(resolution?.resolutionFile)
           }}>{t('activity.button.download')}</button></Typography>
 
           {resolution.status === 'EXECUTED_SUCCESS' && <ResolutionCardTestBar resolutionId={resolution.id} activityId={resolution.activity.id} />}
